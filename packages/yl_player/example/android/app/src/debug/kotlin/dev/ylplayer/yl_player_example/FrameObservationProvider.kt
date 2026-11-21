@@ -61,6 +61,18 @@ private class FrameObservation(private val flutter: FlutterEngine) {
                 when (call.method) {
                     "install" -> install(call.argument<String>("previousSession")!!, false, result)
                     "installActive" -> install(call.argument<String>("sessionId")!!, true, result)
+                    "playbackOutput" -> {
+                        val current = checkNotNull(attached)
+                        onWorker(current.handler, result) {
+                            val player = current.player
+                            val selector = player.trackSelector as androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+                            val counters = player.videoDecoderCounters
+                            counters?.ensureUpdated()
+                            mapOf("requested" to selector.parameters.tunnelingEnabled,
+                                "enabled" to player.isTunnelingEnabled,
+                                "rendered" to counters?.renderedOutputBufferCount)
+                        }
+                    }
                     "read" -> {
                         val current = checkNotNull(attached)
                         onWorker(current.handler, result) { current.records.toList() }

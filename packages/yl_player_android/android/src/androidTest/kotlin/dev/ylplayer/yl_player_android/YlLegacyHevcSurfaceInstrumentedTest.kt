@@ -15,13 +15,14 @@ import kotlinx.coroutines.withTimeout
 import org.junit.Assert.*
 import org.junit.Test
 
-/** Force the legacy switch on the device's real HEVC decoder without changing decoder selection. */
+/** Exercise replacement with a real decoder; ylSurfacePolicy=device also checks production eligibility. */
 class YlLegacyHevcSurfaceInstrumentedTest {
     @Test fun seekableReplacementWhilePausedResumesAtTheSamePosition() = checkReplacement(replay = true)
     @Test fun forwardOnlyReplacementWhilePlayingWaitsForNextKeyFrame() = checkReplacement(replay = false)
 
     private fun checkReplacement(replay: Boolean) = runBlocking<Unit> {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val devicePolicy = InstrumentationRegistry.getArguments().getString("ylSurfacePolicy") == "device"
         val context = instrumentation.targetContext
         val file = File.createTempFile("surface-restart", ".mov", context.cacheDir)
         instrumentation.context.assets.open("format_matrix/mov-hevc-aac.mov").use { input ->
@@ -47,7 +48,12 @@ class YlLegacyHevcSurfaceInstrumentedTest {
                 videoConstraints = AndroidVideoConstraintsMessage()),
             AndroidPlayerOptionsMessage(AndroidDecoderPolicy.HARDWARE_PREFERRED, AndroidAudioPolicy.APP_MANAGED, 100),
             dispatcher = Dispatchers.Unconfined, observeVideo = pts::set,
-            requiresSurfaceRestart = { name -> decoderName.set(name); switches.incrementAndGet(); true },
+            requiresSurfaceRestart = { name ->
+                decoderName.set(name)
+                val restart = !devicePolicy || needsLegacyHevcSurfaceRestart(name)
+                if (restart) switches.incrementAndGet()
+                restart
+            },
             seekNative = { native, target ->
                 seekTarget.set(target)
                 replay && native.seekTo(target)
@@ -84,7 +90,7 @@ class YlLegacyHevcSurfaceInstrumentedTest {
             val previousPts = pts.get()
             awaitState { pixels.get() > oldPixels && pts.get() > previousPts && pts.get() >= target }
             failure.get()?.let { throw it }
-            android.util.Log.i("YL_HEVC_SURFACE", "decoder=${decoderName.get()} replay=$replay targetUs=$target resumedPtsUs=${pts.get()}")
+            android.util.Log.i("YL_HEVC_SURFACE", "devicePolicy=$devicePolicy decoder=${decoderName.get()} replay=$replay targetUs=$target resumedPtsUs=${pts.get()}")
         } finally {
             try { engine.dispose().await() } finally {
                 output.release()

@@ -1,0 +1,2365 @@
+{
+  "install": {
+    "apk": "e5502a50efc38e975dd8428b589623f885ac4f3500161b93f8631501c4e6638a",
+    "installed": "e5502a50efc38e975dd8428b589623f885ac4f3500161b93f8631501c4e6638a",
+    "case": "all",
+    "base": "9bf8301d8792260c49b6a933a1c3b7570f5c6bae"
+  },
+  "framework": {
+    "terminal": true,
+    "passed": false,
+    "pid": "10970"
+  },
+  "afterRelease": {
+    "pid": "10970",
+    "observed": true,
+    "videoCodecs": 0,
+    "pssKiB": 157511
+  },
+  "samples": [
+    {
+      "case": "av1-file",
+      "phase": "load",
+      "elapsedMs": 3449,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920"
+    },
+    {
+      "case": "av1-file",
+      "phase": "firstFrame",
+      "elapsedMs": 10623,
+      "status": "ready",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 0,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "av1-file",
+      "phase": "seek",
+      "elapsedMs": 12078,
+      "status": "playing",
+      "positionMs": 1802,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "targetMs": 1200
+    },
+    {
+      "case": "av1-file",
+      "phase": "seek",
+      "elapsedMs": 13063,
+      "status": "playing",
+      "positionMs": 812,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 3,
+      "drops": 0,
+      "underruns": 0,
+      "targetMs": 400
+    },
+    {
+      "case": "av1-file",
+      "phase": "seek",
+      "elapsedMs": 13839,
+      "status": "playing",
+      "positionMs": 2771,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0,
+      "targetMs": 2400
+    },
+    {
+      "case": "av1-file",
+      "phase": "completed",
+      "elapsedMs": 15177,
+      "status": "completed",
+      "positionMs": 4038,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "av1-file",
+      "phase": "disposed",
+      "elapsedMs": 15967,
+      "status": "completed",
+      "positionMs": 4038,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "av1-http",
+      "phase": "load",
+      "elapsedMs": 233,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920"
+    },
+    {
+      "case": "av1-http",
+      "phase": "disposed",
+      "elapsedMs": 2212,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null
+    },
+    {
+      "case": "speed-file",
+      "phase": "load",
+      "elapsedMs": 358,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790"
+    },
+    {
+      "case": "speed-file",
+      "phase": "firstFrame",
+      "elapsedMs": 3892,
+      "status": "ready",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 0,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "speed-file",
+      "phase": "normal",
+      "elapsedMs": 14125,
+      "status": "playing",
+      "positionMs": 10195,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 247
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "fast",
+      "elapsedMs": 26337,
+      "status": "playing",
+      "positionMs": 19327,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 7,
+      "drops": 164,
+      "underruns": 80,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 43
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "disposed",
+      "elapsedMs": 27652,
+      "status": "playing",
+      "positionMs": 19327,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 7,
+      "drops": 164,
+      "underruns": 80
+    },
+    {
+      "case": "speed-http",
+      "phase": "load",
+      "elapsedMs": 134,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790"
+    },
+    {
+      "case": "speed-http",
+      "phase": "disposed",
+      "elapsedMs": 2983,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null
+    },
+    {
+      "case": "continuous",
+      "phase": "load",
+      "elapsedMs": 344,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790"
+    },
+    {
+      "case": "continuous",
+      "phase": "firstFrame",
+      "elapsedMs": 3749,
+      "status": "ready",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 0,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-1",
+      "elapsedMs": 63870,
+      "status": "playing",
+      "positionMs": 59801,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 1439
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-2",
+      "elapsedMs": 123934,
+      "status": "playing",
+      "positionMs": 119754,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 2881
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-3",
+      "elapsedMs": 184001,
+      "status": "playing",
+      "positionMs": 179917,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 4323
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-4",
+      "elapsedMs": 244066,
+      "status": "playing",
+      "positionMs": 239958,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 5763
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-5",
+      "elapsedMs": 304152,
+      "status": "playing",
+      "positionMs": 300086,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 7206
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-6",
+      "elapsedMs": 364202,
+      "status": "playing",
+      "positionMs": 360164,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 8647
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-7",
+      "elapsedMs": 424251,
+      "status": "playing",
+      "positionMs": 420105,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 10089
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-8",
+      "elapsedMs": 484301,
+      "status": "playing",
+      "positionMs": 480159,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 11530
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-9",
+      "elapsedMs": 544358,
+      "status": "playing",
+      "positionMs": 540256,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 12971
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-10",
+      "elapsedMs": 604454,
+      "status": "playing",
+      "positionMs": 600396,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 14413
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-11",
+      "elapsedMs": 664519,
+      "status": "playing",
+      "positionMs": 660345,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 15855
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-12",
+      "elapsedMs": 724551,
+      "status": "playing",
+      "positionMs": 720389,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 17295
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-13",
+      "elapsedMs": 784684,
+      "status": "playing",
+      "positionMs": 780648,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 18739
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-14",
+      "elapsedMs": 844751,
+      "status": "playing",
+      "positionMs": 840726,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 20181
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-15",
+      "elapsedMs": 905006,
+      "status": "playing",
+      "positionMs": 900805,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 21623
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-16",
+      "elapsedMs": 965071,
+      "status": "playing",
+      "positionMs": 961098,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 23069
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-17",
+      "elapsedMs": 1025119,
+      "status": "playing",
+      "positionMs": 1021040,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 24510
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-18",
+      "elapsedMs": 1085198,
+      "status": "playing",
+      "positionMs": 1081087,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 25951
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-19",
+      "elapsedMs": 1145248,
+      "status": "playing",
+      "positionMs": 1141167,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 27393
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "minute-20",
+      "elapsedMs": 1205320,
+      "status": "playing",
+      "positionMs": 1201107,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 28835
+      }
+    },
+    {
+      "case": "continuous",
+      "phase": "disposed",
+      "elapsedMs": 1206633,
+      "status": "playing",
+      "positionMs": 1201371,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0
+    }
+  ],
+  "memory": [
+    {
+      "wallSeconds": 2,
+      "pid": "10970",
+      "pssKiB": 197170
+    },
+    {
+      "wallSeconds": 15,
+      "pid": "10970",
+      "pssKiB": 152748,
+      "case": "av1-file",
+      "phase": "seek"
+    },
+    {
+      "wallSeconds": 27,
+      "pid": "10970",
+      "pssKiB": 172345,
+      "case": "speed-file",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 40,
+      "pid": "10970",
+      "pssKiB": 167098,
+      "case": "speed-file",
+      "phase": "normal"
+    },
+    {
+      "wallSeconds": 53,
+      "pid": "10970",
+      "pssKiB": 184741,
+      "case": "continuous",
+      "phase": "load"
+    },
+    {
+      "wallSeconds": 66,
+      "pid": "10970",
+      "pssKiB": 164756,
+      "case": "continuous",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 79,
+      "pid": "10970",
+      "pssKiB": 163394,
+      "case": "continuous",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 92,
+      "pid": "10970",
+      "pssKiB": 161514,
+      "case": "continuous",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 106,
+      "pid": "10970",
+      "pssKiB": 160772,
+      "case": "continuous",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 119,
+      "pid": "10970",
+      "pssKiB": 161531,
+      "case": "continuous",
+      "phase": "minute-1"
+    },
+    {
+      "wallSeconds": 133,
+      "pid": "10970",
+      "pssKiB": 161494,
+      "case": "continuous",
+      "phase": "minute-1"
+    },
+    {
+      "wallSeconds": 146,
+      "pid": "10970",
+      "pssKiB": 161903,
+      "case": "continuous",
+      "phase": "minute-1"
+    },
+    {
+      "wallSeconds": 160,
+      "pid": "10970",
+      "pssKiB": 162305,
+      "case": "continuous",
+      "phase": "minute-1"
+    },
+    {
+      "wallSeconds": 173,
+      "pid": "10970",
+      "pssKiB": 159945,
+      "case": "continuous",
+      "phase": "minute-1"
+    },
+    {
+      "wallSeconds": 187,
+      "pid": "10970",
+      "pssKiB": 159937,
+      "case": "continuous",
+      "phase": "minute-2"
+    },
+    {
+      "wallSeconds": 200,
+      "pid": "10970",
+      "pssKiB": 160064,
+      "case": "continuous",
+      "phase": "minute-2"
+    },
+    {
+      "wallSeconds": 214,
+      "pid": "10970",
+      "pssKiB": 160096,
+      "case": "continuous",
+      "phase": "minute-2"
+    },
+    {
+      "wallSeconds": 227,
+      "pid": "10970",
+      "pssKiB": 160301,
+      "case": "continuous",
+      "phase": "minute-2"
+    },
+    {
+      "wallSeconds": 241,
+      "pid": "10970",
+      "pssKiB": 160044,
+      "case": "continuous",
+      "phase": "minute-3"
+    },
+    {
+      "wallSeconds": 254,
+      "pid": "10970",
+      "pssKiB": 160200,
+      "case": "continuous",
+      "phase": "minute-3"
+    },
+    {
+      "wallSeconds": 268,
+      "pid": "10970",
+      "pssKiB": 160511,
+      "case": "continuous",
+      "phase": "minute-3"
+    },
+    {
+      "wallSeconds": 281,
+      "pid": "10970",
+      "pssKiB": 158582,
+      "case": "continuous",
+      "phase": "minute-3"
+    },
+    {
+      "wallSeconds": 295,
+      "pid": "10970",
+      "pssKiB": 158061,
+      "case": "continuous",
+      "phase": "minute-3"
+    },
+    {
+      "wallSeconds": 308,
+      "pid": "10970",
+      "pssKiB": 154173,
+      "case": "continuous",
+      "phase": "minute-4"
+    },
+    {
+      "wallSeconds": 322,
+      "pid": "10970",
+      "pssKiB": 154891,
+      "case": "continuous",
+      "phase": "minute-4"
+    },
+    {
+      "wallSeconds": 336,
+      "pid": "10970",
+      "pssKiB": 154624,
+      "case": "continuous",
+      "phase": "minute-4"
+    },
+    {
+      "wallSeconds": 349,
+      "pid": "10970",
+      "pssKiB": 155669,
+      "case": "continuous",
+      "phase": "minute-4"
+    },
+    {
+      "wallSeconds": 363,
+      "pid": "10970",
+      "pssKiB": 155374,
+      "case": "continuous",
+      "phase": "minute-5"
+    },
+    {
+      "wallSeconds": 376,
+      "pid": "10970",
+      "pssKiB": 155537,
+      "case": "continuous",
+      "phase": "minute-5"
+    },
+    {
+      "wallSeconds": 390,
+      "pid": "10970",
+      "pssKiB": 155438,
+      "case": "continuous",
+      "phase": "minute-5"
+    },
+    {
+      "wallSeconds": 403,
+      "pid": "10970",
+      "pssKiB": 155574,
+      "case": "continuous",
+      "phase": "minute-5"
+    },
+    {
+      "wallSeconds": 417,
+      "pid": "10970",
+      "pssKiB": 154398,
+      "case": "continuous",
+      "phase": "minute-5"
+    },
+    {
+      "wallSeconds": 430,
+      "pid": "10970",
+      "pssKiB": 155634,
+      "case": "continuous",
+      "phase": "minute-6"
+    },
+    {
+      "wallSeconds": 444,
+      "pid": "10970",
+      "pssKiB": 155686,
+      "case": "continuous",
+      "phase": "minute-6"
+    },
+    {
+      "wallSeconds": 457,
+      "pid": "10970",
+      "pssKiB": 155650,
+      "case": "continuous",
+      "phase": "minute-6"
+    },
+    {
+      "wallSeconds": 471,
+      "pid": "10970",
+      "pssKiB": 155726,
+      "case": "continuous",
+      "phase": "minute-6"
+    },
+    {
+      "wallSeconds": 484,
+      "pid": "10970",
+      "pssKiB": 155896,
+      "case": "continuous",
+      "phase": "minute-7"
+    },
+    {
+      "wallSeconds": 498,
+      "pid": "10970",
+      "pssKiB": 155904,
+      "case": "continuous",
+      "phase": "minute-7"
+    },
+    {
+      "wallSeconds": 511,
+      "pid": "10970",
+      "pssKiB": 156268,
+      "case": "continuous",
+      "phase": "minute-7"
+    },
+    {
+      "wallSeconds": 525,
+      "pid": "10970",
+      "pssKiB": 156076,
+      "case": "continuous",
+      "phase": "minute-7"
+    },
+    {
+      "wallSeconds": 538,
+      "pid": "10970",
+      "pssKiB": 155472,
+      "case": "continuous",
+      "phase": "minute-8"
+    },
+    {
+      "wallSeconds": 552,
+      "pid": "10970",
+      "pssKiB": 156148,
+      "case": "continuous",
+      "phase": "minute-8"
+    },
+    {
+      "wallSeconds": 565,
+      "pid": "10970",
+      "pssKiB": 156292,
+      "case": "continuous",
+      "phase": "minute-8"
+    },
+    {
+      "wallSeconds": 579,
+      "pid": "10970",
+      "pssKiB": 156650,
+      "case": "continuous",
+      "phase": "minute-8"
+    },
+    {
+      "wallSeconds": 592,
+      "pid": "10970",
+      "pssKiB": 156789,
+      "case": "continuous",
+      "phase": "minute-8"
+    },
+    {
+      "wallSeconds": 606,
+      "pid": "10970",
+      "pssKiB": 156395,
+      "case": "continuous",
+      "phase": "minute-9"
+    },
+    {
+      "wallSeconds": 620,
+      "pid": "10970",
+      "pssKiB": 156268,
+      "case": "continuous",
+      "phase": "minute-9"
+    },
+    {
+      "wallSeconds": 633,
+      "pid": "10970",
+      "pssKiB": 156284,
+      "case": "continuous",
+      "phase": "minute-9"
+    },
+    {
+      "wallSeconds": 646,
+      "pid": "10970",
+      "pssKiB": 156298,
+      "case": "continuous",
+      "phase": "minute-9"
+    },
+    {
+      "wallSeconds": 660,
+      "pid": "10970",
+      "pssKiB": 155717,
+      "case": "continuous",
+      "phase": "minute-10"
+    },
+    {
+      "wallSeconds": 673,
+      "pid": "10970",
+      "pssKiB": 156298,
+      "case": "continuous",
+      "phase": "minute-10"
+    },
+    {
+      "wallSeconds": 687,
+      "pid": "10970",
+      "pssKiB": 156330,
+      "case": "continuous",
+      "phase": "minute-10"
+    },
+    {
+      "wallSeconds": 700,
+      "pid": "10970",
+      "pssKiB": 156338,
+      "case": "continuous",
+      "phase": "minute-10"
+    },
+    {
+      "wallSeconds": 714,
+      "pid": "10970",
+      "pssKiB": 156370,
+      "case": "continuous",
+      "phase": "minute-10"
+    },
+    {
+      "wallSeconds": 727,
+      "pid": "10970",
+      "pssKiB": 156402,
+      "case": "continuous",
+      "phase": "minute-11"
+    },
+    {
+      "wallSeconds": 741,
+      "pid": "10970",
+      "pssKiB": 156422,
+      "case": "continuous",
+      "phase": "minute-11"
+    },
+    {
+      "wallSeconds": 755,
+      "pid": "10970",
+      "pssKiB": 156370,
+      "case": "continuous",
+      "phase": "minute-11"
+    },
+    {
+      "wallSeconds": 768,
+      "pid": "10970",
+      "pssKiB": 156430,
+      "case": "continuous",
+      "phase": "minute-11"
+    },
+    {
+      "wallSeconds": 782,
+      "pid": "10970",
+      "pssKiB": 155774,
+      "case": "continuous",
+      "phase": "minute-12"
+    },
+    {
+      "wallSeconds": 795,
+      "pid": "10970",
+      "pssKiB": 156550,
+      "case": "continuous",
+      "phase": "minute-12"
+    },
+    {
+      "wallSeconds": 809,
+      "pid": "10970",
+      "pssKiB": 156590,
+      "case": "continuous",
+      "phase": "minute-12"
+    },
+    {
+      "wallSeconds": 822,
+      "pid": "10970",
+      "pssKiB": 156578,
+      "case": "continuous",
+      "phase": "minute-12"
+    },
+    {
+      "wallSeconds": 836,
+      "pid": "10970",
+      "pssKiB": 156738,
+      "case": "continuous",
+      "phase": "minute-12"
+    },
+    {
+      "wallSeconds": 849,
+      "pid": "10970",
+      "pssKiB": 156842,
+      "case": "continuous",
+      "phase": "minute-13"
+    },
+    {
+      "wallSeconds": 863,
+      "pid": "10970",
+      "pssKiB": 157350,
+      "case": "continuous",
+      "phase": "minute-13"
+    },
+    {
+      "wallSeconds": 876,
+      "pid": "10970",
+      "pssKiB": 157325,
+      "case": "continuous",
+      "phase": "minute-13"
+    },
+    {
+      "wallSeconds": 890,
+      "pid": "10970",
+      "pssKiB": 157296,
+      "case": "continuous",
+      "phase": "minute-13"
+    },
+    {
+      "wallSeconds": 903,
+      "pid": "10970",
+      "pssKiB": 156553,
+      "case": "continuous",
+      "phase": "minute-14"
+    },
+    {
+      "wallSeconds": 917,
+      "pid": "10970",
+      "pssKiB": 157173,
+      "case": "continuous",
+      "phase": "minute-14"
+    },
+    {
+      "wallSeconds": 930,
+      "pid": "10970",
+      "pssKiB": 157225,
+      "case": "continuous",
+      "phase": "minute-14"
+    },
+    {
+      "wallSeconds": 944,
+      "pid": "10970",
+      "pssKiB": 157209,
+      "case": "continuous",
+      "phase": "minute-14"
+    },
+    {
+      "wallSeconds": 957,
+      "pid": "10970",
+      "pssKiB": 157237,
+      "case": "continuous",
+      "phase": "minute-14"
+    },
+    {
+      "wallSeconds": 971,
+      "pid": "10970",
+      "pssKiB": 157233,
+      "case": "continuous",
+      "phase": "minute-15"
+    },
+    {
+      "wallSeconds": 984,
+      "pid": "10970",
+      "pssKiB": 157593,
+      "case": "continuous",
+      "phase": "minute-15"
+    },
+    {
+      "wallSeconds": 998,
+      "pid": "10970",
+      "pssKiB": 157567,
+      "case": "continuous",
+      "phase": "minute-15"
+    },
+    {
+      "wallSeconds": 1011,
+      "pid": "10970",
+      "pssKiB": 157535,
+      "case": "continuous",
+      "phase": "minute-15"
+    },
+    {
+      "wallSeconds": 1025,
+      "pid": "10970",
+      "pssKiB": 157551,
+      "case": "continuous",
+      "phase": "minute-16"
+    },
+    {
+      "wallSeconds": 1038,
+      "pid": "10970",
+      "pssKiB": 157578,
+      "case": "continuous",
+      "phase": "minute-16"
+    },
+    {
+      "wallSeconds": 1051,
+      "pid": "10970",
+      "pssKiB": 154384,
+      "case": "continuous",
+      "phase": "minute-16"
+    },
+    {
+      "wallSeconds": 1065,
+      "pid": "10970",
+      "pssKiB": 154318,
+      "case": "continuous",
+      "phase": "minute-16"
+    },
+    {
+      "wallSeconds": 1078,
+      "pid": "10970",
+      "pssKiB": 154380,
+      "case": "continuous",
+      "phase": "minute-17"
+    },
+    {
+      "wallSeconds": 1092,
+      "pid": "10970",
+      "pssKiB": 154432,
+      "case": "continuous",
+      "phase": "minute-17"
+    },
+    {
+      "wallSeconds": 1105,
+      "pid": "10970",
+      "pssKiB": 154432,
+      "case": "continuous",
+      "phase": "minute-17"
+    },
+    {
+      "wallSeconds": 1119,
+      "pid": "10970",
+      "pssKiB": 154484,
+      "case": "continuous",
+      "phase": "minute-17"
+    },
+    {
+      "wallSeconds": 1132,
+      "pid": "10970",
+      "pssKiB": 154380,
+      "case": "continuous",
+      "phase": "minute-17"
+    },
+    {
+      "wallSeconds": 1146,
+      "pid": "10970",
+      "pssKiB": 154412,
+      "case": "continuous",
+      "phase": "minute-18"
+    },
+    {
+      "wallSeconds": 1159,
+      "pid": "10970",
+      "pssKiB": 154396,
+      "case": "continuous",
+      "phase": "minute-18"
+    },
+    {
+      "wallSeconds": 1173,
+      "pid": "10970",
+      "pssKiB": 154384,
+      "case": "continuous",
+      "phase": "minute-18"
+    },
+    {
+      "wallSeconds": 1186,
+      "pid": "10970",
+      "pssKiB": 154508,
+      "case": "continuous",
+      "phase": "minute-18"
+    },
+    {
+      "wallSeconds": 1200,
+      "pid": "10970",
+      "pssKiB": 154496,
+      "case": "continuous",
+      "phase": "minute-19"
+    },
+    {
+      "wallSeconds": 1213,
+      "pid": "10970",
+      "pssKiB": 154532,
+      "case": "continuous",
+      "phase": "minute-19"
+    },
+    {
+      "wallSeconds": 1227,
+      "pid": "10970",
+      "pssKiB": 154528,
+      "case": "continuous",
+      "phase": "minute-19"
+    },
+    {
+      "wallSeconds": 1240,
+      "pid": "10970",
+      "pssKiB": 154556,
+      "case": "continuous",
+      "phase": "minute-19"
+    },
+    {
+      "wallSeconds": 1254,
+      "pid": "10970",
+      "pssKiB": 154540,
+      "case": "continuous",
+      "phase": "minute-19"
+    }
+  ],
+  "resources": [
+    {
+      "wall": 1795268098,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "load",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268101,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268104,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268108,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268111,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "normal",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268115,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "normal",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268118,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "normal",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268122,
+      "pid": "10970",
+      "case": "speed-file",
+      "phase": "fast",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268125,
+      "pid": "10970",
+      "case": "speed-http",
+      "phase": "load",
+      "video": 0,
+      "provider": true
+    },
+    {
+      "wall": 1795268128,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "load",
+      "video": 0,
+      "provider": true
+    },
+    {
+      "wall": 1795268140,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268153,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268165,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268177,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268189,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "firstFrame",
+      "video": 1,
+      "provider": true
+    },
+    {
+      "wall": 1795268245,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-1",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268257,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-2",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268270,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-2",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268282,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-2",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268294,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-2",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268307,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-2",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268319,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-3",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268332,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-3",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268344,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-3",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268356,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-3",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268369,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-3",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268381,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-4",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268394,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-4",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268406,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-4",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268419,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-4",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268431,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-4",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268444,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-5",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268456,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-5",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268468,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-5",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268481,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-5",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268493,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-6",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268506,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-6",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268518,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-6",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268530,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-6",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268543,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-6",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268555,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-7",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268567,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-7",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268580,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-7",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268592,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-7",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268605,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-7",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268617,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-8",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268629,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-8",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268642,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-8",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268654,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-8",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268666,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-8",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268679,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-9",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268691,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-9",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268704,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-9",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268716,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-9",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268728,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-9",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268741,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-10",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268753,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-10",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268766,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-10",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268778,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-10",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268790,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-10",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268803,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-11",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268815,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-11",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268828,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-11",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268840,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-11",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268853,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-12",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268865,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-12",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268877,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-12",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268890,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-12",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268902,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-12",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268915,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-13",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268927,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-13",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268940,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-13",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268952,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-13",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268965,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-13",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268977,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-14",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795268989,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-14",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269002,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-14",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269014,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-14",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269027,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-14",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269039,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-15",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269051,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-15",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269064,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-15",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269076,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-15",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269088,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-15",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269101,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-16",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269113,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-16",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269126,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-16",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269138,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-16",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269151,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-16",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269163,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-17",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269175,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-17",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269188,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-17",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269200,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-17",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269212,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-17",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269225,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-18",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269237,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-18",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269250,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-18",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269262,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-18",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269274,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-19",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269287,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-19",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269299,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-19",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269312,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-19",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269324,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "minute-19",
+      "video": 1,
+      "provider": true,
+      "trimMemoryLevel": 15
+    },
+    {
+      "wall": 1795269336,
+      "pid": "10970",
+      "case": "continuous",
+      "phase": "disposed",
+      "video": 0,
+      "provider": true,
+      "trimMemoryLevel": 15
+    }
+  ],
+  "http": [
+    {
+      "asset": "mkv-av1-opus.mkv",
+      "method": "GET",
+      "start": 0,
+      "end": 65951,
+      "bytesWritten": 65952
+    },
+    {
+      "asset": "mkv-av1-opus.mkv",
+      "method": "GET",
+      "start": 65866,
+      "end": 65951,
+      "bytesWritten": 86
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 0,
+      "end": 4957952,
+      "bytesWritten": 4957953
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 4945384,
+      "end": 4957952,
+      "bytesWritten": 12569
+    }
+  ],
+  "diagnostics": [
+    "11-21 21:34:32.203 10970 10970 I flutter : 00:00 +0: Android TV av1-file",
+    "11-21 21:34:51.561 10970 10970 I flutter : 00:19 +1: Android TV av1-http",
+    "11-21 21:34:53.402 10970 11200 E ExoPlayerImplInternal:   Caused by: androidx.media3.datasource.HttpDataSource$HttpDataSourceException: java.io.IOException: java.util.concurrent.ExecutionException: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:34:53.402 10970 11200 E ExoPlayerImplInternal:   Caused by: java.io.IOException: java.util.concurrent.ExecutionException: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:34:53.402 10970 11200 E ExoPlayerImplInternal:   Caused by: java.util.concurrent.ExecutionException: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:34:53.402 10970 11200 E ExoPlayerImplInternal:   Caused by: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:34:54.247 10970 10970 I flutter : The following YlPlayerException was thrown running a test:",
+    "11-21 21:34:54.247 10970 10970 I flutter : YlFailure(category: network, code: network.connection_lost, retryable: true, scope: command,",
+    "11-21 21:34:54.261 10970 10970 I flutter : 00:22 +1: Android TV av1-http [E]",
+    "11-21 21:34:54.272 10970 10970 I flutter : 00:22 +1 -1: Android TV speed-file",
+    "11-21 21:35:09.807 10970 11237 D YlPlayer: speedHealth speed=1.5 bufferedMediaMs=0 bufferedPlayoutMs=0 allocatorBytes=131072 targetBytes=16777216 tunnelingRequested=false rebufferCount=2 droppedFrames=0 audioUnderruns=0 loading=true supplyEvidence=unknown transferBitsPerSecond=unknown bufferTrend=shrinking consumedMediaMs=183",
+    "11-21 21:35:19.824 10970 11237 D YlPlayer: speedHealth speed=1.5 bufferedMediaMs=79288 bufferedPlayoutMs=52858 allocatorBytes=393216 targetBytes=16777216 tunnelingRequested=false rebufferCount=6 droppedFrames=115 audioUnderruns=47 loading=true supplyEvidence=unknown transferBitsPerSecond=unknown bufferTrend=growing consumedMediaMs=279",
+    "11-21 21:35:22.939 10970 10970 I flutter : The following TestFailure was thrown running a test:",
+    "11-21 21:35:22.939 10970 10970 I flutter : Expected: a numeric value within <0.25> of <1.5>",
+    "11-21 21:35:22.939 10970 10970 I flutter :   Actual: <0.7545860188398612>",
+    "11-21 21:35:22.939 10970 10970 I flutter :    Which:  differs by <0.7454139811601388>",
+    "11-21 21:35:22.941 10970 10970 I flutter : 00:50 +1 -1: Android TV speed-file [E]",
+    "11-21 21:35:22.943 10970 10970 I flutter : 00:50 +1 -2: Android TV speed-http",
+    "11-21 21:35:26.312 10970 11499 E ExoPlayerImplInternal:   Caused by: androidx.media3.datasource.HttpDataSource$HttpDataSourceException: java.io.IOException: java.util.concurrent.ExecutionException: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:35:26.312 10970 11499 E ExoPlayerImplInternal:   Caused by: java.io.IOException: java.util.concurrent.ExecutionException: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:35:26.312 10970 11499 E ExoPlayerImplInternal:   Caused by: java.util.concurrent.ExecutionException: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:35:26.312 10970 11499 E ExoPlayerImplInternal:   Caused by: java.io.IOException: unexpected end of stream on http://127.0.0.1:54180/...",
+    "11-21 21:35:26.852 10970 10970 I flutter : The following YlPlayerException was thrown running a test:",
+    "11-21 21:35:26.852 10970 10970 I flutter : YlFailure(category: network, code: network.connection_lost, retryable: true, scope: command,",
+    "11-21 21:35:26.853 10970 10970 I flutter : 00:54 +1 -2: Android TV speed-http [E]",
+    "11-21 21:35:26.855 10970 10970 I flutter : 00:54 +1 -3: Android TV continuous",
+    "11-21 21:55:34.430 10970 10970 I flutter : 21:02 +2 -3: (tearDownAll)",
+    "11-21 21:55:34.459 10970 10970 I flutter : 21:02 +3 -3: Some tests failed."
+  ]
+}

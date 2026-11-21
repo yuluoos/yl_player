@@ -1,0 +1,272 @@
+{
+  "install": {
+    "apk": "5e9a73a63577293b6c298f1796889f5fe59a9d96ba965de1e9f66f9d903a579b",
+    "installed": "5e9a73a63577293b6c298f1796889f5fe59a9d96ba965de1e9f66f9d903a579b",
+    "case": "lifecycle",
+    "base": "9bf8301d8792260c49b6a933a1c3b7570f5c6bae",
+    "pid": "17661"
+  },
+  "framework": {
+    "terminal": true,
+    "passed": true,
+    "pid": "17661"
+  },
+  "afterRelease": {
+    "pid": "17661",
+    "observed": true,
+    "videoCodecs": 0,
+    "pssKiB": 188464
+  },
+  "samples": [
+    {
+      "case": "lifecycle",
+      "phase": "load",
+      "elapsedMs": 1680,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790"
+    },
+    {
+      "case": "lifecycle",
+      "phase": "firstFrame",
+      "elapsedMs": 8446,
+      "status": "buffering",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "lifecycle",
+      "phase": "normal",
+      "elapsedMs": 18693,
+      "status": "playing",
+      "positionMs": 9726,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 238
+      },
+      "wallMs": 10008,
+      "advancedMs": 9726,
+      "actualSpeed": 0.9718225419664268
+    },
+    {
+      "case": "lifecycle",
+      "phase": "pause",
+      "elapsedMs": 19094,
+      "status": "paused",
+      "positionMs": 10192,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 246
+      }
+    },
+    {
+      "case": "lifecycle",
+      "phase": "pausedSeek",
+      "elapsedMs": 20247,
+      "status": "buffering",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 246
+      }
+    },
+    {
+      "case": "lifecycle",
+      "phase": "unmounted",
+      "elapsedMs": 21420,
+      "status": "ready",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 3,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1
+      }
+    },
+    {
+      "case": "lifecycle",
+      "phase": "remounted",
+      "elapsedMs": 29734,
+      "status": "playing",
+      "positionMs": 96999,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 175
+      },
+      "wallMs": 8006,
+      "advancedMs": 6999,
+      "actualSpeed": 0.8742193354983763
+    },
+    {
+      "case": "lifecycle",
+      "phase": "frames",
+      "elapsedMs": 29783,
+      "status": "playing",
+      "positionMs": 96999,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0,
+      "frames": [
+        {
+          "kind": "frame",
+          "sessionId": "a1-s1",
+          "timeMs": 5236006,
+          "surfaceId": 227974232,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        },
+        {
+          "kind": "frame",
+          "sessionId": "a1-s1",
+          "timeMs": 5236801,
+          "surfaceId": 227974232,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        }
+      ]
+    },
+    {
+      "case": "lifecycle",
+      "phase": "disposed",
+      "elapsedMs": 30774,
+      "status": "playing",
+      "positionMs": 96999,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0
+    }
+  ],
+  "memory": [
+    {
+      "wallSeconds": 2,
+      "pid": "17661",
+      "videoCodecs": 0,
+      "pssKiB": 214130
+    },
+    {
+      "wallSeconds": 7,
+      "pid": "17661",
+      "videoCodecs": 0,
+      "pssKiB": 227048,
+      "case": "lifecycle",
+      "phase": "load"
+    },
+    {
+      "wallSeconds": 11,
+      "pid": "17661",
+      "videoCodecs": 1,
+      "pssKiB": 218242,
+      "case": "lifecycle",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 16,
+      "pid": "17661",
+      "videoCodecs": 1,
+      "pssKiB": 212899,
+      "case": "lifecycle",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 21,
+      "pid": "17661",
+      "videoCodecs": 1,
+      "pssKiB": 202034,
+      "case": "lifecycle",
+      "phase": "pause"
+    },
+    {
+      "wallSeconds": 26,
+      "pid": "17661",
+      "videoCodecs": 1,
+      "pssKiB": 200705,
+      "case": "lifecycle",
+      "phase": "unmounted"
+    },
+    {
+      "wallSeconds": 31,
+      "pid": "17661",
+      "videoCodecs": 1,
+      "pssKiB": 188096,
+      "case": "lifecycle",
+      "phase": "unmounted"
+    }
+  ],
+  "diagnostics": [
+    "11-21 22:05:59.484 17661 17661 I flutter : 00:00 +0: Android TV lifecycle",
+    "11-21 22:06:33.865 17661 17661 I flutter : 00:34 +1: (tearDownAll)",
+    "11-21 22:06:33.890 17661 17661 I flutter : 00:34 +2: All tests passed!"
+  ]
+}

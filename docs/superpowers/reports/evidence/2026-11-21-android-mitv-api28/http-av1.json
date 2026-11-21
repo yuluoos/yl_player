@@ -1,0 +1,192 @@
+{
+  "install": {
+    "apk": "92681c633a8138d90e35a49b6362a8588530c8a9ffa10db084c5538e8656e3f0",
+    "installed": "92681c633a8138d90e35a49b6362a8588530c8a9ffa10db084c5538e8656e3f0",
+    "case": "av1-http",
+    "base": "9bf8301d8792260c49b6a933a1c3b7570f5c6bae",
+    "pid": "16667"
+  },
+  "framework": {
+    "terminal": true,
+    "passed": true,
+    "pid": "16667"
+  },
+  "afterRelease": {
+    "pid": "16667",
+    "observed": true,
+    "videoCodecs": 0,
+    "pssKiB": 179147
+  },
+  "samples": [
+    {
+      "case": "av1-http",
+      "phase": "load",
+      "elapsedMs": 1307,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920"
+    },
+    {
+      "case": "av1-http",
+      "phase": "firstFrame",
+      "elapsedMs": 7071,
+      "status": "ready",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 0,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "av1-http",
+      "phase": "seek",
+      "elapsedMs": 8137,
+      "status": "playing",
+      "positionMs": 1671,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "targetMs": 1200
+    },
+    {
+      "case": "av1-http",
+      "phase": "seek",
+      "elapsedMs": 9203,
+      "status": "playing",
+      "positionMs": 795,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 3,
+      "drops": 0,
+      "underruns": 0,
+      "targetMs": 400
+    },
+    {
+      "case": "av1-http",
+      "phase": "seek",
+      "elapsedMs": 10238,
+      "status": "playing",
+      "positionMs": 2930,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0,
+      "targetMs": 2400
+    },
+    {
+      "case": "av1-http",
+      "phase": "completed",
+      "elapsedMs": 11303,
+      "status": "completed",
+      "positionMs": 4033,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "av1-http",
+      "phase": "disposed",
+      "elapsedMs": 11942,
+      "status": "completed",
+      "positionMs": 4033,
+      "engine": "media3",
+      "decoder": "OMX.MS.AV1.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 0,
+      "underruns": 0
+    }
+  ],
+  "memory": [
+    {
+      "wallSeconds": 2,
+      "pid": "16667",
+      "videoCodecs": 0,
+      "pssKiB": 198599,
+      "case": "av1-http",
+      "phase": "load"
+    },
+    {
+      "wallSeconds": 7,
+      "pid": "16667",
+      "videoCodecs": 1,
+      "pssKiB": 203324,
+      "case": "av1-http",
+      "phase": "load"
+    },
+    {
+      "wallSeconds": 11,
+      "pid": "16667",
+      "videoCodecs": 0,
+      "pssKiB": 180436,
+      "case": "av1-http",
+      "phase": "seek"
+    }
+  ],
+  "http": [
+    {
+      "asset": "mkv-av1-opus.mkv",
+      "method": "GET",
+      "start": 0,
+      "end": 65951,
+      "bytesWritten": 65952
+    },
+    {
+      "asset": "mkv-av1-opus.mkv",
+      "method": "GET",
+      "start": 65866,
+      "end": 65951,
+      "bytesWritten": 86
+    },
+    {
+      "asset": "mkv-av1-opus.mkv",
+      "method": "GET",
+      "start": 750,
+      "end": 65951,
+      "bytesWritten": 65202
+    },
+    {
+      "asset": "mkv-av1-opus.mkv",
+      "method": "GET",
+      "start": 744,
+      "end": 65951,
+      "bytesWritten": 65208
+    }
+  ],
+  "diagnostics": [
+    "11-21 22:02:03.809 16667 16667 I flutter : 00:00 +0: Android TV av1-http",
+    "11-21 22:02:19.041 16667 16667 I flutter : 00:15 +1: (tearDownAll)",
+    "11-21 22:02:19.061 16667 16667 I flutter : 00:15 +2: All tests passed!"
+  ]
+}

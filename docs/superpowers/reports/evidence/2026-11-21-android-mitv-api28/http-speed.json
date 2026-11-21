@@ -1,0 +1,488 @@
+{
+  "install": {
+    "apk": "18f44fa82e9146d3a9e4855f47af55937fcc68b10a5dea1eb156da763e22cae5",
+    "installed": "18f44fa82e9146d3a9e4855f47af55937fcc68b10a5dea1eb156da763e22cae5",
+    "case": "speed-http",
+    "base": "9bf8301d8792260c49b6a933a1c3b7570f5c6bae",
+    "pid": "16154"
+  },
+  "framework": {
+    "terminal": true,
+    "passed": false,
+    "pid": "16154"
+  },
+  "afterRelease": {
+    "pid": "16154",
+    "observed": true,
+    "videoCodecs": 0,
+    "pssKiB": 160184
+  },
+  "samples": [
+    {
+      "case": "speed-http",
+      "phase": "load",
+      "elapsedMs": 1373,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790"
+    },
+    {
+      "case": "speed-http",
+      "phase": "firstFrame",
+      "elapsedMs": 7686,
+      "status": "ready",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 0,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "speed-http",
+      "phase": "normal",
+      "elapsedMs": 17944,
+      "status": "playing",
+      "positionMs": 10018,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 245
+      },
+      "wallMs": 10028,
+      "advancedMs": 10018,
+      "actualSpeed": 0.9990027921818907
+    },
+    {
+      "case": "speed-http",
+      "phase": "fast",
+      "elapsedMs": 30078,
+      "status": "playing",
+      "positionMs": 18767,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 6,
+      "drops": 147,
+      "underruns": 86,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 47
+      },
+      "wallMs": 12015,
+      "advancedMs": 8749,
+      "actualSpeed": 0.7281731169371619
+    },
+    {
+      "case": "speed-http",
+      "phase": "fastSteady",
+      "elapsedMs": 42113,
+      "status": "playing",
+      "positionMs": 28407,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 12,
+      "drops": 329,
+      "underruns": 178,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 99
+      },
+      "wallMs": 12001,
+      "advancedMs": 9640,
+      "actualSpeed": 0.8032663944671278
+    },
+    {
+      "case": "speed-http",
+      "phase": "restored",
+      "elapsedMs": 52161,
+      "status": "buffering",
+      "positionMs": 32246,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 16,
+      "drops": 338,
+      "underruns": 178,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 54
+      },
+      "wallMs": 10002,
+      "advancedMs": 3839,
+      "actualSpeed": 0.3838232353529294
+    },
+    {
+      "case": "speed-http",
+      "phase": "pause",
+      "elapsedMs": 64226,
+      "status": "buffering",
+      "positionMs": 32246,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 16,
+      "drops": 338,
+      "underruns": 178,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 54
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "pausedSeek",
+      "elapsedMs": 65379,
+      "status": "buffering",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 16,
+      "drops": 338,
+      "underruns": 178,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 54
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "unmounted",
+      "elapsedMs": 66541,
+      "status": "ready",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 17,
+      "drops": 338,
+      "underruns": 178,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "remounted",
+      "elapsedMs": 74998,
+      "status": "playing",
+      "positionMs": 97166,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 18,
+      "drops": 340,
+      "underruns": 178,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 168
+      },
+      "wallMs": 8004,
+      "advancedMs": 7166,
+      "actualSpeed": 0.8953023488255872
+    },
+    {
+      "case": "speed-http",
+      "phase": "frames",
+      "elapsedMs": 75044,
+      "status": "playing",
+      "positionMs": 97166,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 18,
+      "drops": 340,
+      "underruns": 178,
+      "frames": [
+        {
+          "kind": "frame",
+          "sessionId": "a1-s1",
+          "timeMs": 4913932,
+          "surfaceId": 263387993,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        },
+        {
+          "kind": "frame",
+          "sessionId": "a1-s1",
+          "timeMs": 4914938,
+          "surfaceId": 263387993,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        }
+      ]
+    },
+    {
+      "case": "speed-http",
+      "phase": "disposed",
+      "elapsedMs": 75989,
+      "status": "playing",
+      "positionMs": 97425,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 18,
+      "drops": 340,
+      "underruns": 178
+    }
+  ],
+  "memory": [
+    {
+      "wallSeconds": 2,
+      "pid": "16154",
+      "videoCodecs": 0,
+      "pssKiB": 195938
+    },
+    {
+      "wallSeconds": 7,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 215227,
+      "case": "speed-http",
+      "phase": "load"
+    },
+    {
+      "wallSeconds": 10,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 187484,
+      "case": "speed-http",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 15,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 173394,
+      "case": "speed-http",
+      "phase": "firstFrame"
+    },
+    {
+      "wallSeconds": 20,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 175190,
+      "case": "speed-http",
+      "phase": "normal"
+    },
+    {
+      "wallSeconds": 23,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 162898,
+      "case": "speed-http",
+      "phase": "normal"
+    },
+    {
+      "wallSeconds": 28,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 163672,
+      "case": "speed-http",
+      "phase": "normal"
+    },
+    {
+      "wallSeconds": 31,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 163594,
+      "case": "speed-http",
+      "phase": "normal"
+    },
+    {
+      "wallSeconds": 36,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 164492,
+      "case": "speed-http",
+      "phase": "fast"
+    },
+    {
+      "wallSeconds": 41,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 164854,
+      "case": "speed-http",
+      "phase": "fast"
+    },
+    {
+      "wallSeconds": 45,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 164429,
+      "case": "speed-http",
+      "phase": "fastSteady"
+    },
+    {
+      "wallSeconds": 49,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 164081,
+      "case": "speed-http",
+      "phase": "fastSteady"
+    },
+    {
+      "wallSeconds": 54,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 163161,
+      "case": "speed-http",
+      "phase": "restored"
+    },
+    {
+      "wallSeconds": 58,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 161974,
+      "case": "speed-http",
+      "phase": "restored"
+    },
+    {
+      "wallSeconds": 63,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 163396,
+      "case": "speed-http",
+      "phase": "restored"
+    },
+    {
+      "wallSeconds": 68,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 165258,
+      "case": "speed-http",
+      "phase": "pausedSeek"
+    },
+    {
+      "wallSeconds": 72,
+      "pid": "16154",
+      "videoCodecs": 1,
+      "pssKiB": 164126,
+      "case": "speed-http",
+      "phase": "unmounted"
+    },
+    {
+      "wallSeconds": 77,
+      "pid": "16154",
+      "videoCodecs": 0,
+      "pssKiB": 165090,
+      "case": "speed-http",
+      "phase": "disposed"
+    }
+  ],
+  "http": [
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 0,
+      "end": 4957952,
+      "bytesWritten": 4957953
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 4945384,
+      "end": 4957952,
+      "bytesWritten": 12569
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 761,
+      "end": 4957952,
+      "bytesWritten": 4957192
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 39797,
+      "end": 4957952,
+      "bytesWritten": 4918156
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 110201,
+      "end": 4957952,
+      "bytesWritten": 4847752
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 352441,
+      "end": 4957952,
+      "bytesWritten": 4605512
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 375744,
+      "end": 4957952,
+      "bytesWritten": 4582209
+    }
+  ],
+  "diagnostics": [
+    "11-21 21:59:52.144 16154 16154 I flutter : 00:00 +0: Android TV speed-http",
+    "11-21 22:00:13.999 16154 16231 D YlPlayer: speedHealth speed=1.5 bufferedMediaMs=0 bufferedPlayoutMs=0 allocatorBytes=0 targetBytes=25165824 tunnelingRequested=false rebufferCount=2 droppedFrames=0 audioUnderruns=0 loading=true supplyEvidence=measured transferBitsPerSecond=402064 bufferTrend=unknown consumedMediaMs=unknown",
+    "11-21 22:00:24.223 16154 16231 D YlPlayer: speedHealth speed=1.5 bufferedMediaMs=120621 bufferedPlayoutMs=80414 allocatorBytes=524288 targetBytes=25165824 tunnelingRequested=false rebufferCount=5 droppedFrames=129 audioUnderruns=86 loading=true supplyEvidence=unknown transferBitsPerSecond=unknown bufferTrend=growing consumedMediaMs=254",
+    "11-21 22:00:34.353 16154 16231 D YlPlayer: speedHealth speed=1.5 bufferedMediaMs=250954 bufferedPlayoutMs=167302 allocatorBytes=1048576 targetBytes=25165824 tunnelingRequested=false rebufferCount=10 droppedFrames=262 audioUnderruns=142 loading=true supplyEvidence=unknown transferBitsPerSecond=unknown bufferTrend=growing consumedMediaMs=309",
+    "11-21 22:01:11.975 16154 16154 I flutter : The following TestFailure was thrown running a test:",
+    "11-21 22:01:11.975 16154 16154 I flutter : Expected: empty",
+    "11-21 22:01:11.975 16154 16154 I flutter :   Actual: [",
+    "11-21 22:01:11.975 16154 16154 I flutter :             'pause: Bad state: Playback wait failed: YlPlaybackStatus.buffering null'",
+    "11-21 22:01:11.991 16154 16154 I flutter : 01:19 +0: Android TV speed-http [E]",
+    "11-21 22:01:12.037 16154 16154 I flutter : 01:19 +0 -1: (tearDownAll)",
+    "11-21 22:01:12.077 16154 16154 I flutter : 01:19 +1 -1: Some tests failed."
+  ]
+}

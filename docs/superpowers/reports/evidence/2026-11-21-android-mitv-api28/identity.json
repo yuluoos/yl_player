@@ -1,0 +1,17 @@
+{
+  "model": "MiTV-MTTP0",
+  "board": "m7332",
+  "android": "9",
+  "sdk": "28",
+  "abi": "armeabi-v7a,armeabi",
+  "heapGrowthLimit": "192m",
+  "memTotalKiB": 1362636,
+  "televisionFeature": true,
+  "display": "Physical size: 1920x1080",
+  "registeredCodecs": [
+    "<MediaCodec name=\"OMX.MS.HEVC.Decoder\" type=\"video/hevc\" >",
+    "<MediaCodec name=\"OMX.MS.HEVC.Decoder.secure\" type=\"video/hevc\" >",
+    "<MediaCodec name=\"OMX.MS.AV1.Decoder\" type=\"video/av01\" >",
+    "<MediaCodec name=\"OMX.MS.AV1.Decoder.secure\" type=\"video/av01\" >"
+  ]
+}

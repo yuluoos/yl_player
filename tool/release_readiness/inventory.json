@@ -1192,6 +1192,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-oppo-substitute-script-behavior.md",
       "sha256": "cc99e215cb506c4a9424cd201fadb5da452570a9e1190697a1f348929b4ec39f",
       "kind": "report"
+    },
+    "android-mitv-api28-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-mitv-api28.md",
+      "sha256": "3a21593c43983921ea83d33a127734a0ed60e51202e76fc70a566fe67efa32ac",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1566,10 +1571,11 @@
         "remaining-local-acceptance-20261028",
         "remaining-device-acceptance-20261105",
         "android-hevc-main10-20261121",
-        "android-oppo-format-matrix-20261121"
+        "android-oppo-format-matrix-20261121",
+        "android-mitv-api28-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-av1-file-http-on-capable-hardware-after-38-of-40-oppo-same-build-passes"
+      "nextAction": "qualify-single-device-single-build-after-40-of-40-cumulative-format-passes"
     },
     {
       "requirement": "CAP-FORMAT",
@@ -2548,7 +2554,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-mitv-api28-20261121"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -2749,10 +2756,11 @@
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-mitv-api28-20261121"
       ],
       "acceptance": null,
-      "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs"
+      "nextAction": "qualify-minimum-api24-and-retest-speed-transitions-after-low-memory-32bit-api28-run"
     },
     {
       "requirement": "REG-OS",

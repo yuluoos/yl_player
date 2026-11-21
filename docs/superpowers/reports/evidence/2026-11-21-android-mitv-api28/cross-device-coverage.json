@@ -1,0 +1,288 @@
+{
+  "scope": "cumulative-across-devices-and-builds",
+  "required": 40,
+  "covered": 40,
+  "sameDeviceSameBuild": false,
+  "rows": [
+    {
+      "caseId": "avi-avc-mp3",
+      "transport": "file",
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "model": "OPPO CPH2065",
+      "runId": "c45f51db-d601-416f-93e0-42f6a264d1d0"
+    },
+    {
+      "caseId": "avi-avc-mp3",
+      "transport": "http",
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "model": "OPPO CPH2065",
+      "runId": "005856de-1f06-42e2-96f4-3e258adeb096"
+    },
+    {
+      "caseId": "flv-avc-mp3",
+      "transport": "file",
+      "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "model": "OPPO CPH2065",
+      "runId": "e6baecc7-ba22-48dc-9f9f-699b707d13cc"
+    },
+    {
+      "caseId": "flv-avc-mp3",
+      "transport": "http",
+      "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "model": "OPPO CPH2065",
+      "runId": "0a40cd16-d2fc-4e31-b8d4-fb15d6123f19"
+    },
+    {
+      "caseId": "mkv-av1-opus",
+      "transport": "file",
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "model": "MiTV-MTTP0",
+      "runId": "fd1d17df-11f5-4fbb-8587-6414404a6013"
+    },
+    {
+      "caseId": "mkv-av1-opus",
+      "transport": "http",
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "model": "MiTV-MTTP0",
+      "runId": "ccba3f7b-24f7-432f-8aba-1bf4f24c6f53"
+    },
+    {
+      "caseId": "mkv-avc-aac",
+      "transport": "file",
+      "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "model": "OPPO CPH2065",
+      "runId": "5fb9efde-f220-445f-a383-c8b1b4d05594"
+    },
+    {
+      "caseId": "mkv-avc-aac",
+      "transport": "http",
+      "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "model": "OPPO CPH2065",
+      "runId": "ddb18e57-61f3-4fc3-be6b-9017286b187b"
+    },
+    {
+      "caseId": "mkv-avc-aac-no-cues",
+      "transport": "file",
+      "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "model": "OPPO CPH2065",
+      "runId": "62ef958d-1220-41fa-bc86-7b289242316d"
+    },
+    {
+      "caseId": "mkv-avc-aac-no-cues",
+      "transport": "http",
+      "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "model": "OPPO CPH2065",
+      "runId": "4c92d512-a71f-48b7-b82c-b51051131282"
+    },
+    {
+      "caseId": "mkv-avc-ac3-51",
+      "transport": "file",
+      "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "model": "OPPO CPH2065",
+      "runId": "d74b9dcd-5db0-4997-b6b2-fb434a5d0c23"
+    },
+    {
+      "caseId": "mkv-avc-ac3-51",
+      "transport": "http",
+      "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "model": "OPPO CPH2065",
+      "runId": "2db3f521-79d7-4845-9389-80e387bb2991"
+    },
+    {
+      "caseId": "mkv-avc-dts",
+      "transport": "file",
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "model": "OPPO CPH2065",
+      "runId": "2adee337-b4c0-4b57-a034-59f98b2d228f"
+    },
+    {
+      "caseId": "mkv-avc-dts",
+      "transport": "http",
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "model": "OPPO CPH2065",
+      "runId": "5bbada5b-1f37-4d52-a13b-f3c44aa38927"
+    },
+    {
+      "caseId": "mkv-avc-eac3",
+      "transport": "file",
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "model": "OPPO CPH2065",
+      "runId": "b274d6a7-cb46-49df-b630-c7f417019ebd"
+    },
+    {
+      "caseId": "mkv-avc-eac3",
+      "transport": "http",
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "model": "OPPO CPH2065",
+      "runId": "6125bae6-9dd1-4fdc-b669-98441821dddb"
+    },
+    {
+      "caseId": "mkv-avc-flac",
+      "transport": "file",
+      "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "model": "OPPO CPH2065",
+      "runId": "d67c6a11-5e58-4cde-9d5a-63c7e1576dcc"
+    },
+    {
+      "caseId": "mkv-avc-flac",
+      "transport": "http",
+      "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "model": "OPPO CPH2065",
+      "runId": "ab1aa5c4-ad1f-4888-970d-3d402f6dcc9c"
+    },
+    {
+      "caseId": "mkv-avc-opus",
+      "transport": "file",
+      "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "model": "OPPO CPH2065",
+      "runId": "3f588d57-f83d-4db9-8696-f4ed84f9377e"
+    },
+    {
+      "caseId": "mkv-avc-opus",
+      "transport": "http",
+      "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "model": "OPPO CPH2065",
+      "runId": "72abe3ba-5286-43ae-8c36-c24fae1c1749"
+    },
+    {
+      "caseId": "mkv-avc-opus-hybrid",
+      "transport": "file",
+      "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "model": "OPPO CPH2065",
+      "runId": "e1eeb224-c0c1-41af-a118-b87398c7761b"
+    },
+    {
+      "caseId": "mkv-avc-opus-hybrid",
+      "transport": "http",
+      "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "model": "OPPO CPH2065",
+      "runId": "729c251d-7116-40e7-9c00-74ecf51da78b"
+    },
+    {
+      "caseId": "mkv-avc-opus-silk",
+      "transport": "file",
+      "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "model": "OPPO CPH2065",
+      "runId": "d2014057-8d70-4a75-b85b-d0184900decd"
+    },
+    {
+      "caseId": "mkv-avc-opus-silk",
+      "transport": "http",
+      "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "model": "OPPO CPH2065",
+      "runId": "8a618b71-3e41-4d70-ae99-d6d625462ccd"
+    },
+    {
+      "caseId": "mkv-avc-vorbis",
+      "transport": "file",
+      "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "model": "OPPO CPH2065",
+      "runId": "07fc8c6b-a351-4843-8abd-396fb0132485"
+    },
+    {
+      "caseId": "mkv-avc-vorbis",
+      "transport": "http",
+      "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "model": "OPPO CPH2065",
+      "runId": "44818ff5-5013-4bf0-b97d-c7065bea0809"
+    },
+    {
+      "caseId": "mkv-hevc-main10-aac",
+      "transport": "file",
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "model": "OPPO CPH2065",
+      "runId": "db06ad7f-0ea9-4241-bc26-baff126537ab"
+    },
+    {
+      "caseId": "mkv-hevc-main10-aac",
+      "transport": "http",
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "model": "OPPO CPH2065",
+      "runId": "2f02ceef-b519-40ab-ad26-373bf4d87bcf"
+    },
+    {
+      "caseId": "mov-hevc-aac",
+      "transport": "file",
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "model": "OPPO CPH2065",
+      "runId": "54247e2c-e20c-4629-890c-a2e1d0e635cf"
+    },
+    {
+      "caseId": "mov-hevc-aac",
+      "transport": "http",
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "model": "OPPO CPH2065",
+      "runId": "88620c7a-7f24-404e-b13b-f0bc891b0afd"
+    },
+    {
+      "caseId": "mp4-avc-aac",
+      "transport": "file",
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "model": "OPPO CPH2065",
+      "runId": "950f875b-a92b-46cb-85cc-0cf3210708b6"
+    },
+    {
+      "caseId": "mp4-avc-aac",
+      "transport": "http",
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "model": "OPPO CPH2065",
+      "runId": "412bf928-7df2-4495-8d47-2d1ba81cf829"
+    },
+    {
+      "caseId": "ps-avc-mp3",
+      "transport": "file",
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "model": "OPPO CPH2065",
+      "runId": "5897bf92-1568-474a-8344-94d5c6995f0b"
+    },
+    {
+      "caseId": "ps-avc-mp3",
+      "transport": "http",
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "model": "OPPO CPH2065",
+      "runId": "8652113f-0024-4fc6-8ca5-53ba0d1e82dd"
+    },
+    {
+      "caseId": "ts-avc-ac3",
+      "transport": "file",
+      "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "model": "OPPO CPH2065",
+      "runId": "2fa3ac1b-4f04-49c0-8008-c0568d673677"
+    },
+    {
+      "caseId": "ts-avc-ac3",
+      "transport": "http",
+      "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "model": "OPPO CPH2065",
+      "runId": "f18d31c5-b767-4742-9876-834ed5404114"
+    },
+    {
+      "caseId": "webm-vp9-opus",
+      "transport": "file",
+      "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "model": "OPPO CPH2065",
+      "runId": "8cfd423a-6048-45fa-850d-62ed146eb22d"
+    },
+    {
+      "caseId": "webm-vp9-opus",
+      "transport": "http",
+      "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "model": "OPPO CPH2065",
+      "runId": "5f45f544-ae15-43d2-861d-b51ac0fefe71"
+    },
+    {
+      "caseId": "webm-vp9-vorbis",
+      "transport": "file",
+      "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "model": "OPPO CPH2065",
+      "runId": "eff523ad-2814-496b-b4c1-d066cdabc726"
+    },
+    {
+      "caseId": "webm-vp9-vorbis",
+      "transport": "http",
+      "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "model": "OPPO CPH2065",
+      "runId": "e5b622e3-a672-4fe9-a1dd-a2da1c1e5409"
+    }
+  ]
+}
