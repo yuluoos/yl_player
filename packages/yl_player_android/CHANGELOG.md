@@ -1,3 +1,7 @@
+## 0.3.0-dev.8
+
+- Improve Mi TV playback when switching surfaces, changing DASH resolutions, recovering an expired HLS live window, or switching directly from 1× to 3×.
+
 ## 0.3.0-dev.7
 
 - Synchronize the package with the `0.3.0-dev.7` release.

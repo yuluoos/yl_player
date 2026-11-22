@@ -1,3 +1,7 @@
+## 0.3.0-dev.8
+
+- Redact quoted credentials and request header values from playback diagnostics.
+
 ## 0.3.0-dev.7
 
 - Synchronize the package with the `0.3.0-dev.7` release.

@@ -1,3 +1,7 @@
+## 0.3.0-dev.8
+
+- Size Android native video surfaces for the playback viewport and keep them mounted when subtitle cues change.
+
 ## 0.3.0-dev.7
 
 - Update the Apple backend to include the Swift type-checking fix for DTS header parsing.

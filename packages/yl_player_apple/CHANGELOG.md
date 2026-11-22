@@ -1,3 +1,7 @@
+## 0.3.0-dev.8
+
+- Improve buffered local MP4 startup, DASH recovery and audio clock handling on iOS and macOS.
+
 ## 0.3.0-dev.7
 
 - Simplify DTS header bit parsing for the Swift type checker without changing how bits are read.

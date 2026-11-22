@@ -1,3 +1,7 @@
+## 0.3.0-dev.8
+
+- Update the packaged Apple FFmpeg bridge to the reproducible Xcode 27.2 build.
+
 ## 0.3.0-dev.7
 
 - Synchronize the package with the `0.3.0-dev.7` release.
