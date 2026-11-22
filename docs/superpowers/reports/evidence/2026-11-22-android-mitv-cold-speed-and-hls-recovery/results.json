@@ -1,0 +1,588 @@
+{
+  "modifiedSourceSha256": {
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlLiveModePolicy.kt": "ab26316b2c13b45997078cf216435083036b83558753e4739283d595ad6ca679",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "7b91759fec2b34ab632652b32e45ec82434eb7d8d2436a6a1d90c3d4245d52df",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlFailureMapperTest.kt": "54f7c90da8d133bffa38277c303a1882f32919ea505504d3895d308fb0965005",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlLiveModePolicyTest.kt": "068b42a5f440bee25b85635238510c6662efcf0b8bb8e8a8a1895219b89cf6d0",
+    "tool/playback_network/live_fixture.py": "0b3278f44565b1a532a86149c38bbef4b6bec1a0a8c68a03f498bb0c8625648b",
+    "tool/playback_network/test_live_fixture.py": "ae3c8955cc1355616c13d4521791d38dc65ae1461a9181269bec6c1d524f6ed2",
+    "packages/yl_player/example/integration_test/android_hls_recovery_test.dart": "7e7611bdb1e4869c4ab92c9a278d555b0e406bc3e872992addcde9b4d995b8c4"
+  },
+  "androidJvm": {
+    "tests": 648,
+    "skipped": 3,
+    "errors": 0,
+    "failures": 0
+  },
+  "model": "MiTV-MTTP0",
+  "api": 28,
+  "sourceHead": "df5f892a7bd2221a5d89ee03557fd2dc9d6c517f",
+  "speed": [
+    {
+      "apk": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+      "kernel": "69710071b7ec73ee3f196d530c0e7a587a8a49be067be71c468acaaae34b4cd7",
+      "pid": "5825",
+      "entry": "Android TV speed-http",
+      "entrySeen": true,
+      "passed": false,
+      "terminal": true,
+      "coldStart": "cold-1",
+      "switches": [
+        {
+          "phase": "fast-3.0",
+          "firstFrameMs": 498,
+          "firstMediaSecondMs": 1230,
+          "wallMs": 12001,
+          "mediaMs": 33304,
+          "speed": 2.775102074827098,
+          "underruns": 0,
+          "withinThreshold": true
+        },
+        {
+          "phase": "repeat-3.0",
+          "firstFrameMs": 693,
+          "firstMediaSecondMs": 1415,
+          "wallMs": 12000,
+          "mediaMs": 32791,
+          "speed": 2.7325833333333334,
+          "underruns": 0,
+          "withinThreshold": false
+        }
+      ],
+      "steady3x": 2.991750687442713,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "restored1x": 0.9754,
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": [
+        "  Actual: ['repeat-3.0 requested 3.0, measured 2.7325833333333334']"
+      ]
+    },
+    {
+      "apk": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+      "kernel": "69710071b7ec73ee3f196d530c0e7a587a8a49be067be71c468acaaae34b4cd7",
+      "pid": "6524",
+      "entry": "Android TV speed-http",
+      "entrySeen": true,
+      "passed": true,
+      "terminal": true,
+      "coldStart": "cold-2",
+      "switches": [
+        {
+          "phase": "fast-3.0",
+          "firstFrameMs": 531,
+          "firstMediaSecondMs": 1002,
+          "wallMs": 12001,
+          "mediaMs": 33591,
+          "speed": 2.799016748604283,
+          "underruns": 0,
+          "withinThreshold": true
+        },
+        {
+          "phase": "repeat-3.0",
+          "firstFrameMs": 674,
+          "firstMediaSecondMs": 1184,
+          "wallMs": 12001,
+          "mediaMs": 33196,
+          "speed": 2.766102824764603,
+          "underruns": 0,
+          "withinThreshold": true
+        }
+      ],
+      "steady3x": 2.98325,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "restored1x": 0.9481051894810519,
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    },
+    {
+      "apk": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+      "kernel": "69710071b7ec73ee3f196d530c0e7a587a8a49be067be71c468acaaae34b4cd7",
+      "pid": "7307",
+      "entry": "Android TV speed-http",
+      "entrySeen": true,
+      "passed": true,
+      "terminal": true,
+      "coldStart": "cold-3",
+      "switches": [
+        {
+          "phase": "fast-3.0",
+          "firstFrameMs": 507,
+          "firstMediaSecondMs": 1121,
+          "wallMs": 12001,
+          "mediaMs": 33136,
+          "speed": 2.76110324139655,
+          "underruns": 0,
+          "withinThreshold": true
+        },
+        {
+          "phase": "repeat-3.0",
+          "firstFrameMs": 690,
+          "firstMediaSecondMs": 1177,
+          "wallMs": 12000,
+          "mediaMs": 33330,
+          "speed": 2.7775,
+          "underruns": 0,
+          "withinThreshold": true
+        }
+      ],
+      "steady3x": 3.0059161736521958,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "restored1x": 0.9874012598740126,
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    }
+  ],
+  "hls": {
+    "hls-1": {
+      "receipt": {
+        "apk": "25c7f273ea9cff83324291f9e99024701dc5d576d3fc4250988f12a4185ce425",
+        "kernel": "cdd44a3110370732b7250ad8bfa6d1b61183f37dc3d06443777fd9aa11bc87a1",
+        "pid": "8140",
+        "entry": "default HLS retries two 503 responses",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "master": [
+        {
+          "statuses": [
+            503,
+            503,
+            200
+          ],
+          "requestMs": [
+            2398,
+            2575,
+            3614
+          ],
+          "firstFrame": true,
+          "session": "a1-s1"
+        }
+      ],
+      "resumes": [
+        {
+          "mode": "smoothPlayback",
+          "session": "a2-s1",
+          "oldWindow": [
+            30,
+            35
+          ],
+          "newWindow": [
+            36,
+            41
+          ],
+          "pauseMs": 5436,
+          "resumeMs": 945,
+          "advanceUs": 541000,
+          "frames": 11,
+          "reconnects": null,
+          "status": "playing"
+        },
+        {
+          "mode": "lowLatency",
+          "session": "a2-s1",
+          "oldWindow": [
+            40,
+            45
+          ],
+          "newWindow": [
+            46,
+            51
+          ],
+          "pauseMs": 6458,
+          "resumeMs": 993,
+          "advanceUs": 525000,
+          "frames": 11,
+          "reconnects": null,
+          "status": "playing"
+        }
+      ],
+      "segmentRange": [
+        23,
+        41
+      ],
+      "segmentResponses": 21,
+      "fixtureSha": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b"
+    },
+    "hls-2": {
+      "receipt": {
+        "apk": "4eae4a5ba6e83348c92fb297800aaf2fb3d6c2cf4d5e5da94b9be1176a05fcc8",
+        "kernel": "7f21f3b6ea1101cb7580991d1620f15eece6b2941c68777e60d8b261fa2f9e92",
+        "pid": "8780",
+        "entry": "default HLS retries two 503 responses",
+        "entrySeen": true,
+        "passed": false,
+        "terminal": true
+      },
+      "master": [
+        {
+          "statuses": [
+            503,
+            503,
+            200
+          ],
+          "requestMs": [
+            2449,
+            2641,
+            3684
+          ],
+          "firstFrame": true,
+          "session": "a1-s1"
+        }
+      ],
+      "resumes": [
+        {
+          "mode": "smoothPlayback",
+          "session": "a2-s1",
+          "oldWindow": [
+            29,
+            34
+          ],
+          "newWindow": [
+            35,
+            40
+          ],
+          "requestAtResume": 41,
+          "requestAtEnd": 78,
+          "followFrames": 24,
+          "pauseMs": 5543,
+          "resumeMs": 950,
+          "advanceUs": 538000,
+          "frames": 12,
+          "reconnects": null,
+          "status": "playing"
+        }
+      ],
+      "segmentRange": [
+        23,
+        58
+      ],
+      "segmentResponses": 38,
+      "fixtureSha": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b"
+    },
+    "hls-3": {
+      "receipt": {
+        "apk": "6ef95fce30d96f581b4564d7547058e6fd64517f2666e835c5697d2ccc19708f",
+        "kernel": "e550c9466a5af52dc90b4109695182d6ff777c153385f11fc9c1e10d376a0faf",
+        "pid": "9650",
+        "entry": "default HLS retries two 503 responses",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "master": [
+        {
+          "statuses": [
+            503,
+            503,
+            200
+          ],
+          "requestMs": [
+            2300,
+            2478,
+            3518
+          ],
+          "firstFrame": true,
+          "session": "a1-s1"
+        }
+      ],
+      "resumes": [
+        {
+          "mode": "smoothPlayback",
+          "session": "a2-s1",
+          "oldWindow": [
+            29,
+            34
+          ],
+          "newWindow": [
+            35,
+            40
+          ],
+          "requestAtResume": 43,
+          "requestAtEnd": 80,
+          "followFrames": 24,
+          "pauseMs": 6341,
+          "resumeMs": 747,
+          "advanceUs": 564000,
+          "frames": 4,
+          "reconnects": null,
+          "status": "playing",
+          "newSegmentsAfterResume": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58
+          ]
+        },
+        {
+          "mode": "lowLatency",
+          "session": "a2-s1",
+          "oldWindow": [
+            56,
+            61
+          ],
+          "newWindow": [
+            62,
+            67
+          ],
+          "requestAtResume": 97,
+          "requestAtEnd": 131,
+          "followFrames": 26,
+          "pauseMs": 6526,
+          "resumeMs": 1002,
+          "advanceUs": 557000,
+          "frames": 14,
+          "reconnects": 1,
+          "status": "playing",
+          "newSegmentsAfterResume": [
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85
+          ]
+        }
+      ],
+      "segmentRange": [
+        22,
+        85
+      ],
+      "segmentResponses": 51,
+      "fixtureSha": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b"
+    },
+    "hls-4": {
+      "receipt": {
+        "apk": "142c8fd73ce5853d64cb7f507364908da8005654d66e327d409057e3dedbd440",
+        "kernel": "e9619bfa2c950e699e99eac5a22d58e38bc8103b689f4dccc02beee1ccb46300",
+        "pid": "10696",
+        "entry": "default HLS retries two 503 responses",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "master": [
+        {
+          "statuses": [
+            503,
+            503,
+            200
+          ],
+          "requestMs": [
+            2411,
+            2589,
+            3631
+          ],
+          "firstFrame": true,
+          "session": "a1-s1"
+        }
+      ],
+      "resumes": [
+        {
+          "mode": "smoothPlayback",
+          "session": "a2-s1",
+          "oldWindow": [
+            30,
+            35
+          ],
+          "newWindow": [
+            36,
+            41
+          ],
+          "requestAtResume": 47,
+          "requestAtEnd": 84,
+          "followFrames": 23,
+          "pauseMs": 6389,
+          "resumeMs": 934,
+          "advanceUs": 535000,
+          "frames": 17,
+          "retriesAfterResume": [],
+          "status": "playing",
+          "newSegmentsAfterResume": [
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59
+          ]
+        },
+        {
+          "mode": "lowLatency",
+          "session": "a2-s1",
+          "oldWindow": [
+            57,
+            62
+          ],
+          "newWindow": [
+            63,
+            68
+          ],
+          "requestAtResume": 98,
+          "requestAtEnd": 131,
+          "followFrames": 25,
+          "pauseMs": 5352,
+          "resumeMs": 976,
+          "advanceUs": 543000,
+          "frames": 16,
+          "retriesAfterResume": [
+            1
+          ],
+          "status": "playing",
+          "newSegmentsAfterResume": [
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85
+          ]
+        }
+      ],
+      "segmentRange": [
+        22,
+        85
+      ],
+      "segmentResponses": 53,
+      "fixtureSha": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b"
+    }
+  },
+  "build": {
+    "target": "integration_test/android_hls_recovery_test.dart",
+    "sourceSha256": "7e7611bdb1e4869c4ab92c9a278d555b0e406bc3e872992addcde9b4d995b8c4",
+    "sourceHead": "df5f892a7bd2221a5d89ee03557fd2dc9d6c517f",
+    "apk": "142c8fd73ce5853d64cb7f507364908da8005654d66e327d409057e3dedbd440",
+    "kernel": "e9619bfa2c950e699e99eac5a22d58e38bc8103b689f4dccc02beee1ccb46300"
+  },
+  "cleanup": {
+    "example": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+    "release": "86f6a60a3e0ae4b79f14a44bb1e0a056def7deeb8394d754e0b53d8a70f866f6",
+    "foreground": "mResumedActivity: ActivityRecord{cd181a7 u0 com.example.tvs/.MainActivity t262}",
+    "active": true,
+    "testPortsCleared": true,
+    "temporaryFixturesRestored": 232
+  },
+  "members": {
+    "cold-1/receipt.json": "13ae56d158f74c74957e04e0acc9ed906c919230c9e1db07120302d4a6c1873b",
+    "cold-1/observations.log": "1389e8825fa3c12b2fb453658afbdb87d3675d718333f6cea6a4b490ffcfadf5",
+    "cold-1/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "cold-2/receipt.json": "d66b6752e65feeaad7d3ed973ed5bf29a5f418483e252c069bf197d5467e527b",
+    "cold-2/observations.log": "66273fa7d642c09617dd337e4e8bd306c42854e3d673da49d0f975e1f9cbe8ae",
+    "cold-2/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "cold-3/receipt.json": "11138576024de1cebfda42b6db8f1f255dfcb0c91c7221c260c693b83380d0e4",
+    "cold-3/observations.log": "3ca2f4f60c890a9ab386f7fc2b640f559486cf0e4e014c4565319d1c90b9b331",
+    "cold-3/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "hls-1/observations.log": "05a45b91976b10a1b37d96aa98e68bc123f24eb1b1d1d25ee757c9e8d26fc71a",
+    "hls-1/receipt.json": "d9e8833be01f1d859880fa5aa49a1025e95a50de0dc30b621161e43273f4f68d",
+    "hls-1-source/receipt.json": "b0c1e4d3e51feaf8873b760df82b7d28be5bbd4f802c77b2b43b1e3808c071c5",
+    "hls-1/native-summary.log": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "hls-2/observations.log": "6ce610278335facd709a2360b9066b82cd07c316971e3009082ae6a62608c872",
+    "hls-2/receipt.json": "684d5052b97ce2d345cb5fc6132631268cd4213ccab9b78fda70d70984c7941c",
+    "hls-2-source/receipt.json": "7529d72126f9e09f57f3eac111638da8d8a53b1b020a70e97cea361d376501ae",
+    "hls-2/native-summary.log": "041f1848adf763a222eeb5011b0892dab236f22a56682dc6fd140e6cb1a83109",
+    "hls-3/observations.log": "6eb993fcb95e1652929a72a841df0d9c0fb748fd7a5e72aeedbb20efa19d4709",
+    "hls-3/receipt.json": "9da7c5c0b6b27f2159fc1b86a3daf798bc6409027bdaf13f57b35921be708cef",
+    "hls-3-source/receipt.json": "e32bcde775f844c75a9f40819643d345d4dc5f6fea50b2bd43f6b1bc3ad3505b",
+    "hls-3/native-summary.log": "35c5587b9a0067dced4cf3126cb2a0700813862297133021ac2979a317a1020c",
+    "hls-4/observations.log": "378e06ab0bf9357e6b3f2a5235930554e459da6445d7cd84acb037796b01a1d0",
+    "hls-4/receipt.json": "7a03c01011cd0a81a1be3822e17065426440bd2f99a00c6563a6f8b991189a86",
+    "hls-4-source/receipt.json": "de00a97fa7aa400465c952a8f1a9c3ae53c0c29857fa18f520da407b64e7da66",
+    "hls-4/native-summary.log": "584d56a61c6a1679eddd2b00fafddf300069e643bbf52f8f43b7465da3cfcc0f",
+    "cleanup.json": "2e90e40e5607554ee0332b62cc14b913e0bcb663ec9045fac98d27a722adea7c",
+    "build.json": "20ba1ced5a06b1633512fbfcb38df8cc4507b39277f206cd5792dc12cbdf0401",
+    "jvm-results.json": "652672146fbb6b7c6972f0bd082b795ea4b5da150ecb00f00b471486fde2b451",
+    "verify-windows.py": "3cb8575744b5ce414d2029ce3403aa7607c5a80981ba6c93670fd068fba4a36b",
+    "restored-example-media-sha256.json": "9a10d9a1463db689ed3c37f06216bc6e41543443bc4cde2b6a16762306a81d4d",
+    "install-1795342047835042000.json": "a587332083c31ea8e9e317665e4af9ab56269420ce1513e10494921c0ef2b038",
+    "install-1795341657423087000.json": "f09b3a5e27b8b2200bb9814124b5c660f4599419a7e1ccc50bf67b555de68390",
+    "install-1795341438593151000.json": "a5071bc2245f6dccbdb542e492603c0323fdf05b158b3807d026aabdef31fb64",
+    "install-1795342804933670000.json": "3cded8575fdb69513a6888847e5d8823db545c753e4a1ae770d8be0634e39dd4",
+    "install-1795341574614241000.json": "494fa5a993ac57c0cca3c8075684e1ae38168296ea17bbbe4bbd54d53e530660",
+    "install-1795342653258815000.json": "39252ac91be1d64838457f1bcdaa1c5a510a4f3c508e981723f1a10101f3cc34",
+    "build-initial.json": "4b59996bc65604ff821005ee00e6d45c6d75c4dcdaae5b7a7a3d68612b3e54d2",
+    "build-before-fix.json": "ca6e131bb750e6e2c7ad5ac0c38ca0839ed2d2c5765c47bb093c5537e2074c19",
+    "build-first-fix.json": "8199122475f66437e8552dd8a8eb73319392b414eebb51e5bf18fd3794053992"
+  },
+  "archiveSha256": "be68354a93e416783a35d5bb052b7c7b875a006c7e04d7fcbbaf312505f280f9"
+}

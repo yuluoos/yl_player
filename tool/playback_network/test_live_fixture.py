@@ -33,6 +33,7 @@ class LiveFixtureTests(unittest.TestCase):
                 response = client.getresponse()
                 self.assertEqual(response.status, 200)
                 self.assertEqual(response.getheader('X-Yl-Timeline-State'), 'pending')
+                self.assertIsNone(response.getheader('X-Yl-Request-Id'))
                 response.read()
                 client.request('GET', '/../private.flv')
                 response = client.getresponse()
@@ -43,6 +44,7 @@ class LiveFixtureTests(unittest.TestCase):
                 response = client.getresponse()
                 self.assertEqual(response.read(3), b'FLV')
                 self.assertEqual(response.getheader('X-Yl-Media-SHA256'), SOURCE_SHA256)
+                self.assertEqual(response.getheader('X-Yl-Request-Id'), str(fixture.records[0]['id']))
                 self.assertTrue(fixture.started)
                 self.assertTrue(any(p.poll() is None for p in fixture.children))
                 # Exiting must cancel a stream even while its reader remains open.

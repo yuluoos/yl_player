@@ -15,7 +15,9 @@ class YlFailureMapperTest {
     fun `public failures and local diagnostics never contain untrusted exception prose`() {
         val lines = mutableListOf<String>()
         val mapper = YlFailureMapper(YlSafeDiagnostics(lines::add))
-        val secret = "https://user:password@example.test/video?token=secret Authorization: Bearer abc Cookie: session=xyz\n at Secret.frame(Secret.kt:12)"
+        // A hexadecimal token could also appear in a legitimate random diagnostic UUID.
+        val bearer = "test-bearer-token"
+        val secret = "https://user:password@example.test/video?token=secret Authorization: Bearer $bearer Cookie: session=xyz\n at Secret.frame(Secret.kt:12)"
         for (error in listOf(IOException(secret), IllegalStateException(secret))) {
             val mapped = mapper.toFlutterError(error)
             val details = assertIs<AndroidFailureMessage>(mapped.details)
@@ -23,7 +25,7 @@ class YlFailureMapperTest {
             assertEquals(details.code, mapped.code)
             assertEquals(details.message, mapped.message)
             for (value in listOf(mapped.toString(), details.toString(), lines.last())) {
-                for (forbidden in listOf("https:", "example.test", "Authorization", "Cookie", "secret", "abc", "xyz", "Secret.frame")) {
+                for (forbidden in listOf("https:", "example.test", "Authorization", "Cookie", "secret", bearer, "xyz", "Secret.frame")) {
                     assertFalse(value.contains(forbidden), value)
                 }
             }

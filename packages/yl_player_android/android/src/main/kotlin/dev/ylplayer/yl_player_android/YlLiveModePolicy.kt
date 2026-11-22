@@ -7,8 +7,10 @@ internal class YlLiveCatchUpPolicy {
         restoreRate(requestedSpeed)
         automaticEdgeAllowed = false
     }
+    fun canResumeAtEdge(playing: Boolean, active: Boolean, requestedSpeed: Float) =
+        playing && active && automaticEdgeAllowed && requestedSpeed == 1f
     fun canCatchUp(low: Boolean, playing: Boolean, active: Boolean, requestedSpeed: Float) =
-        low && playing && active && automaticEdgeAllowed && requestedSpeed == 1f
+        low && canResumeAtEdge(playing, active, requestedSpeed)
 }
 
 /** RTMP has no source clock/DVR window. A new extractor epoch discards transport

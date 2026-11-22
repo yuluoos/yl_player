@@ -3,6 +3,16 @@ package dev.ylplayer.yl_player_android
 import kotlin.test.*
 
 class YlLiveModePolicyTest {
+    @Test fun `expired live window recovery preserves user playback intent`() {
+        val policy = YlLiveCatchUpPolicy()
+        assertTrue(policy.canResumeAtEdge(playing = true, active = true, requestedSpeed = 1f))
+        assertFalse(policy.canResumeAtEdge(playing = false, active = true, requestedSpeed = 1f))
+        assertFalse(policy.canResumeAtEdge(playing = true, active = false, requestedSpeed = 1f))
+        assertFalse(policy.canResumeAtEdge(playing = true, active = true, requestedSpeed = 1.5f))
+        policy.absoluteSeek(1f) {}
+        assertFalse(policy.canResumeAtEdge(playing = true, active = true, requestedSpeed = 1f))
+    }
+
     @Test fun `HTTP FLV long pause refreshes only low live demand`() {
         val policy = YlHttpFlvResumePolicy()
         assertFalse(policy.requiresRefresh(low = true, live = true, nowMs = 5000))

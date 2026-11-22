@@ -112,6 +112,8 @@ class LiveFixture:
                     self.send_header('Content-Type', 'video/x-flv' if protocol == 'flv' else
                                      'application/vnd.apple.mpegurl' if self.path.endswith('.m3u8') else 'video/mp2t')
                     self.send_header('Cache-Control', 'no-store')
+                    if record is not None:
+                        self.send_header('X-Yl-Request-Id', str(record['id']))
                     self.send_header('X-Yl-Run-Id', fixture.run_id)
                     self.send_header('X-Yl-Media-SHA256', SOURCE_SHA256)
                     self.send_header('X-Yl-Profile-SHA256', fixture.profile.sha256)

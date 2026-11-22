@@ -18,6 +18,7 @@ import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
+import androidx.media3.exoplayer.hls.HlsMediaSource
 import dev.ylplayer.yl_player_android.pigeon.*
 import android.view.Surface
 import kotlin.math.max
@@ -127,6 +128,7 @@ internal class YlMedia3Core(
         liveModeRequestId = requestId
         return previous.copy(mode = mode, committedRequestId = requestId)
     }
+    private var isNetworkHls = false
     private var sourceIsLive = false
     private var stopped = false
     private var resetting = false
@@ -548,6 +550,7 @@ internal class YlMedia3Core(
         handler.removeCallbacks(positionTicker)
         handler.post(positionTicker)
         firstFrameRendered = false
+        isNetworkHls = source.kind == AndroidSourceKind.NETWORK && mediaSource is HlsMediaSource
         sourceIsLive = rtmp || source.intent == AndroidStreamIntent.LIVE
 
         active = true
@@ -911,6 +914,17 @@ internal class YlMedia3Core(
         if (!isCurrentEvent(eventTime)) return
         stallWatchdog.cancel()
         if (rtmp && tryRtmpRecovery(error)) return
+        if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW &&
+            isNetworkHls && !managedNetwork && protectedDrm == null &&
+            hasBeenReady && reconnectCount < configuration.network.maxRetries &&
+            liveCatchUp.canResumeAtEdge(exoPlayer.playWhenReady && lifecycle.state.playbackIntended &&
+                !lifecycle.state.focusPaused, active, requestedPlaybackSpeed)) {
+            // Buffered frames can conceal an expired playlist until well after resume.
+            recordRetry(reconnectCount + 1, 0, SystemClock.elapsedRealtime())
+            exoPlayer.seekToDefaultPosition()
+            prepareDecoder()
+            return
+        }
         if (tryDecoderRecovery(error)) return
         status = "error"
         lastFailureCause = error
