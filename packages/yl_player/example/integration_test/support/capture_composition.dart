@@ -4,16 +4,16 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-/// Apple uses hybrid native views, which RenderRepaintBoundary cannot include.
-/// The host helper captures only this example's window / named simulator.
+/// Hybrid native views need a host capture to include the video layer.
 Future<(ui.Image, double, double)> captureComposition(
   RenderRepaintBoundary boundary,
 ) async {
+  const url = String.fromEnvironment('P01_CAPTURE_URL');
   if (defaultTargetPlatform != TargetPlatform.macOS &&
-      defaultTargetPlatform != TargetPlatform.iOS) {
+      defaultTargetPlatform != TargetPlatform.iOS &&
+      !(defaultTargetPlatform == TargetPlatform.android && url.isNotEmpty)) {
     return (await boundary.toImage(pixelRatio: 1), 1.0, 0.0);
   }
-  const url = String.fromEnvironment('P01_CAPTURE_URL');
   if (url.isEmpty) {
     throw StateError(
       'Apple composition measurement requires the P01 window capture helper.',
@@ -53,6 +53,13 @@ Future<(ui.Image, double, double)> captureComposition(
       codec.dispose();
     }
     final scale = image.width / boundary.size.width;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      if ((image.height - boundary.size.height * scale).abs() > 1) {
+        image.dispose();
+        throw StateError('Android display capture requires a fullscreen view.');
+      }
+      return (image, scale, 0.0);
+    }
     // Window capture includes the macOS title bar above Flutter's content view.
     final top = image.height - boundary.size.height * scale;
     if (top < -1 || top > 100 * scale) {

@@ -6,6 +6,13 @@ import kotlin.test.assertEquals
 
 class YlMedia3StatePolicyTest {
     @Test
+    fun `a paused seek remains paused when buffering finishes`() {
+        assertEquals("paused", YlMedia3StatePolicy.status("buffering", Player.STATE_READY, false, pausedAfterPlayback = true))
+        assertEquals("ready", YlMedia3StatePolicy.status("opening", Player.STATE_READY, false))
+        assertEquals("completed", YlMedia3StatePolicy.status("paused", Player.STATE_ENDED, false, pausedAfterPlayback = true))
+    }
+
+    @Test
     fun `initial buffering does not establish readiness`() {
         assertEquals("opening", YlMedia3StatePolicy.status("opening", Player.STATE_BUFFERING, false, false))
         assertEquals("buffering", YlMedia3StatePolicy.status("ready", Player.STATE_BUFFERING, false, true))

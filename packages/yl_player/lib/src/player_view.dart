@@ -237,20 +237,20 @@ final class YlPlayerView extends StatelessWidget {
         return ColoredBox(
           color: backgroundColor,
           child: ClipRect(
-            child: controller.textSubtitleCues.isEmpty || textureId == null
-                ? content
-                : Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      content,
-                      TextSubtitleOverlay(
-                        cues: controller.textSubtitleCues,
-                        geometry: geometry,
-                        fit: fit,
-                        alignment: alignment,
-                      ),
-                    ],
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Keep the video surface mounted when cues appear or disappear.
+                content,
+                if (textureId != null && controller.textSubtitleCues.isNotEmpty)
+                  TextSubtitleOverlay(
+                    cues: controller.textSubtitleCues,
+                    geometry: geometry,
+                    fit: fit,
+                    alignment: alignment,
                   ),
+              ],
+            ),
           ),
         );
       },

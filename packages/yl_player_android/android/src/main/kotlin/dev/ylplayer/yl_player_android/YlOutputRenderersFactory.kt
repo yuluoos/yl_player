@@ -239,19 +239,24 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
 
     private fun videoRenderer(context: Context, mediaCodecSelector: MediaCodecSelector, enableDecoderFallback: Boolean,
         eventHandler: Handler, eventListener: VideoRendererEventListener, allowedVideoJoiningTimeMs: Long, rendererObserver: YlVideoOutputObserver): YlOutputVideoRenderer {
+        val sizing = dashDecoderSizing
+        val handoff = sizing?.let { YlDashCodecHandoff(codecAdapterFactory) }
         val builder = MediaCodecVideoRenderer.Builder(context)
-            .setCodecAdapterFactory(codecAdapterFactory)
+            .setCodecAdapterFactory(handoff ?: codecAdapterFactory)
             .setMediaCodecSelector(mediaCodecSelector)
             .setAllowedJoiningTimeMs(allowedVideoJoiningTimeMs)
             .setEnableDecoderFallback(enableDecoderFallback)
             .setEventHandler(eventHandler).setEventListener(eventListener)
             .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY)
-        return YlOutputVideoRenderer(builder, rendererObserver, isMiTv3xRequested, dashDecoderSizing,
-            { if (dashPlayWhenReady()) dashStartupAudioPosition?.invoke() else null }) { dashAudioWaiting?.invoke() == true }
+        val audioPosition = { if (dashPlayWhenReady()) dashStartupAudioPosition?.invoke() else null }
+        val waiting = { dashAudioWaiting?.invoke() == true }
+        return if (handoff != null) {
+            YlDashTransitionRenderer(builder, rendererObserver, sizing, audioPosition, waiting, dashPlayWhenReady, handoff)
+        } else YlOutputVideoRenderer(builder, rendererObserver, isMiTv3xRequested, sizing, audioPosition, waiting)
     }
 }
 
-internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver,
+internal open class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver,
     private val isMiTv3xRequested: (() -> Boolean)?, private val dashDecoderSizing: YlDashDecoderSizing?,
     private val startupAudioPosition: () -> Long?, private val waitingForAudio: () -> Boolean) : MediaCodecVideoRenderer(builder) {
     // Poll on ordinary renderer iterations. A missing/late audio stream must never
@@ -261,6 +266,7 @@ internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlV
     private var firstOutputWaitStartMs = 0L
     private var startupPollDeadlineMs = 0L
     private val startupGate = YlDashStartupFrameGate()
+    protected open fun gateDecoderStartup() = true
 
     override fun isReady() = super.isReady() || (startupGate.holding && surface != null && codec != null)
 
@@ -279,11 +285,11 @@ internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlV
     override fun processOutputBuffer(positionUs: Long, elapsedRealtimeUs: Long, codec: MediaCodecAdapter?,
         buffer: ByteBuffer?, bufferIndex: Int, bufferFlags: Int, sampleCount: Int,
         bufferPresentationTimeUs: Long, isDecodeOnlyBuffer: Boolean, isLastBuffer: Boolean, format: Format): Boolean {
-        if (firstOutputPending && surface != null && !isDecodeOnlyBuffer && !isLastBuffer &&
+        if (firstOutputPending && gateDecoderStartup() && surface != null && !isDecodeOnlyBuffer && !isLastBuffer &&
             startupGate.awaitAudio(startupAudioPosition(), state == Renderer.STATE_STARTED, SystemClock.elapsedRealtime())) {
             return false
         }
-        if (firstOutputPending && surface != null && !isDecodeOnlyBuffer && !isLastBuffer && waitingForAudio()) {
+        if (firstOutputPending && gateDecoderStartup() && surface != null && !isDecodeOnlyBuffer && !isLastBuffer && waitingForAudio()) {
             val now = SystemClock.elapsedRealtime()
             if (firstOutputWaitStartMs == 0L) firstOutputWaitStartMs = now
             if (now - firstOutputWaitStartMs < MAX_FIRST_FRAME_AUDIO_WAIT_MS) return false

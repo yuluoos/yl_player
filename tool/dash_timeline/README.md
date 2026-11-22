@@ -84,9 +84,10 @@ retains the initial missing-metadata attempt separately from valid lifecycle RED
 ## Real composition captures
 
 `dash_subtitle_composition_test.dart` measures the rendered video marker and cue
-pixels at paused programme positions. Android reads the actual Flutter external
-texture composition. Apple uses native hybrid views; a RepaintBoundary snapshot
-excludes their video layer and must not be treated as black-output evidence.
+pixels at paused programme positions. Android devices with Flutter external
+textures use the in-process capture. On Android TVs using a native SurfaceView,
+the video and Flutter subtitles are separate layers. Use the display capture
+below for those TVs. Apple hybrid views also require an external capture.
 Start the loopback-only helper for the example window or the named simulator:
 
 ```sh
@@ -96,6 +97,15 @@ python3 tool/dash_timeline/capture_composition.py --platform macos --window-help
 # From packages/yl_player/example, use the token URL printed by that process:
 flutter test integration_test/dash_subtitle_composition_test.dart -d macos --dart-define=P01_CAPTURE_URL=<printed-loopback-URL> --timeout 2m
 ```
+
+For clear test media on a fullscreen Android TV, run the helper with
+`--platform android-device --device <adb-serial> --output <directory>`.
+Forward the printed loopback port with
+`adb -s <adb-serial> reverse --no-rebind tcp:<port> tcp:<port>` and use its
+printed URL as `P01_CAPTURE_URL` for the same test on that device. The helper
+checks the example activity has focus before and after each screenshot.
+Remove the forwarding with `adb -s <adb-serial> reverse --remove tcp:<port>`
+after the run.
 
 The macOS helper requires existing screen-capture permission. It selects only the
 unique largest window belonging to `dev.ylplayer.ylPlayerExample`; it does not

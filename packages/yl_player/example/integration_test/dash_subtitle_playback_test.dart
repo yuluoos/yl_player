@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +15,10 @@ import '../../test/support/fmp4_fixture.dart' as mp4;
 void main() => runDashSubtitlePlaybackTests();
 
 void runDashSubtitlePlaybackTests({bool verifyPixels = false}) {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  if (verifyPixels && defaultTargetPlatform == TargetPlatform.android) {
+    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
+  }
   for (final format in ['vtt', 'ttml', 'wvtt', 'stpp']) {
     testWidgets(
       'managed DASH $format ${verifyPixels ? 'actual pixels ' : ''}cue across Period gap, seek and off',
@@ -90,6 +94,7 @@ void runDashSubtitlePlaybackTests({bool verifyPixels = false}) {
         final outputKey = GlobalKey();
         await tester.pumpWidget(
           MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: RepaintBoundary(
               key: outputKey,
               child: YlPlayerView(controller: player),
@@ -109,34 +114,34 @@ void runDashSubtitlePlaybackTests({bool verifyPixels = false}) {
         await session.selectSubtitleTrack(track);
         await readyAndPlay(player, session);
         await session.pause();
-        Future<void> observe(int ms, String? label) async {
-          await session.seekTo(Duration(milliseconds: ms));
+        Rect? lastCueRect;
+        Future<void> observe(int ms, String? label, {bool off = false}) async {
+          if (!off) await session.seekTo(Duration(milliseconds: ms));
           await stateWhere(
             player,
             (s) => (s.timeline.position.inMilliseconds - ms).abs() < 80,
           );
           final deadline = DateTime.now().add(const Duration(seconds: 4));
+          final cueText = find.text(
+            label ?? (off ? 'P1 T12' : 'P0 T12'),
+            findRichText: true,
+          );
           do {
             await tester.pump(const Duration(milliseconds: 50));
-            if (label == null
-                ? find.text('P0 T12', findRichText: true).evaluate().isEmpty
-                : find.text(label, findRichText: true).evaluate().length == 1) {
-              break;
-            }
+            if (cueText.evaluate().length == (label == null ? 0 : 1)) break;
           } while (DateTime.now().isBefore(deadline));
           if (label == null) {
-            expect(find.text('P0 T12', findRichText: true), findsNothing);
+            expect(cueText, findsNothing);
           } else {
             expect(
-              find.text(label, findRichText: true),
+              cueText,
               findsOneWidget,
               reason:
                   'status=${player.state.status} position=${player.state.timeline.position.inMilliseconds} frame=${player.isCurrentFramePresented} texture=${player.textureId.value} geometry=${player.state.videoGeometry}',
             );
           }
           if (verifyPixels) {
-            // Capture the actual video + Flutter cue composition. Apple needs a
-            // full window capture because its video is a hybrid native view.
+            // Hybrid native views require a composited window/display capture.
             final expected = switch (ms) {
               500 => [255, 0, 0],
               2500 => [0, 0, 255],
@@ -157,14 +162,12 @@ void runDashSubtitlePlaybackTests({bool verifyPixels = false}) {
               // Sample the layout before awaiting capture, and require the cue
               // to remain present afterward; the bounded loop still fails if
               // the rendered cue never returns.
-              final cue = label == null
-                  ? null
-                  : find.text(label, findRichText: true);
-              final local = cue != null && cue.evaluate().length == 1
-                  ? tester
-                        .getRect(cue)
-                        .shift(-boundary.localToGlobal(Offset.zero))
-                  : null;
+              Rect? local = label == null ? lastCueRect : null;
+              if (label != null && cueText.evaluate().length == 1) {
+                local = tester
+                    .getRect(cueText)
+                    .shift(-boundary.localToGlobal(Offset.zero));
+              }
               final (image, scale, top) = await captureComposition(boundary);
               try {
                 final bytes = (await image.toByteData(
@@ -177,7 +180,9 @@ void runDashSubtitlePlaybackTests({bool verifyPixels = false}) {
                     4;
                 rgb = [for (var c = 0; c < 3; c++) bytes.getUint8(offset + c)];
                 glyphPixels = 0;
-                if (local != null && cue!.evaluate().length == 1) {
+                if (local != null &&
+                    (label == null || cueText.evaluate().length == 1)) {
+                  if (label != null) lastCueRect = local;
                   final rect = Rect.fromLTRB(
                     local.left * scale,
                     top + local.top * scale,
@@ -209,22 +214,22 @@ void runDashSubtitlePlaybackTests({bool verifyPixels = false}) {
                 image.dispose();
               }
               if (_colorMatches(rgb, expected) &&
-                  (label == null || glyphPixels > 8)) {
+                  (label == null ? glyphPixels == 0 : glyphPixels > 8)) {
                 break;
               }
             } while (capture.elapsed < const Duration(seconds: 4));
             debugPrint(
-              'YL_DASH_CUE_PIXEL format=$format requestedMs=$ms clockMs=${player.state.timeline.position.inMilliseconds} rgb=$rgb glyphPixels=$glyphPixels captureMs=${capture.elapsedMilliseconds}',
+              'YL_DASH_CUE_PIXEL format=$format requestedMs=$ms clockMs=${player.state.timeline.position.inMilliseconds} rgb=$rgb glyphPixels=$glyphPixels off=$off captureMs=${capture.elapsedMilliseconds}',
             );
             expect(
               _colorMatches(rgb, expected),
               isTrue,
               reason:
-                  'Actual texture pixel $rgb must match owned reference $expected at $ms',
+                  'Composited pixel $rgb must match owned reference $expected at $ms',
             );
-            if (label != null) expect(glyphPixels, greaterThan(8));
+            expect(glyphPixels, label == null ? equals(0) : greaterThan(8));
           }
-          expect(player.state.subtitles.selectedTrackId, track);
+          expect(player.state.subtitles.selectedTrackId, off ? isNull : track);
           expect(player.state.failure, isNull);
         }
 
@@ -234,8 +239,7 @@ void runDashSubtitlePlaybackTests({bool verifyPixels = false}) {
         await observe(5500, 'P1 T10');
         await observe(7500, 'P1 T12');
         await session.selectSubtitleTrack(null);
-        await tester.pump();
-        expect(find.text('P1 T12', findRichText: true), findsNothing);
+        await observe(7500, null, off: true);
         await player.stop();
       },
     );

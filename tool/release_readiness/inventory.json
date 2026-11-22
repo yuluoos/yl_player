@@ -1233,6 +1233,16 @@
       "kind": "report",
       "sha256": "3dde21a4a282f5bc282c91568e3ad1af61dd5a4565467fe4771c2cbd64b9eb29"
     },
+    "android-mitv-dash-codec-handoff-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-dash-codec-handoff.md",
+      "kind": "report",
+      "sha256": "06bc458f7aaaa19200512d72ed993c3e7051dff17ae8d54c429713066e03e8a2"
+    },
+    "android-mitv-track-and-subtitle-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-track-and-subtitle.md",
+      "kind": "report",
+      "sha256": "1c5cd66a4f09fad196936878af64abc45d462cb1620fefdfdc07c379012662e6"
+    },
     "android-mitv-memory-lifecycle-and-focus-20261122": {
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-memory-lifecycle-and-audio-focus.md",
       "kind": "report",
@@ -1326,7 +1336,7 @@
       "requirement": "CAP-DASH",
       "platform": "android",
       "implementation": "partial",
-      "verification": "failed",
+      "verification": "not_run",
       "evidence": [
         "p01",
         "remaining-acceptance-20261026",
@@ -1339,10 +1349,11 @@
         "android-mitv-remaining-acceptance-20261122",
         "android-mitv-decoder-playback-retest-20261122",
         "android-mitv-dash-recovery-and-transitions-20261122",
-        "android-mitv-dash-first-frame-and-hevc-20261122"
+        "android-mitv-dash-first-frame-and-hevc-20261122",
+        "android-mitv-dash-codec-handoff-20261122"
       ],
       "acceptance": null,
-      "nextAction": "resolve-api28-avc-to-hevc-first-output-skew-after-cold-start-clock-qualification"
+      "nextAction": "complete-other-device-and-stream-profile-coverage-after-api28-cross-codec-qualification"
     },
     {
       "requirement": "CAP-DASH",
@@ -1621,10 +1632,11 @@
         "android-oppo-format-matrix-20261121",
         "android-mitv-api28-20261121",
         "android-mitv-format-matrix-20261122",
-        "android-mitv-format-recovery-20261122"
+        "android-mitv-format-recovery-20261122",
+        "android-mitv-track-and-subtitle-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-remaining-device-track-switch-and-audio-route-boundaries-after-40-of-40-mitv-same-apk-passes"
+      "nextAction": "qualify-other-device-track-switch-and-audio-route-boundaries-after-api28-fixed-dash-video-passes"
     },
     {
       "requirement": "CAP-FORMAT",
@@ -1725,7 +1737,7 @@
       "requirement": "CAP-LIVE",
       "platform": "android",
       "implementation": "implemented",
-      "verification": "failed",
+      "verification": "not_run",
       "evidence": [
         "p04",
         "p05",
@@ -1735,10 +1747,11 @@
         "android-oppo-playback-regressions-20261121",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122"
       ],
       "acceptance": null,
-      "nextAction": "resolve-mitv-hls-and-flv-low-latency-pause-resume"
+      "nextAction": "qualify-physical-source-clock-and-frozen-targets-after-mitv-foreground-mode-switches"
     },
     {
       "requirement": "CAP-LIVE",
@@ -1774,7 +1787,7 @@
       "requirement": "CAP-PERIOD",
       "platform": "android",
       "implementation": "partial",
-      "verification": "failed",
+      "verification": "not_run",
       "evidence": [
         "p01",
         "p02",
@@ -1789,10 +1802,11 @@
         "android-mitv-remaining-acceptance-20261122",
         "android-mitv-decoder-playback-retest-20261122",
         "android-mitv-dash-recovery-and-transitions-20261122",
-        "android-mitv-dash-first-frame-and-hevc-20261122"
+        "android-mitv-dash-first-frame-and-hevc-20261122",
+        "android-mitv-dash-codec-handoff-20261122"
       ],
       "acceptance": null,
-      "nextAction": "reduce-api28-avc-to-hevc-output-gap-with-one-decoder"
+      "nextAction": "complete-other-device-and-stream-profile-coverage-after-api28-cross-codec-qualification"
     },
     {
       "requirement": "CAP-PERIOD",
@@ -1829,7 +1843,7 @@
       "requirement": "CAP-RTMP",
       "platform": "android",
       "implementation": "partial",
-      "verification": "failed",
+      "verification": "not_run",
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
@@ -1838,10 +1852,11 @@
         "android-oppo-playback-regressions-20261121",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122"
       ],
       "acceptance": null,
-      "nextAction": "resolve-mitv-system-default-startup-before-faults-and-sustained-playback"
+      "nextAction": "qualify-remaining-stream-and-device-boundaries-after-mitv-faults-and-sustained-single-connection-pass"
     },
     {
       "requirement": "CAP-RTMP",
@@ -1883,7 +1898,8 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-track-and-subtitle-20261122"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1971,10 +1987,11 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-dash-network-and-resolver-20261121",
         "android-oppo-av-dns-script-followup-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-api28-segment-system-dns-after-selector-rejection"
+      "nextAction": "verify-remaining-connected-request-budgets-after-mitv-system-manifest-and-segment-dns-pass"
     },
     {
       "requirement": "ERR-02",
@@ -2155,7 +2172,8 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-other-rtmp-peers-after-oppo-handshake-and-disconnect-regressions"
@@ -2372,7 +2390,8 @@
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-mitv-decoder-playback-retest-20261122"
       ],
       "acceptance": null,
       "nextAction": "verify-bounded-actual-source-attempt-summary"
@@ -2419,7 +2438,8 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -2625,6 +2645,7 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-mitv-api28-20261121",
+        "android-mitv-decoder-playback-retest-20261122",
         "android-mitv-memory-lifecycle-and-focus-20261122"
       ],
       "acceptance": null,
@@ -2723,6 +2744,7 @@
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
         "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122",
         "android-mitv-memory-lifecycle-and-focus-20261122"
       ],
       "acceptance": null,
@@ -2879,7 +2901,8 @@
         "p07",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-mitv-track-and-subtitle-20261122"
       ],
       "acceptance": null,
       "nextAction": "verify-protected-hdr-subtitle-and-external-output"

@@ -9,7 +9,10 @@ import 'support/dash_server.dart';
 
 /// Same owned media and public expectations on Android, iOS and macOS.
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
+  }
   const cases = <String, int>{
     'independent-pto': 4000,
     'clip-end': 3500,
@@ -65,8 +68,14 @@ void main() {
       YlVideoSelectionReason.trackUnavailable,
     );
     await session.pause();
-    await session.selectVideoTrack(player.state.videoTracks.first.id);
-    expect(player.state.videoSelection.isAutomatic, isFalse);
+    final hevcTrack = player.state.videoTracks.first.id;
+    await session.selectVideoTrack(hevcTrack);
+    await stateWhere(
+      player,
+      (s) =>
+          s.videoSelection.fixedTrackId == hevcTrack &&
+          s.videoSelection.reason == YlVideoSelectionReason.user,
+    );
     await session.seekTo(const Duration(milliseconds: 2100));
     await session.play();
     await stateWhere(player, (s) => s.timeline.position.inMilliseconds >= 2300);

@@ -134,6 +134,7 @@ internal class YlMedia3Core(
     private var status = "idle"
     private var metricsCollector = YlMetricsCollector()
     private var hasBeenReady = false
+    private var hasPlayed = false
     private var playingChangeSequence = 0L
     private var rebufferCount = 0
     private var bufferingStartedAtMs: Long? = null
@@ -283,6 +284,9 @@ internal class YlMedia3Core(
     }
     fun seekTo(positionMs: Long) {
         if (rtmp) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        if (active && exoPlayer.playbackState == Player.STATE_ENDED &&
+            !sourceIsLive && !exoPlayer.isCurrentMediaItemLive &&
+            exoPlayer.duration >= 0 && positionMs >= exoPlayer.duration) return
         speedDiagnostics.discontinuity()
         resetHealthWindow(SystemClock.elapsedRealtime())
         liveCatchUp.absoluteSeek(requestedPlaybackSpeed, exoPlayer::setPlaybackSpeed)
@@ -552,6 +556,7 @@ internal class YlMedia3Core(
 
         metricsCollector.start(SystemClock.elapsedRealtime(), managedNetwork)
         hasBeenReady = false
+        hasPlayed = false
         rebufferCount = 0
         rebufferDurationMs = 0L
         bufferingStartedAtMs = null
@@ -705,7 +710,8 @@ internal class YlMedia3Core(
             Player.STATE_BUFFERING -> metricsCollector.buffering(eventTime.realtimeMs)
             else -> metricsCollector.endBuffering(eventTime.realtimeMs)
         }
-        status = YlMedia3StatePolicy.status(status, playbackState, exoPlayer.isPlaying, hasBeenReady)
+        status = YlMedia3StatePolicy.status(status, playbackState, exoPlayer.isPlaying, hasBeenReady,
+            pausedAfterPlayback = hasPlayed && !exoPlayer.playWhenReady)
         if (playbackState == Player.STATE_READY && videoTracks.isEmpty() && audioTracks.isNotEmpty()) finishDecoderInspection()
         if (playbackState == Player.STATE_READY && !hasBeenReady) {
             hasBeenReady = true
@@ -725,6 +731,7 @@ internal class YlMedia3Core(
         if (!isCurrentEvent(eventTime)) return
         if (!active) return
         val sequence = ++playingChangeSequence
+        if (isPlaying) hasPlayed = true
         if (isPlaying && lifecycle.state.focusPaused) {
             cancelFocusGrace()
             lifecycle.reduce(YlLifecycleEvent.FOCUS_GAIN)

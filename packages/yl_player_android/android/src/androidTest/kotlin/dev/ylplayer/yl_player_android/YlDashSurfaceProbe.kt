@@ -12,7 +12,7 @@ import java.util.concurrent.FutureTask
 import java.util.concurrent.TimeUnit
 
 /** GPU readback runs on its own looper; the actual audio sink is read on the playback looper. */
-internal class YlDashSurfaceProbe(private val playback: Handler) {
+internal class YlDashSurfaceProbe(private val playback: Handler, sampleAcrossOutput: Boolean = false) {
     private val thread = HandlerThread("dash-pixel-probe").apply { start() }
     private val gpu = Handler(thread.looper)
 
@@ -22,16 +22,17 @@ internal class YlDashSurfaceProbe(private val playback: Handler) {
         return task.get(5, TimeUnit.SECONDS)
     }
 
-    private class Output {
+    private class Output(across: Boolean) {
+        private val samples = if (across) 3 else 1
         val display = GlUtil.getDefaultEglDisplay()
         val context = GlUtil.createEglContext(display)
         private val eglSurface = GlUtil.createFocusedPlaceholderEglSurface(context, display)
-        private val sampleTexture = GlUtil.createTexture(1, 1, false)
+        private val sampleTexture = GlUtil.createTexture(samples, samples, false)
         private val framebuffer = GlUtil.createFboForTexture(sampleTexture)
         private val decoderTexture = GlUtil.createExternalTexture()
         val texture = SurfaceTexture(decoderTexture)
         val surface = Surface(texture)
-        private val pixel = ByteBuffer.allocateDirect(4)
+        private val pixel = ByteBuffer.allocateDirect(4 * samples * samples)
         private val transform = FloatArray(16)
         private val program = GlProgram(
             "attribute vec4 position; void main() { gl_Position = position; }",
@@ -40,12 +41,12 @@ internal class YlDashSurfaceProbe(private val playback: Handler) {
                 precision mediump float;
                 uniform samplerExternalOES frame;
                 uniform mat4 transform;
-                void main() { gl_FragColor = texture2D(frame, (transform * vec4(0.5, 0.5, 0.0, 1.0)).xy); }
+                void main() { gl_FragColor = texture2D(frame, (transform * vec4(${if (across) "(gl_FragCoord.xy - 0.5) * 0.4 + 0.1" else "vec2(0.5)"}, 0.0, 1.0)).xy); }
             """.trimIndent(),
         )
 
         init {
-            GlUtil.focusFramebuffer(display, context, eglSurface, framebuffer, 1, 1)
+            GlUtil.focusFramebuffer(display, context, eglSurface, framebuffer, samples, samples)
             program.setBufferAttribute("position", floatArrayOf(-1f, -1f, 3f, -1f, -1f, 3f), 2)
             program.setSamplerTexIdUniform("frame", decoderTexture, 0)
         }
@@ -58,9 +59,15 @@ internal class YlDashSurfaceProbe(private val playback: Handler) {
             program.bindAttributesAndUniforms()
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3)
             pixel.clear()
-            GLES20.glReadPixels(0, 0, 1, 1, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, pixel)
+            GLES20.glReadPixels(0, 0, samples, samples, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, pixel)
             GlUtil.checkGlError()
-            return (0..2).map { pixel.get(it).toInt() and 255 }
+            val center = samples * samples / 2
+            val rgb = (0..2).map { pixel.get(4 * center + it).toInt() and 255 }
+            for (point in 0 until samples * samples) for (channel in 0..2) {
+                val observed = pixel.get(4 * point + channel).toInt() and 255
+                check(kotlin.math.abs(observed - rgb[channel]) < 32) { "Output grid point $point differs from centre $rgb" }
+            }
+            return rgb
         }
 
         fun close() {
@@ -78,7 +85,7 @@ internal class YlDashSurfaceProbe(private val playback: Handler) {
     }
 
     private val output = try {
-        onGpuThread { Output() }
+        onGpuThread { Output(sampleAcrossOutput) }
     } catch (failure: Exception) {
         thread.quitSafely()
         throw failure

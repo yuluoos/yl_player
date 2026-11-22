@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture the owned example window, named simulator, or requested iPhone display.
+"""Capture the owned example window, named simulator, or requested device display.
 
 No media/player APIs are mocked. Requires existing screen-capture permission on
 macOS; never requests permission or captures a different application's window.
@@ -17,20 +17,36 @@ import subprocess
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--platform', choices=['macos', 'ios', 'ios-device'], required=True)
+parser.add_argument('--platform', choices=['macos', 'ios', 'ios-device', 'android-device'], required=True)
 parser.add_argument('--window-helper', type=Path)
 parser.add_argument('--simulator')
 parser.add_argument('--device')
 parser.add_argument('--bind-address', default='127.0.0.1', help='Explicit local interface for physical-device captures; never wildcard')
 parser.add_argument('--output', type=Path, required=True)
 args = parser.parse_args()
-assert (args.platform == 'macos' and args.window_helper) or (args.platform == 'ios' and args.simulator) or (args.platform == 'ios-device' and args.device)
+assert (args.platform == 'macos' and args.window_helper) or (args.platform == 'ios' and args.simulator) or (args.platform in ('ios-device', 'android-device') and args.device)
 address = ipaddress.ip_address(args.bind_address)
 assert address.version == 4 and not address.is_unspecified and (address.is_loopback or address.is_private)
 assert args.platform == 'ios-device' or address.is_loopback
 args.output.mkdir(parents=True, exist_ok=True)
 token = secrets.token_hex(16)
 count = 0
+
+def capture_android():
+    adb = ['adb', '-s', args.device]
+    def require_example():
+        window = subprocess.check_output(adb + ['shell', 'dumpsys', 'window', 'windows'],
+                                         timeout=5, text=True)
+        if not re.search(r'mCurrentFocus=Window\{[^\n}]*\sdev\.ylplayer\.yl_player_example/(?:dev\.ylplayer\.yl_player_example)?\.MainActivity\}', window):
+            raise ValueError('Example activity must own the focused window')
+    require_example()
+    raw = subprocess.check_output(adb + ['exec-out', 'screencap', '-p'], timeout=8)
+    require_example()
+    # Some TV builds emit a short vendor diagnostic before the PNG stream.
+    start = raw.find(b'\x89PNG\r\n\x1a\n', 0, 4096)
+    if start < 0:
+        raise ValueError('Missing screenshot PNG')
+    return raw[start:]
 
 class Capture(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -48,12 +64,17 @@ class Capture(http.server.BaseHTTPRequestHandler):
                 command = ['/usr/sbin/screencapture', '-x', '-o', '-l', window, '-t', 'png', str(target)]
             elif args.platform == 'ios-device':
                 command = ['xcrun', 'devicectl', 'device', 'capture', 'screenshot', '--device', args.device, '--destination', str(target), '--timeout', '8']
-            else:
+            elif args.platform == 'ios':
                 command = ['xcrun', 'simctl', 'io', args.simulator, 'screenshot', '--type=png', '--mask=black', str(target)]
-            subprocess.run(command, check=True, timeout=10, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            payload = target.read_bytes()
+            if args.platform == 'android-device':
+                payload = capture_android()
+            else:
+                subprocess.run(command, check=True, timeout=10, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                payload = target.read_bytes()
             if not 0 < len(payload) <= 16 * 1024 * 1024:
                 raise ValueError('Capture exceeds bound')
+            if args.platform == 'android-device':
+                target.write_bytes(payload)
             self.send_response(200)
             self.send_header('Content-Type', 'image/png')
             self.send_header('Content-Length', str(len(payload)))

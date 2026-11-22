@@ -54,6 +54,9 @@ void main() {
       ]);
       await session.selectSubtitleTrack('owned');
       await stateWhere(player, (s) => s.status == YlPlaybackStatus.completed);
+      debugPrint(
+        'P02_AT_EOF positionMs=${player.state.timeline.position.inMilliseconds} durationMs=${player.state.timeline.duration?.inMilliseconds} seekable=${player.state.timeline.isSeekable}',
+      );
       await session.pause();
       await session.seekTo(const Duration(seconds: 4));
       await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -68,10 +71,18 @@ void main() {
         (s) => (s.timeline.position.inMilliseconds - 1500).abs() < 100,
       );
       await Future<void>.delayed(const Duration(milliseconds: 500));
+      final statusAtCheck = player.state.status;
       debugPrint(
-        'P02_COMPLETED_SEEK status=${player.state.status.name} positionMs=${player.state.timeline.position.inMilliseconds} firstFrame=${player.isCurrentFramePresented} visibleCues=${find.text('RESTORED CUE', findRichText: true).evaluate().length}',
+        'P02_COMPLETED_SEEK status=${statusAtCheck.name} positionMs=${player.state.timeline.position.inMilliseconds} firstFrame=${player.isCurrentFramePresented} visibleCues=${find.text('RESTORED CUE', findRichText: true).evaluate().length}',
       );
-      expect(player.state.status, YlPlaybackStatus.paused);
+      if (statusAtCheck == YlPlaybackStatus.buffering) {
+        final wait = Stopwatch()..start();
+        await stateWhere(player, (s) => s.status != YlPlaybackStatus.buffering);
+        debugPrint(
+          'P02_AFTER_BUFFERING status=${player.state.status.name} additionalWaitMs=${wait.elapsedMilliseconds}',
+        );
+      }
+      expect(statusAtCheck, YlPlaybackStatus.paused);
       expect(find.text('RESTORED CUE', findRichText: true), findsOneWidget);
       final position = player.state.timeline.position;
       await Future<void>.delayed(const Duration(milliseconds: 500));

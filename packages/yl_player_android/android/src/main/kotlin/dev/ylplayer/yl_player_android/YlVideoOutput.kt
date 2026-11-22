@@ -12,6 +12,8 @@ internal class YlVideoOutput(
     private val tracker = YlSurfaceGeneration()
     private var surface: Surface? = null
     private val replacedSurfaces = mutableMapOf<Surface, Surface>()
+    private var bufferWidth = 0
+    private var bufferHeight = 0
     private var disposed = false
 
     override val identity: YlOutputIdentity get() = YlOutputIdentity(tracker.generation, true)
@@ -27,11 +29,15 @@ internal class YlVideoOutput(
     }
 
     // Main looper only. SurfaceTextureEntry remains registry-owned in the v2 path.
-    fun borrowSurface(): Surface = surface ?: Surface(texture.surfaceTexture()).also { surface = it }
+    private fun wrapTexture() = Surface(texture.surfaceTexture()).also {
+        YlVideoSurfaceSize.update(it, bufferWidth, bufferHeight)
+    }
+
+    fun borrowSurface(): Surface = surface ?: wrapTexture().also { surface = it }
     // A foreground callback may reattach the retained old output before worker installation.
     // Keep its wrapper alive until installation acknowledges the ownership handoff.
     fun recreateBorrowedSurface(): Surface {
-        val replacement = Surface(texture.surfaceTexture())
+        val replacement = wrapTexture()
         surface?.let { replacedSurfaces[replacement] = it }
         surface = replacement
         tracker.rebuild()
@@ -58,7 +64,7 @@ internal class YlVideoOutput(
         if (!tracker.canAttach(expectedSurfaceGeneration, expectedSourceGeneration, currentSourceGeneration)) {
             return false
         }
-        val output = surface ?: Surface(texture.surfaceTexture()).also { surface = it }
+        val output = surface ?: wrapTexture().also { surface = it }
         consumer(output)
         return true
     }
@@ -86,7 +92,7 @@ internal class YlVideoOutput(
         if (!tracker.canAttach(expectedSurfaceGeneration, expectedSourceGeneration, currentSourceGeneration)) {
             return false
         }
-        val output = Surface(texture.surfaceTexture())
+        val output = wrapTexture()
         surface = output
         consumer(output)
         return true
@@ -95,6 +101,9 @@ internal class YlVideoOutput(
     fun resize(width: Int, height: Int) {
         if (disposed || width <= 0 || height <= 0) return
         texture.surfaceTexture().setDefaultBufferSize(width, height)
+        bufferWidth = width
+        bufferHeight = height
+        surface?.let { YlVideoSurfaceSize.update(it, width, height) }
     }
 
     fun dispose(clear: (Surface) -> Unit) {

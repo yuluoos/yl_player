@@ -74,6 +74,14 @@ class YlDashManifestParserTest {
         val current = manifest.getPeriod(0).adaptationSets.single().representations.single().format
         sizing.update(manifest)
         assertEquals(640, sizing.nextFormat(current)?.width)
+        assertNull(sizing.transitionOutputSize)
+        sizing.update(programme("hvc1.1.6.L93.B0", 640, 360))
+        assertEquals(640, sizing.transitionOutputSize?.width)
+        for (ineligible in listOf(programme("hvc1.2.4.L93.B0", 640, 360),
+            programme("hvc1.1.6.L93.B0", 640, 480), programme("hvc1.1.6.L93.B0", 1920, 1080))) {
+            sizing.update(ineligible)
+            assertNull(sizing.transitionOutputSize)
+        }
         for (other in listOf(programme("hvc1.1.6.L93.B0", 640, 360), programme("avc1.640028", 1920, 1080))) {
             sizing.update(other)
             assertNull(sizing.nextFormat(current))

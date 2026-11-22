@@ -1,0 +1,1058 @@
+{
+  "model": "MiTV-MTTP0",
+  "api": 28,
+  "baseCommit": "aebe0bc9c44eaae27e4febbf53fb87e54c1fc5bf",
+  "sourceSha256": {
+    "packages/yl_player/example/integration_test/dash_program_periods_test.dart": "072912099270acac753777c07dc0c202981a22a22db2afa0e1d86b5bf4930647",
+    "packages/yl_player_android/android/build.gradle.kts": "be10d1b169cdf6bad2771d63e1c195663f5c3759ef64f5e9eb6338015cd93b76",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "231bd5bfc3ab6cec3b9b4fc47b9586b5bcfd5485d192cbd975fb1c0838ccfa2c",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashSurfaceProbe.kt": "1062cb46cb487ba92f968e5a1fe5f9ba0d3ee71e592c7bdec79c883ca99b2f69",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashDecoderSizing.kt": "a3fc657ae3f8e1a065c53dbae38b4d7147947352c66fd261f8fb827e31a478ca",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashTransitionRenderer.kt": "63f88caeb59b40e21aed9f86954d14ab24f90d3f0fba0604bfb5222a0e15337a",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeViewFactory.kt": "c4ae375ddb641d3d1c6e7696d185b2b2df21c2a66e22f70b430aae7fb51ef75b",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "0e22dc50536860651f698dc488a0150cb96e9089a189a5c77dc28d957cdc7cef",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoOutput.kt": "eb43c0228dc1a69f1512b8427c609c48bbf5610dcfc28d612b2ea64c0864ab6d",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSurfaceSize.kt": "baff60ded9d14fc6c33be7f4a99f7b320def6ec440137e300655da1f641b5330",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashCodecHandoffTest.kt": "dfc4ff5f77a6fdf79abe1d08ca06aa06e3be95fa3566207a373ba9aa10362a22",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt": "2509b845552e3edc1bede88862555bfb9f4bb5428c0d7177724c24d780618408"
+  },
+  "limitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+  "manifestSha256": "61eff7acbc9f5e486d60e18e18ba29abb5d02638de169ace2ab5614402c6e9dc",
+  "results": {
+    "final": {
+      "model": "MiTV-MTTP0",
+      "apiLevel": 28,
+      "apkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "installedApkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "method": "YlDashJointInstrumentedTest#nativeJointBaseline",
+      "passed": true,
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "rows": 191,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -4346,
+          "maxAbsDeltaUs": 37942,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1864.81
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "rows": 192,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -63,
+          "maxAbsDeltaUs": 26231,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1183.09
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "rows": 191,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -6733,
+          "maxAbsDeltaUs": 35000,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 964.12
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "rows": 96,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -18780,
+          "maxAbsDeltaUs": 30864,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 850.24
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "rows": 95,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -8135,
+          "maxAbsDeltaUs": 27987,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 896.54
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "rows": 96,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -8489,
+          "maxAbsDeltaUs": 25856,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 903.59
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "rows": 84,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -10151,
+          "maxAbsDeltaUs": 31649,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 940.71
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "rows": 84,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -16351,
+          "maxAbsDeltaUs": 26091,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 930.86
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "rows": 83,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -3718,
+          "maxAbsDeltaUs": 38084,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 832.75
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 68,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -17397,
+          "maxAbsDeltaUs": 32918,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1285.99,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": 6438,
+          "boundaryGpuDeltaUs": -13198,
+          "boundaryExcessMs": 25.0,
+          "boundaryGpuExcessMs": 45.436,
+          "gpuMaxUs": 78691,
+          "uniquePts": 68,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "rows": 68,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -28125,
+          "maxAbsDeltaUs": 28826,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 991.91,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": 19621,
+          "boundaryGpuDeltaUs": -10821,
+          "boundaryExcessMs": -8.334,
+          "boundaryGpuExcessMs": 26.676,
+          "gpuMaxUs": 46748,
+          "uniquePts": 68,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -19771,
+          "maxAbsDeltaUs": 32727,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1049.59,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": 20449,
+          "boundaryGpuDeltaUs": -10234,
+          "boundaryExcessMs": -8.334,
+          "boundaryGpuExcessMs": 19.63,
+          "gpuMaxUs": 47897,
+          "uniquePts": 69,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -23359,
+          "maxAbsDeltaUs": 33181,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 975.23
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -14436,
+          "maxAbsDeltaUs": 32214,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 978.86
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -13292,
+          "maxAbsDeltaUs": 24971,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 963.06
+        }
+      ],
+      "totalRows": 1524,
+      "missingAudioPairs": 0,
+      "frozenGate": {
+        "passed": true
+      }
+    },
+    "repeat": {
+      "model": "MiTV-MTTP0",
+      "apiLevel": 28,
+      "apkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "installedApkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "method": "YlDashJointInstrumentedTest#nativeJointBaseline",
+      "passed": true,
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "rows": 191,
+          "firstPtsUs": 0,
+          "firstDeltaUs": 3778,
+          "maxAbsDeltaUs": 46870,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1845.45
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "rows": 192,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -4072,
+          "maxAbsDeltaUs": 25258,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1024.98
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "rows": 192,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -4395,
+          "maxAbsDeltaUs": 35956,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1011.25
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "rows": 96,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -10490,
+          "maxAbsDeltaUs": 28968,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 859.37
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "rows": 96,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -6543,
+          "maxAbsDeltaUs": 29067,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 882.89
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "rows": 96,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -4659,
+          "maxAbsDeltaUs": 24720,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 899.88
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "rows": 84,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -8467,
+          "maxAbsDeltaUs": 29119,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 921.08
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "rows": 84,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -7624,
+          "maxAbsDeltaUs": 33831,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 840.98
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "rows": 84,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -1907,
+          "maxAbsDeltaUs": 25090,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 856.19
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -17774,
+          "maxAbsDeltaUs": 35527,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1106.87,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": 10523,
+          "boundaryGpuDeltaUs": -1062,
+          "boundaryExcessMs": 25.0,
+          "boundaryGpuExcessMs": 29.561,
+          "gpuMaxUs": 38435,
+          "uniquePts": 69,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "rows": 68,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -36882,
+          "maxAbsDeltaUs": 36882,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1125.05,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": -17435,
+          "boundaryGpuDeltaUs": -35684,
+          "boundaryExcessMs": 36.129,
+          "boundaryGpuExcessMs": 49.574,
+          "gpuMaxUs": 62717,
+          "uniquePts": 68,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -17158,
+          "maxAbsDeltaUs": 36825,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 996.28,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": 5465,
+          "boundaryGpuDeltaUs": -14863,
+          "boundaryExcessMs": 11.505,
+          "boundaryGpuExcessMs": 18.607,
+          "gpuMaxUs": 41427,
+          "uniquePts": 69,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -15792,
+          "maxAbsDeltaUs": 28961,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1000.55
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "rows": 68,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -28589,
+          "maxAbsDeltaUs": 36028,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 979.65
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "rows": 69,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -829,
+          "maxAbsDeltaUs": 27255,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 937.03
+        }
+      ],
+      "totalRows": 1527,
+      "missingAudioPairs": 0,
+      "frozenGate": {
+        "passed": true
+      }
+    },
+    "pause": {
+      "model": "MiTV-MTTP0",
+      "apiLevel": 28,
+      "apkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "installedApkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "method": "YlDashQueuedPauseInstrumentedTest#pauseWithDecodedFramesQueued",
+      "passed": true,
+      "runs": [
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 67,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -35546,
+          "maxAbsDeltaUs": 40006,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1915.89,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": 15416,
+          "boundaryGpuDeltaUs": -7882,
+          "boundaryExcessMs": -8.334,
+          "boundaryGpuExcessMs": 11.454,
+          "gpuMaxUs": 61602,
+          "uniquePts": 67,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        }
+      ],
+      "totalRows": 67,
+      "missingAudioPairs": 0
+    },
+    "fullhd": {
+      "model": "MiTV-MTTP0",
+      "apiLevel": 28,
+      "apkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "installedApkSha256": "ad373ef6e0214b29cf34abe43f9aa8c1fe4a741a79bc2ba0eef8e016ebe54bd7",
+      "method": "YlDashQueuedPauseInstrumentedTest#fullHdSurface",
+      "passed": true,
+      "runs": [
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 68,
+          "firstPtsUs": 0,
+          "firstDeltaUs": -18384,
+          "maxAbsDeltaUs": 42645,
+          "missingAudioPairs": 0,
+          "firstMpdToReleaseMs": 1939.92,
+          "previousPtsUs": 1458333,
+          "nextPtsUs": 1500000,
+          "boundaryDeltaUs": 16975,
+          "boundaryGpuDeltaUs": -3839,
+          "boundaryExcessMs": 8.333,
+          "boundaryGpuExcessMs": 32.579,
+          "gpuMaxUs": 54821,
+          "uniquePts": 68,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "measurementSource": "fixturePixel"
+        }
+      ],
+      "totalRows": 68,
+      "missingAudioPairs": 0
+    }
+  },
+  "public": {
+    "apkSha256": "2da53f9be7bac629751a1b84f10fc70ad03f9e1c75abbc9522d1cae6cccb3e8e",
+    "installedApkSha256": "2da53f9be7bac629751a1b84f10fc70ad03f9e1c75abbc9522d1cae6cccb3e8e",
+    "passed": true,
+    "cases": [
+      "managed DASH fixed AVC disappears and HEVC can be fixed",
+      "managed DASH programme independent-pto",
+      "managed DASH programme clip-end",
+      "managed DASH programme gap",
+      "managed DASH programme overlap",
+      "managed DASH programme unknown-middle",
+      "managed DASH programme multiple-base",
+      "managed DASH programme fractional-microsecond",
+      "managed DASH programme cross-codec",
+      "managed DASH programme resolution",
+      "managed DASH programme audio-added",
+      "managed DASH programme absolute-base",
+      "managed DASH programme absolute-list",
+      "managed DASH programme audio-gap-leading",
+      "managed DASH programme audio-gap-internal",
+      "managed DASH programme audio-gap-trailing",
+      "managed DASH programme video-gap-leading",
+      "managed DASH programme video-gap-internal",
+      "managed DASH programme video-gap-trailing"
+    ]
+  },
+  "jvm": {
+    "tests": 643,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "hostTests": [
+    "Ran 20 tests in 52.310s",
+    "OK",
+    "Swift program MPD checks: 27",
+    "Swift program checks: 1518 (independent Fraction cases: 1494)",
+    "Exact sample window checks: 8"
+  ],
+  "earlierQualification": [
+    {
+      "stage": {
+        "passed": true
+      },
+      "rows": 1528,
+      "apkSha256": "a8bc86b409c4c071578746407b253ae61bd5b5b60655cd56a9fb7a849c38ae8f"
+    },
+    {
+      "stage": {
+        "passed": false,
+        "reason": "clip-end: outside frozen native AV pair envelope"
+      },
+      "rows": 1519,
+      "apkSha256": "a8bc86b409c4c071578746407b253ae61bd5b5b60655cd56a9fb7a849c38ae8f"
+    }
+  ],
+  "visibleScreen": {
+    "samples": [
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH fixed AVC disappears and HEVC can be fixed",
+        "marker": "avc-red",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        "elapsedSeconds": 21.322
+      },
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH fixed AVC disappears and HEVC can be fixed",
+        "marker": "hevc-yellow",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ]
+        ],
+        "elapsedSeconds": 22.864
+      },
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH fixed AVC disappears and HEVC can be fixed",
+        "marker": "hevc-yellow",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ],
+          [
+            255,
+            255,
+            0
+          ]
+        ],
+        "elapsedSeconds": 24.298
+      },
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH fixed AVC disappears and HEVC can be fixed",
+        "marker": "hevc-cyan",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ]
+        ],
+        "elapsedSeconds": 25.692
+      },
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH fixed AVC disappears and HEVC can be fixed",
+        "marker": "avc-green",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ]
+        ],
+        "elapsedSeconds": 27.229
+      },
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH programme cross-codec",
+        "marker": "avc-red",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        "elapsedSeconds": 98.217
+      },
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH programme cross-codec",
+        "marker": "avc-green",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            0,
+            255,
+            0
+          ]
+        ],
+        "elapsedSeconds": 100.255
+      },
+      {
+        "method": "adb exec-out screencap",
+        "case": "managed DASH programme cross-codec",
+        "marker": "hevc-cyan",
+        "size": [
+          1920,
+          1080
+        ],
+        "matchedPoints": 9,
+        "pixels": [
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ],
+          [
+            0,
+            254,
+            255
+          ]
+        ],
+        "elapsedSeconds": 101.799
+      }
+    ],
+    "area": {
+      "avc-red": {
+        "ninePointMatches": 9,
+        "markerPixels": 2069532,
+        "totalPixels": 2073600,
+        "percent": 99.804
+      },
+      "avc-green": {
+        "ninePointMatches": 9,
+        "markerPixels": 2069532,
+        "totalPixels": 2073600,
+        "percent": 99.804
+      },
+      "hevc-yellow": {
+        "ninePointMatches": 9,
+        "markerPixels": 2069532,
+        "totalPixels": 2073600,
+        "percent": 99.804
+      },
+      "hevc-cyan": {
+        "ninePointMatches": 9,
+        "markerPixels": 2069526,
+        "totalPixels": 2073600,
+        "percent": 99.804
+      }
+    },
+    "images": {
+      "avc-red.png": "0ee90041b16086932c3b456df752ef26c2e822335f3dc8b79ff217d5df04065d",
+      "hevc-yellow.png": "53f83f51fad280527618c268f55a7b70f8daf795a8f00e75993adf1147276573",
+      "avc-green.png": "9fd60c67507cff9b23c2539bf9851576b5c1730ed793d81eea65e9985d03e947",
+      "hevc-cyan.png": "463ab95ed168010f7ff07df75a60bd79b00858040ab0c7c5c28a8d24559d9d25"
+    }
+  },
+  "archiveSha256": "0f578134a312af3e1742c451477f28d7e93e37e144cd7b97e445c223a8159639"
+}

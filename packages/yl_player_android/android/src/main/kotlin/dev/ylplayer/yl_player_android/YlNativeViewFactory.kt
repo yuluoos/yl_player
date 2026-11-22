@@ -34,7 +34,9 @@ internal class YlNativeViewFactory(private var registry: YlNativeViewRegistry) :
         binding.onFrame = { cover.visibility = View.INVISIBLE }
         val callback = object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) { binding.available(viewId, holder.surface) }
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                YlVideoSurfaceSize.update(holder.surface, width, height)
+            }
             override fun surfaceDestroyed(holder: SurfaceHolder) { binding.destroyed(viewId) }
         }
         video.holder.addCallback(callback)

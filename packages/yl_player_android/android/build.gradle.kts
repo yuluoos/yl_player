@@ -86,6 +86,7 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-exoplayer-hls:$media3Version")
     implementation("androidx.media3:media3-exoplayer-dash:$media3Version")
+    implementation("androidx.media3:media3-effect:$media3Version")
     implementation("androidx.media3:media3-datasource-okhttp:$media3Version")
 
     // Generated Pigeon suspend handlers and the owned callback/command scopes.

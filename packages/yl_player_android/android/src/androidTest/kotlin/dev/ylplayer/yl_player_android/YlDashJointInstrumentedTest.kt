@@ -39,14 +39,25 @@ class YlDashPausedPreviewInstrumentedTest {
     @Test fun previewBeforePlay() = DashJointMeasurement.measure("paused-preview", 0)
 }
 
+class YlDashQueuedPauseInstrumentedTest {
+    @Test fun crossCodec() {
+        for (run in 0 until 3) DashJointMeasurement.measure("cross-codec", run)
+    }
+    @Test fun fullHdSurface() = DashJointMeasurement.measure("cross-codec", 0, fullHd = true)
+    @Test fun pauseWithDecodedFramesQueued() = DashJointMeasurement.measure("cross-codec", 0, pauseDuringAvc = true)
+}
+
 private object DashJointMeasurement {
     private data class Frame(val ptsUs: Long, val formatId: String?, val periodStartUs: Long, val metadataNs: Long, val audioAtMetadataUs: Long?)
-    fun measure(name: String, run: Int) {
+    fun measure(name: String, run: Int, pauseDuringAvc: Boolean = false, fullHd: Boolean = false) {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         val assets = instrumentation.context.assets
         val done = CountDownLatch(1)
         val preview = CountDownLatch(1)
+        val beforeSwitch = CountDownLatch(1)
+        var pauseAcknowledgedNs = 0L
+        var resumedNs = 0L
         var failure: Throwable? = null
         var player: ExoPlayer? = null
         var sink: AudioSink? = null
@@ -161,14 +172,33 @@ private object DashJointMeasurement {
                     exo.setVideoFrameMetadataListener { pts, release, format, _ ->
                         val start = if (format.id == "p1-video") periodBoundary else 0L
                         val metadataNs = System.nanoTime()
-                        val clock = if (pts <= 125_000L) programmeClock(sink?.getCurrentPositionUs(false)) else null
+                        val atGraphSwitch = format.id == null && name == "cross-codec" && pts == periodBoundary
+                        val clock = if (pts <= 125_000L || atGraphSwitch) programmeClock(sink?.getCurrentPositionUs(false)) else null
                         frames[release] = Frame(pts, format.id, start, metadataNs, clock)
                         while (frames.size > 64) frames.remove(frames.keys.first())
                     }
-                    val output = YlDashSurfaceProbe(Handler(exo.playbackLooper))
+                    val output = YlDashSurfaceProbe(Handler(exo.playbackLooper), sampleAcrossOutput = fullHd)
                     probe = output
+                    if (name == "cross-codec" && renderers.dashDecoderSizing != null) {
+                        val width = if (fullHd) 1920 else 640
+                        val height = if (fullHd) 1080 else 360
+                        output.texture.setDefaultBufferSize(width, height)
+                        YlVideoSurfaceSize.update(output.surface, width, height)
+                    }
                     output.observe({ timestamp, rgb, gpuStartNs, gpuEndNs ->
                         val frame = frames.remove(timestamp)
+                        // The Media3 graph reports a composed programme PTS and drops the
+                        // input representation ID. The two fixture palettes independently
+                        // identify the actual decoded Period when observing this path.
+                        val graphOutput = name == "cross-codec" && frame != null && frame.formatId == null &&
+                            renderers.dashDecoderSizing?.transitionOutputSize != null
+                        val representation = if (graphOutput) when {
+                            rgb[0] > 223 && rgb[1] > 223 && rgb[2] < 32 ||
+                                rgb[0] < 32 && rgb[1] > 223 && rgb[2] > 223 -> "p1-video"
+                            rgb[0] > 223 && rgb[1] < 32 && rgb[2] < 32 ||
+                                rgb[0] < 32 && rgb[1] > 223 && rgb[2] < 32 -> "p0-video"
+                            else -> error("Unexpected cross-codec pixel $rgb")
+                        } else frame?.formatId
                         val consumed = sink?.getCurrentPositionUs(false)
                         val observedHost = System.nanoTime()
                         val audio = programmeClock(consumed)
@@ -178,7 +208,8 @@ private object DashJointMeasurement {
                         // rate-1 projection to that native presentation timestamp.
                         val projected = audio?.let { it + (timestamp - observedHost) / 1000 }
                         val row = JSONObject().put("imageTimestampNs", timestamp).put("observedHostNs", observedHost)
-                            .put("videoPtsUs", video ?: JSONObject.NULL).put("representation", frame?.formatId ?: JSONObject.NULL)
+                            .put("videoPtsUs", video ?: JSONObject.NULL).put("representation", representation ?: JSONObject.NULL)
+                            .put("identitySource", if (graphOutput) "fixturePixel" else "decoderMetadata")
                             .put("audioUs", audio ?: JSONObject.NULL).put("audioProjectedAtReleaseUs", projected ?: JSONObject.NULL).put("audioPeriodStartUs", audioStart)
                             .put("audioStreamOffsetUs", audioOffset).put("metadataHostNs", frame?.metadataNs ?: JSONObject.NULL)
                             .put("audioAtMetadataUs", frame?.audioAtMetadataUs ?: JSONObject.NULL)
@@ -188,6 +219,7 @@ private object DashJointMeasurement {
                             .put("deltaUs", if (projected != null && video != null) video - projected else JSONObject.NULL)
                         synchronized(rows) { rows += row }
                         if (frame?.ptsUs == 0L) preview.countDown()
+                        if (pauseDuringAvc && video != null && video >= 700_000L) beforeSwitch.countDown()
                     }, { error -> failure = error; done.countDown() })
                     exo.setVideoSurface(output.surface)
                     exo.setMediaSource(YlDashProgramMediaSource(item, DefaultHttpDataSource.Factory(),
@@ -195,6 +227,16 @@ private object DashJointMeasurement {
                     exo.prepare()
                     if (name != "paused-preview") exo.play()
                 }
+            }
+            if (pauseDuringAvc) {
+                assertTrue("AVC playback did not reach pause point", beforeSwitch.await(8, TimeUnit.SECONDS))
+                instrumentation.runOnMainSync { player!!.pause() }
+                val barrier = java.util.concurrent.FutureTask { System.nanoTime() }
+                check(Handler(player!!.playbackLooper).post(barrier))
+                pauseAcknowledgedNs = barrier.get(2, TimeUnit.SECONDS)
+                Thread.sleep(650)
+                resumedNs = System.nanoTime()
+                instrumentation.runOnMainSync { player!!.play() }
             }
             if (name == "paused-preview") {
                 assertTrue("Paused startup did not produce a preview", preview.await(5, TimeUnit.SECONDS))
@@ -213,10 +255,21 @@ private object DashJointMeasurement {
             // Log one bounded row per line to avoid Android logcat truncation.
             android.util.Log.i("P01_JOINT", JSONObject().put("fixture", name).put("run", run).put("elapsedMs", record.getLong("elapsedMs")).toString())
             for (row in measured) android.util.Log.i("P01_JOINT_ROW", row.put("fixture", name).put("run", run).toString())
+            if (pauseDuringAvc) {
+                // Allow the one already-presented 24 fps frame to reach the consumer.
+                val advanced = measured.filter { it.getLong("gpuStartNs") in (pauseAcknowledgedNs + 42_000_000L) until resumedNs }
+                android.util.Log.i("P01_JOINT_PAUSE", JSONObject().put("ackNs", pauseAcknowledgedNs)
+                    .put("resumeNs", resumedNs).put("framesDuringHold", advanced.size).toString())
+                assertTrue("Video advanced after pause acknowledgement: $advanced", advanced.isEmpty())
+            }
             assertTrue("Actual surface frames absent: ${measured.size}", measured.size > 12)
             assertTrue("Image timestamps must match rendered frame metadata", measured.all { !it.isNull("videoPtsUs") })
             assertTrue("Native consumed clock absent", measured.count { !it.isNull("audioUs") } > 12)
             if (periodBoundary != Long.MAX_VALUE) assertTrue("Second Period actual output absent", measured.any { it.optLong("videoPtsUs") >= periodBoundary })
+            if (name == "cross-codec" && measured.any { it.optString("identitySource") == "fixturePixel" }) {
+                assertEquals(1_458_333L, measured.last { it.getString("representation") == "p0-video" }.getLong("videoPtsUs"))
+                assertEquals(1_500_000L, measured.first { it.getString("representation") == "p1-video" }.getLong("videoPtsUs"))
+            }
             for (row in measured) {
                 val pts = row.getLong("videoPtsUs")
                 val second = pts >= periodBoundary
