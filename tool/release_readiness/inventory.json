@@ -1202,6 +1202,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-mitv-playback-speed.md",
       "sha256": "d9dcf43454580863b6e8ba0f836eff7128e70e81e1d291dabda1e3fb8a02b3b6",
       "kind": "report"
+    },
+    "android-mitv-format-matrix-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-format-matrix.md",
+      "sha256": "a9d8a9dfcbac5c643759567fa63b99a2ce16039a1ffa1b1cc4dfbe02244a1ed0",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1577,10 +1582,11 @@
         "remaining-device-acceptance-20261105",
         "android-hevc-main10-20261121",
         "android-oppo-format-matrix-20261121",
-        "android-mitv-api28-20261121"
+        "android-mitv-api28-20261121",
+        "android-mitv-format-matrix-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-single-device-single-build-after-40-of-40-cumulative-format-passes"
+      "nextAction": "resolve-mitv-hevc-startup-av-pairing-and-dts-avi-ps-audio-clock-timeouts-after-32-of-40-same-build-passes"
     },
     {
       "requirement": "CAP-FORMAT",

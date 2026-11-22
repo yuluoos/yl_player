@@ -1,0 +1,363 @@
+[
+  {
+    "caseId": "avi-avc-mp3",
+    "transport": "file",
+    "initial": "e3e52428-6dee-4358-8453-defded70b0bf",
+    "repeat": "0a6994cd-f84a-4370-ac47-433891d06cda",
+    "selected": "0a6994cd-f84a-4370-ac47-433891d06cda",
+    "repeatOutcome": {
+      "caseId": "avi-avc-mp3",
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "requirement": "required",
+      "transport": "file",
+      "accepted": true,
+      "identityBound": true,
+      "collectorPassed": true,
+      "extractionValid": true,
+      "exitCode": 0,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "0a6994cd-f84a-4370-ac47-433891d06cda"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "avi-avc-mp3",
+    "transport": "http",
+    "initial": "b3d78095-2fd2-4b8a-b574-81fc265cf716",
+    "repeat": "86e6d887-edde-41e2-87a1-dd9d23dbcc62",
+    "selected": "b3d78095-2fd2-4b8a-b574-81fc265cf716",
+    "repeatOutcome": {
+      "caseId": "avi-avc-mp3",
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target",
+      "collectorError": null,
+      "runId": "86e6d887-edde-41e2-87a1-dd9d23dbcc62"
+    },
+    "launchExit": 255
+  },
+  {
+    "caseId": "flv-avc-mp3",
+    "transport": "file",
+    "initial": "e11b783b-06e4-4aaf-b1d6-0f5a62af44ee",
+    "repeat": "321b5a4e-1efe-4325-a12e-6df852b5e9c8",
+    "selected": "321b5a4e-1efe-4325-a12e-6df852b5e9c8",
+    "repeatOutcome": {
+      "caseId": "flv-avc-mp3",
+      "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "requirement": "required",
+      "transport": "file",
+      "accepted": true,
+      "identityBound": true,
+      "collectorPassed": true,
+      "extractionValid": true,
+      "exitCode": 0,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "321b5a4e-1efe-4325-a12e-6df852b5e9c8"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mkv-av1-opus",
+    "transport": "http",
+    "initial": "d3b8803a-1dae-40bd-b550-bdffe88fd438",
+    "repeat": "d28a2ae0-e4e7-4b1b-9768-f226dde9aefd",
+    "selected": "d3b8803a-1dae-40bd-b550-bdffe88fd438",
+    "repeatOutcome": {
+      "caseId": "mkv-av1-opus",
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "d28a2ae0-e4e7-4b1b-9768-f226dde9aefd"
+    },
+    "launchExit": 255
+  },
+  {
+    "caseId": "mkv-avc-aac",
+    "transport": "http",
+    "initial": "14e4bd67-0724-4997-80d8-86d974a9f8fb",
+    "repeat": "8332581a-8a7e-4591-8d9c-4ff1c4fd64de",
+    "selected": "8332581a-8a7e-4591-8d9c-4ff1c4fd64de",
+    "repeatOutcome": {
+      "caseId": "mkv-avc-aac",
+      "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": true,
+      "identityBound": true,
+      "collectorPassed": true,
+      "extractionValid": true,
+      "exitCode": 0,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "8332581a-8a7e-4591-8d9c-4ff1c4fd64de"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mkv-avc-dts",
+    "transport": "file",
+    "initial": "dfa492be-1851-45a4-9976-f94d0d06a453",
+    "repeat": "148bc1fe-f5a3-49be-9e62-12c82fcbea56",
+    "selected": "dfa492be-1851-45a4-9976-f94d0d06a453",
+    "repeatOutcome": {
+      "caseId": "mkv-avc-dts",
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "requirement": "required",
+      "transport": "file",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "invalid_session"
+      ],
+      "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target",
+      "collectorError": null,
+      "runId": "148bc1fe-f5a3-49be-9e62-12c82fcbea56"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mkv-avc-dts",
+    "transport": "http",
+    "initial": "a6e022f2-4f8b-4c67-8dfa-f9d3cf0997fc",
+    "repeat": "327957d1-7b31-4afa-9596-39d5303aa311",
+    "selected": "a6e022f2-4f8b-4c67-8dfa-f9d3cf0997fc",
+    "repeatOutcome": {
+      "caseId": "mkv-avc-dts",
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target",
+      "collectorError": null,
+      "runId": "327957d1-7b31-4afa-9596-39d5303aa311"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mkv-avc-eac3",
+    "transport": "http",
+    "initial": "b2fe0b34-a2e7-4f11-a4a4-9aa09f37dd67",
+    "repeat": "a9606b23-0158-4690-88f0-73ea5ac6fc06",
+    "selected": "a9606b23-0158-4690-88f0-73ea5ac6fc06",
+    "repeatOutcome": {
+      "caseId": "mkv-avc-eac3",
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": true,
+      "identityBound": true,
+      "collectorPassed": true,
+      "extractionValid": true,
+      "exitCode": 0,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "a9606b23-0158-4690-88f0-73ea5ac6fc06"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mkv-hevc-main10-aac",
+    "transport": "file",
+    "initial": "3334f616-e9af-4128-b681-a2498d830294",
+    "repeat": "39b635fd-0f94-4f67-96e6-36ed58fd7620",
+    "selected": "3334f616-e9af-4128-b681-a2498d830294",
+    "repeatOutcome": {
+      "caseId": "mkv-hevc-main10-aac",
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "requirement": "required",
+      "transport": "file",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "pixel_audio_pair_missing"
+      ],
+      "failure": null,
+      "collectorError": null,
+      "runId": "39b635fd-0f94-4f67-96e6-36ed58fd7620"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mkv-hevc-main10-aac",
+    "transport": "http",
+    "initial": "cf3fb307-d82e-4013-8235-bdca7a213914",
+    "repeat": "87a22c9c-5a92-4f29-a771-6425d09d895e",
+    "selected": "cf3fb307-d82e-4013-8235-bdca7a213914",
+    "repeatOutcome": {
+      "caseId": "mkv-hevc-main10-aac",
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "pixel_audio_pair_missing"
+      ],
+      "failure": null,
+      "collectorError": null,
+      "runId": "87a22c9c-5a92-4f29-a771-6425d09d895e"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mov-hevc-aac",
+    "transport": "file",
+    "initial": "1fb699fe-c308-44d3-8818-4a5f81b3f50f",
+    "repeat": "15763a7e-e91e-4bee-9b4e-7904aa104e71",
+    "selected": "1fb699fe-c308-44d3-8818-4a5f81b3f50f",
+    "repeatOutcome": {
+      "caseId": "mov-hevc-aac",
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "requirement": "required",
+      "transport": "file",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "pixel_audio_pair_missing"
+      ],
+      "failure": null,
+      "collectorError": null,
+      "runId": "15763a7e-e91e-4bee-9b4e-7904aa104e71"
+    },
+    "launchExit": 255
+  },
+  {
+    "caseId": "mov-hevc-aac",
+    "transport": "http",
+    "initial": "b60818b6-51d4-4d73-94dd-03de18e636b1",
+    "repeat": "c80b27af-418d-472e-b8fd-e2eb544b8a1b",
+    "selected": "b60818b6-51d4-4d73-94dd-03de18e636b1",
+    "repeatOutcome": {
+      "caseId": "mov-hevc-aac",
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "pixel_audio_pair_missing"
+      ],
+      "failure": null,
+      "collectorError": null,
+      "runId": "c80b27af-418d-472e-b8fd-e2eb544b8a1b"
+    },
+    "launchExit": 255
+  },
+  {
+    "caseId": "mp4-avc-aac",
+    "transport": "http",
+    "initial": "7dee3b62-ea40-4414-bbeb-cf3b62e60076",
+    "repeat": "9fc6fc2d-12b5-4ba5-bb9b-693bdb7387a0",
+    "selected": "9fc6fc2d-12b5-4ba5-bb9b-693bdb7387a0",
+    "repeatOutcome": {
+      "caseId": "mp4-avc-aac",
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": true,
+      "identityBound": true,
+      "collectorPassed": true,
+      "extractionValid": true,
+      "exitCode": 0,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "9fc6fc2d-12b5-4ba5-bb9b-693bdb7387a0"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "ps-avc-mp3",
+    "transport": "file",
+    "initial": "a22b0f93-4eec-4720-899e-653c9f5ca377",
+    "repeat": "c9d3d482-d0ea-46e6-ad01-235a0d28ae13",
+    "selected": "a22b0f93-4eec-4720-899e-653c9f5ca377",
+    "repeatOutcome": {
+      "caseId": "ps-avc-mp3",
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "requirement": "required",
+      "transport": "file",
+      "accepted": false,
+      "identityBound": true,
+      "collectorPassed": false,
+      "extractionValid": true,
+      "exitCode": 1,
+      "rawErrors": [
+        "invalid_session"
+      ],
+      "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target",
+      "collectorError": null,
+      "runId": "c9d3d482-d0ea-46e6-ad01-235a0d28ae13"
+    },
+    "launchExit": 0
+  },
+  {
+    "caseId": "mkv-av1-opus",
+    "transport": "http",
+    "initial": "d3b8803a-1dae-40bd-b550-bdffe88fd438",
+    "repeat": "c5ecc4b9-b38a-4670-a88a-bf0f7a183799",
+    "selected": "c5ecc4b9-b38a-4670-a88a-bf0f7a183799",
+    "repeatOutcome": {
+      "caseId": "mkv-av1-opus",
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": true,
+      "identityBound": true,
+      "collectorPassed": true,
+      "extractionValid": true,
+      "exitCode": 0,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "c5ecc4b9-b38a-4670-a88a-bf0f7a183799"
+    },
+    "launchExit": 0
+  }
+]

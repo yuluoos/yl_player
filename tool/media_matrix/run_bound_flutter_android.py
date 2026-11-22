@@ -9,6 +9,7 @@ import argparse
 import base64
 import gzip
 import json
+import shlex
 import subprocess
 import time
 import uuid
@@ -18,6 +19,16 @@ from bound_av import validate
 from bound_matrix import planned_case
 from run_bound_android import parse_rows
 from run_bound_apple import CASES, PHASES, write
+
+
+def installed_apk_matches(adb, package, expected):
+    listing = subprocess.run(adb + ['shell', 'pm', 'path', package], capture_output=True, text=True)
+    paths = listing.stdout.strip().splitlines()
+    if listing.returncode or len(paths) != 1 or not paths[0].startswith('package:/'):
+        return False
+    path = paths[0][len('package:'):]
+    result = subprocess.run(adb + ['shell', 'sha256sum', shlex.quote(path)], capture_output=True, text=True)
+    return result.returncode == 0 and result.stdout.split()[:1] == [expected]
 
 
 def planned_controls(catalog):
@@ -51,9 +62,13 @@ def main():
     if args.negative_identity:plan['buildSha256']='0'*64
     write(out/'plan.json',plan)
     adb=['adb','-s',args.serial];package='dev.ylplayer.yl_player_example'
-    install=subprocess.run(adb+['install','-r',str(args.apk)],capture_output=True)
-    (out/'install.log').write_bytes(install.stdout+install.stderr)
-    if install.returncode:raise RuntimeError('APK install failed')
+    # TV launchers can foreground their app list on a package-replaced broadcast.
+    if args.matrix_id and installed_apk_matches(adb, package, sha):
+        (out/'install.log').write_text(f'Reused installed APK with SHA-256 {sha}\n')
+    else:
+        install=subprocess.run(adb+['install','-r',str(args.apk)],capture_output=True)
+        (out/'install.log').write_bytes(install.stdout+install.stderr)
+        if install.returncode:raise RuntimeError('APK install failed')
     subprocess.run(adb+['shell','am','force-stop',package],check=True,capture_output=True)
     command=adb+['shell','am','start','-W','-n',package+'/'+package+'.MainActivity','--es','p03Plan',base64.b64encode(canonical(plan)).decode()]
     write(out/'launch.json',dict(command=command,preverified=sha_file(args.apk)==sha))

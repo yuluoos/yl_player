@@ -5,9 +5,12 @@ import hashlib
 import math
 import struct
 import json
+from subprocess import CompletedProcess
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 import bound_matrix
+from run_bound_flutter_android import installed_apk_matches
 import test_bound_av as fixtures
 
 class MatrixTest(unittest.TestCase):
@@ -23,6 +26,22 @@ class MatrixTest(unittest.TestCase):
         self.assertEqual(2,sum(c['requirement']=='corrupt' for c in cells))
         for bad in (self.catalog[:-1],self.catalog+[self.catalog[0]]):
             with self.assertRaises(ValueError):bound_matrix.cells(bad)
+
+    def test_reuse_requires_one_installed_apk_with_matching_device_digest(self):
+        adb = ['adb', '-s', 'tv']
+        path = '/data/app/example/base.apk'
+        sha = 'a' * 64
+        single = CompletedProcess([], 0, 'package:' + path + '\n')
+        for observed, code, matches in [(sha, 0, True), ('b' * 64, 0, False), (sha, 1, False)]:
+            with self.subTest(observed=observed, code=code), patch('run_bound_flutter_android.subprocess.run') as run:
+                run.side_effect = [single, CompletedProcess([], code, observed + '  ' + path)]
+                self.assertEqual(installed_apk_matches(adb, 'example', sha), matches)
+                self.assertEqual(run.call_args_list[1].args[0], adb + ['shell', 'sha256sum', path])
+        for listing in ['', single.stdout + 'package:/data/app/example/split.apk\n']:
+            with self.subTest(listing=listing), patch('run_bound_flutter_android.subprocess.run') as run:
+                run.return_value = CompletedProcess([], 0, listing)
+                self.assertFalse(installed_apk_matches(adb, 'example', sha))
+                run.assert_called_once()
 
     def test_child_plan_preserves_source_channels_and_transport(self):
         apple=bound_matrix.planned_case(self.catalog,'mkv-avc-opus-silk','macos','http')
