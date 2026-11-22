@@ -1,0 +1,509 @@
+{
+  "baseCommit": "aebe0bc9c44eaae27e4febbf53fb87e54c1fc5bf",
+  "model": "MiTV-MTTP0",
+  "api": 28,
+  "memory": {
+    "memory-critical": {
+      "apk": "ba036131246e722c45863c1970dd8f632982fcf39d13b1b86f8b5b787816f5c9",
+      "trim": {
+        "exit": 0,
+        "attempts": {
+          "RUNNING_CRITICAL": {
+            "exit": 255,
+            "output": "Exception occurred while executing:\njava.lang.IllegalArgumentException: Unable to set a higher trim level than current level\n\tat com.android.server.am.ActivityManagerService.setProcessMemoryTrimLevel(ActivityManagerService.java:4849)\n\tat com.android.server.am.ActivityManagerShellCommand.runSendTrimMemory(ActivityManagerShellCommand.java:2342)\n\tat com.android.server.am.ActivityManagerShellCommand.onCommand(ActivityManagerShellCommand.java:259)\n\tat android.os.ShellCommand.exec(ShellCommand.java:103)\n\tat com.android.server.am.ActivityManagerService.onShellCommand(ActivityManagerService.java:16194)\n\tat android.os.Binder.shellCommand(Binder.java:634)\n\tat android.os.Binder.onTransact(Binder.java:532)\n\tat android.app.IActivityManager$Stub.onTransact(IActivityManager.java:3592)\n\tat com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:3317)\n\tat android.os.Binder.execTransact(Binder.java:731)"
+          },
+          "16": {
+            "exit": 0,
+            "output": ""
+          }
+        }
+      },
+      "budgets": {
+        "normal": [
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 0
+          },
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 2424832
+          }
+        ],
+        "reduced": [
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 16,
+            "targetBytes": 25165824,
+            "allocatedBytes": 0
+          },
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 16,
+            "targetBytes": 18874368,
+            "allocatedBytes": 4325376
+          }
+        ],
+        "rebuilt": [
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 0
+          },
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 1376256
+          }
+        ]
+      },
+      "stages": {
+        "overlap": {
+          "samples": 15,
+          "videoCodecs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "pssKiB": [
+            168297,
+            256933
+          ]
+        },
+        "trim": {
+          "samples": 1,
+          "videoCodecs": [
+            1
+          ],
+          "pssKiB": [
+            220376,
+            220376
+          ]
+        },
+        "background": {
+          "samples": 5,
+          "videoCodecs": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pssKiB": [
+            180970,
+            204546
+          ]
+        },
+        "foreground": {
+          "samples": 7,
+          "videoCodecs": [
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "pssKiB": [
+            181408,
+            220544
+          ]
+        },
+        "survivor": {
+          "samples": 2,
+          "videoCodecs": [
+            1,
+            0
+          ],
+          "pssKiB": [
+            186460,
+            192406
+          ]
+        },
+        "stopped": {
+          "samples": 4,
+          "videoCodecs": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pssKiB": [
+            166392,
+            188890
+          ]
+        }
+      },
+      "decoder": [
+        "OMX.MS.AVC.Decoder",
+        "OMX.MS.AVC.Decoder"
+      ]
+    },
+    "memory-critical-repeat": {
+      "apk": "ba036131246e722c45863c1970dd8f632982fcf39d13b1b86f8b5b787816f5c9",
+      "trim": {
+        "exit": 0,
+        "attempts": {
+          "RUNNING_CRITICAL": {
+            "exit": 255,
+            "output": "Exception occurred while executing:\njava.lang.IllegalArgumentException: Unable to set a higher trim level than current level\n\tat com.android.server.am.ActivityManagerService.setProcessMemoryTrimLevel(ActivityManagerService.java:4849)\n\tat com.android.server.am.ActivityManagerShellCommand.runSendTrimMemory(ActivityManagerShellCommand.java:2342)\n\tat com.android.server.am.ActivityManagerShellCommand.onCommand(ActivityManagerShellCommand.java:259)\n\tat android.os.ShellCommand.exec(ShellCommand.java:103)\n\tat com.android.server.am.ActivityManagerService.onShellCommand(ActivityManagerService.java:16194)\n\tat android.os.Binder.shellCommand(Binder.java:634)\n\tat android.os.Binder.onTransact(Binder.java:532)\n\tat android.app.IActivityManager$Stub.onTransact(IActivityManager.java:3592)\n\tat com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:3317)\n\tat android.os.Binder.execTransact(Binder.java:731)"
+          },
+          "16": {
+            "exit": 0,
+            "output": ""
+          }
+        }
+      },
+      "budgets": {
+        "normal": [
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 0
+          },
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 2097152
+          }
+        ],
+        "reduced": [
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 16,
+            "targetBytes": 25165824,
+            "allocatedBytes": 0
+          },
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 16,
+            "targetBytes": 18874368,
+            "allocatedBytes": 5308416
+          }
+        ],
+        "rebuilt": [
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 0
+          },
+          {
+            "normalBytes": 25165824,
+            "lastTrimLevel": 15,
+            "targetBytes": 25165824,
+            "allocatedBytes": 1441792
+          }
+        ]
+      },
+      "stages": {
+        "overlap": {
+          "samples": 15,
+          "videoCodecs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "pssKiB": [
+            174952,
+            268838
+          ]
+        },
+        "trim": {
+          "samples": 2,
+          "videoCodecs": [
+            1,
+            1
+          ],
+          "pssKiB": [
+            246389,
+            254113
+          ]
+        },
+        "background": {
+          "samples": 5,
+          "videoCodecs": [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "pssKiB": [
+            206136,
+            250762
+          ]
+        },
+        "foreground": {
+          "samples": 7,
+          "videoCodecs": [
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "pssKiB": [
+            194419,
+            215712
+          ]
+        },
+        "survivor": {
+          "samples": 2,
+          "videoCodecs": [
+            1,
+            1
+          ],
+          "pssKiB": [
+            207872,
+            214443
+          ]
+        },
+        "stopped": {
+          "samples": 4,
+          "videoCodecs": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pssKiB": [
+            187264,
+            202864
+          ]
+        }
+      },
+      "decoder": [
+        "OMX.MS.AVC.Decoder",
+        "OMX.MS.AVC.Decoder"
+      ]
+    }
+  },
+  "focus": {
+    "focus-final": {
+      "playerApk": "697e64d7d13c734657de9646b38faec1a78fb0344fabf0aa71e3a206ae2c2849",
+      "peerApk": "f6921f849766ad86e7d2d0471287a09813d303ad5faf95b0fb98d51aac390e13",
+      "playerUid": 10043,
+      "peerUid": 10041,
+      "clock": {
+        "transient": {
+          "pauseMs": 695,
+          "endMs": 695,
+          "deltaMs": 0
+        },
+        "long-transient": {
+          "pauseMs": 573,
+          "endMs": 573,
+          "deltaMs": 0
+        },
+        "duck": {
+          "pauseMs": 549,
+          "endMs": 549,
+          "deltaMs": 0
+        },
+        "gain": {
+          "pauseMs": 587,
+          "endMs": 587,
+          "deltaMs": 0
+        },
+        "user-pause": {
+          "pauseMs": 627,
+          "endMs": 627,
+          "deltaMs": 0
+        }
+      },
+      "cases": [
+        "transient",
+        "long-transient",
+        "duck",
+        "gain",
+        "user-pause",
+        "app-managed"
+      ],
+      "foregroundOnly": true,
+      "route": "speaker",
+      "stackReleased": true
+    },
+    "focus-repeat": {
+      "playerApk": "697e64d7d13c734657de9646b38faec1a78fb0344fabf0aa71e3a206ae2c2849",
+      "peerApk": "f6921f849766ad86e7d2d0471287a09813d303ad5faf95b0fb98d51aac390e13",
+      "playerUid": 10043,
+      "peerUid": 10041,
+      "clock": {
+        "transient": {
+          "pauseMs": 792,
+          "endMs": 792,
+          "deltaMs": 0
+        },
+        "long-transient": {
+          "pauseMs": 582,
+          "endMs": 582,
+          "deltaMs": 0
+        },
+        "duck": {
+          "pauseMs": 574,
+          "endMs": 574,
+          "deltaMs": 0
+        },
+        "gain": {
+          "pauseMs": 590,
+          "endMs": 590,
+          "deltaMs": 0
+        },
+        "user-pause": {
+          "pauseMs": 572,
+          "endMs": 572,
+          "deltaMs": 0
+        }
+      },
+      "cases": [
+        "transient",
+        "long-transient",
+        "duck",
+        "gain",
+        "user-pause",
+        "app-managed"
+      ],
+      "foregroundOnly": true,
+      "route": "speaker",
+      "stackReleased": true
+    }
+  },
+  "jvm": {
+    "tests": 645,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0
+  },
+  "archiveFiles": {
+    "first/capture.log": "6129dff089ec67332fa327d00714288de10978cd24c99f8cd889ab6d2965ce51",
+    "first/receipt.json": "b037f54503bb697b284f1f280b7d326a9e633c070f71b79a0d46606bc81b67a0",
+    "first/installed.json": "ca414d2aae1a494bd4e05dee65a014cd2ae906afeb77946799b2c68805488033",
+    "first/peer.json": "1ad82f18505c10ecd5b1b4362cb4bfccd4a08cfff18011dbe200ff2a75f99b0b",
+    "first/peer-junit.log": "49c724ab2d9ed33ef37f7505a065e689c2a83245469298c62d9c2d6696ac245e",
+    "first/focus.jsonl": "163a378ecc62170095919d68ed2e3914bda571125b438aa1dc3efdaea3058a58",
+    "qualified/capture.log": "43dd6b7f5d06a70bee81a0b199498d9903cb2ad7a740272374609ff47ac29624",
+    "qualified/receipt.json": "42d09d888ed451605cc115271baf780eeadae01607f502008823a638d795555d",
+    "qualified/installed.json": "43fa4cfd35a180f2f66e052e1d7e1375e628b520f1aeb7c831de3e5be4442de2",
+    "qualified/peer.json": "77873b8e30cefce01897ddf66898cf9a33681fef1c2c5b74cb0b999767cbda42",
+    "qualified/peer-junit.log": "3df9e5e5c4068625b2d2380b6a0c5fbe889bc205204b2dd4f72cea98d8bf9bc8",
+    "qualified/focus.jsonl": "4a647b34ad552d4ce4def23015284eb45bfefe7a426b222741205f70d1819a95",
+    "qualified/cleanup.json": "fa074426f7d4b697a9e09954d7a8e88118471cb27b5130e19de9c85c3ae27790",
+    "pause-clock/capture.log": "6760fdc064970a65e2a6080de9bf7c0ec9cd25c5209c70d559d05aff2b03c2b1",
+    "pause-clock/receipt.json": "187f203667bc1ae917ea26bae3912fd893482c9e855923ae2bdd9113dd657fa9",
+    "pause-clock/installed.json": "0009f98c9b6eec6f70ef632165f340d78143f03201d4a7b55b138be2905bfc91",
+    "pause-clock/peer.json": "6b06308aef87d6567962a26e6e5adbbe4886500df5310e3ea68db6c4c07d90ba",
+    "pause-clock/peer-junit.log": "a7c24249a8234ecd044e2eff745eaefe95d9cb84187248ee4c9e91207f48c73d",
+    "pause-clock/focus.jsonl": "98f15ca11cd2a08347e31917848cd043ec3ec7197971a56f877a19ca137fff25",
+    "pause-clock/cleanup.json": "fa074426f7d4b697a9e09954d7a8e88118471cb27b5130e19de9c85c3ae27790",
+    "memory-first/capture.log": "d09bd81f949935353fef6e5004b8a4c56c1c2f31a615f5871dd45e3c6cf4cb0e",
+    "memory-first/receipt.json": "50925ed564e39466f62eef173db29449dc491815dfbbc43bfaf053bfc615f013",
+    "memory-first/installed.json": "fb174c343bac20a09eebbbc56c07f415814b7046efcd852e3c51b4734586aaa7",
+    "memory-first/resources.json": "199a31c0b5d7f94b3956a0d1adf69dcd8eddd1c0c763aee02148d65f64506208",
+    "memory-first/trim.json": "46eb70fbd73d915e221637a0ba9a575466939c4d59cfd06e8ee02fbb128e0d02",
+    "memory-output/capture.log": "038533d7ce8bf17c1fd127b95cccc6e0ac972b6881d87c04da3ef46c9d6f5834",
+    "memory-output/receipt.json": "be6e232b7d583de09452fc60e7167e154d891edd67e80b95b2bf04803192ded3",
+    "memory-output/installed.json": "23ae12cfc7e4cf5b6312f9536b2859463a8d08ec680f2d5d8da915cd380564d4",
+    "memory-output/resources.json": "a550692fa16f06128bf768c989bf50e5b6e1533b336bb5c4ee9666429240fd43",
+    "memory-output/trim.json": "f3ebea623f75b6e0c5bafbf1ea9b197434415e2201b9050137dbbf0f6499b426",
+    "memory-final/capture.log": "0dda41194796a522a6c136e74fe505a85ebe4529ffcde80eb55eb53dcecda6b7",
+    "memory-final/receipt.json": "bc3bb8143cd276be515f1e42d64af7be94f3cfea387ba77cd2eb5ee32f61f89f",
+    "memory-final/installed.json": "726107c1dc6eb0a87d029824d64f5d70384e7db9876bd1f0cb60a5ceab245af4",
+    "memory-final/resources.json": "c3e74030f636eb9f1c31e3be8071be499b02d55f274de0d29aeda0f7f793333b",
+    "memory-final/trim.json": "46eb70fbd73d915e221637a0ba9a575466939c4d59cfd06e8ee02fbb128e0d02",
+    "memory-peer-fix/capture.log": "ffb3b7b346578dab36f9b0590e3b67ec9b7a2a2db7e297abcb6b230d80cc5419",
+    "memory-peer-fix/receipt.json": "c532d8a07c355b7c592aee188267eefb9718cd10a74792776d6d3b4758149037",
+    "memory-peer-fix/installed.json": "17bcef084ba2d63998b17ca7168dfeca59d55bf574166f06326cfd170e7ca073",
+    "memory-peer-fix/resources.json": "b796e4e3a3220c5d44e9fc738c4bb6ad71acaf86c9caa9816c402a2873f09b73",
+    "memory-peer-fix/trim.json": "f3ebea623f75b6e0c5bafbf1ea9b197434415e2201b9050137dbbf0f6499b426",
+    "focus-final/capture.log": "036d9791f69ae2206a4011e05b8dd4e21ebf9b29b2ddacd22e42169adbdbd521",
+    "focus-final/receipt.json": "b12eb864e846a6b5044a6324106560aeed85a5d5aac0966ff4a838dc59fb07ee",
+    "focus-final/installed.json": "93438cfd67244df786569c5a3c9e036d8bfc855c6128f48171b15377692430ca",
+    "focus-final/peer.json": "4aeb236d86b426db0fc1ef182b87e4a98bba634acd7624fbc479697825df0643",
+    "focus-final/peer-junit.log": "eaa26c72a08fb34e4db6889c736c53987a0a241570a9d470cd381ab7173eff29",
+    "focus-final/focus.jsonl": "b24d845daab5db5019c4d9eebf241a19084948af798a1a7890e288cb0b2460f6",
+    "focus-final/cleanup.json": "fa074426f7d4b697a9e09954d7a8e88118471cb27b5130e19de9c85c3ae27790",
+    "focus-repeat/capture.log": "927974f4f07598eb0c40ed5d1aa0c54dfc0ace9dae91f830578f681caeb391f3",
+    "focus-repeat/receipt.json": "fd9b15f29a55663633857687fbd081d7baff171297b2bfde8e57804f031335e2",
+    "focus-repeat/installed.json": "983fcd5d86917c5e1702fbe0211f2ecef4995d7f71484d61b6baa17a1394f842",
+    "focus-repeat/peer.json": "4aeb236d86b426db0fc1ef182b87e4a98bba634acd7624fbc479697825df0643",
+    "focus-repeat/peer-junit.log": "2fd36bc21048a1c57e0ba918f712463748a8cdcee5b08920dd7405cb3168e684",
+    "focus-repeat/focus.jsonl": "10ef982f65448b261b72bfa7a5131dc60eef42d5268debc2e9bf076dd0a951a8",
+    "focus-repeat/cleanup.json": "fa074426f7d4b697a9e09954d7a8e88118471cb27b5130e19de9c85c3ae27790",
+    "memory-critical/capture.log": "53c9f52f80b01add1637ec39182f0bda356ea468e89f84727d705fee0421593c",
+    "memory-critical/receipt.json": "743147012d12b45e4575a9b19df6fe05e7cde4711e8a70d95fdee86e5859ed99",
+    "memory-critical/installed.json": "5e586908c7f218abcb8bcfa2c01d136d3bea0ee64a682788756590c2a1922cb2",
+    "memory-critical/resources.json": "8b66fe77e37d5ffcc0bc87939ac58c81941feaad7001d32fe411c757bbe34124",
+    "memory-critical/trim.json": "875fb32f62fcc999c2346e77e22faab63ff3a1af964eeff0a6f80b02c703ccc8",
+    "memory-critical-repeat/capture.log": "8e46d33639f144360c90ada0422fed0248415e6b00b97f9e7817edf977e5ba02",
+    "memory-critical-repeat/receipt.json": "f9b9ef8fcc5996e016613d31ad64eb3730ce70994a168d774db715eb1877136e",
+    "memory-critical-repeat/installed.json": "f0cff0b002add1bbfbcb35b33a0e0a776167566ae90b43a99c6a4f599e2c3aee",
+    "memory-critical-repeat/resources.json": "d112c032f79e3b1c99d93f553a6f235eed14a29ec7b1716bc81cb3d36688371e",
+    "memory-critical-repeat/trim.json": "875fb32f62fcc999c2346e77e22faab63ff3a1af964eeff0a6f80b02c703ccc8",
+    "output-devices.log": "18abc214e9f842cdc3369f60c9dc42b6f29d8db59b2b82506d69e4b3ff523a1e",
+    "analyze.log": "3a452afb3c9f0f7a6f21eea7b37bebe5c5fd2011eb539b19b9dfdf880a38d388",
+    "jvm.log": "5c18c181cca1a7a41ee9f6a12170cd0af4626882f983c08bd176bd913be9bd36"
+  },
+  "finalSourceSha256": {
+    "packages/yl_player/example/android/app/src/debug/kotlin/dev/ylplayer/yl_player_example/FrameObservationProvider.kt": "d5183024e09742ab6db75dde78e54f4e6c0d6a97907832ea87f7e824664971dd",
+    "packages/yl_player/example/integration_test/android_audio_focus_peer_test.dart": "e24c2d63d4adc54fb9b3f33a355bcfc198ca01e10c38c5daa6337ae2a4bd95b6",
+    "packages/yl_player/example/integration_test/android_memory_lifecycle_test.dart": "69e795e707864b4552d97bfa30b1948cb7122000d5c07b207f575bd2781679ad",
+    "packages/yl_player/example/integration_test/dash_program_periods_test.dart": "072912099270acac753777c07dc0c202981a22a22db2afa0e1d86b5bf4930647",
+    "packages/yl_player/example/integration_test/dash_subtitle_playback_test.dart": "72680392ee661a5a7e940d6a479035501d1b53f2f018d08c52f665f7832a005e",
+    "packages/yl_player/example/integration_test/subtitle_completed_seek_test.dart": "1fd263b1b2426535917c28893d72df0cdfab92424e6c65640348bae5f314fbac",
+    "packages/yl_player/example/integration_test/support/capture_composition.dart": "cecc35e92c75e2e27597e02e0d26dcb3e9e50b206bd20c5fbda1a3daabbf6016",
+    "packages/yl_player/lib/src/player_view.dart": "41ec8edce6bf79ed4dd2076ce438e1678b35446567beeb8a4bd43aec54626b05",
+    "packages/yl_player_android/android/build.gradle.kts": "be10d1b169cdf6bad2771d63e1c195663f5c3759ef64f5e9eb6338015cd93b76",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusPeerInstrumentedTest.kt": "7a963391504136c0a6beba1239069306415f21a8dce678f202a988f3906f798a",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "231bd5bfc3ab6cec3b9b4fc47b9586b5bcfd5485d192cbd975fb1c0838ccfa2c",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashSurfaceProbe.kt": "1062cb46cb487ba92f968e5a1fe5f9ba0d3ee71e592c7bdec79c883ca99b2f69",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashDecoderSizing.kt": "a3fc657ae3f8e1a065c53dbae38b4d7147947352c66fd261f8fb827e31a478ca",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashTransitionRenderer.kt": "63f88caeb59b40e21aed9f86954d14ab24f90d3f0fba0604bfb5222a0e15337a",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "feeae67361b9a3bfca4506880a0736a4018fe1f17d075d888743cdc26b1aac2e",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3StatePolicy.kt": "f094f26e04b8913b3f9ca912e180f082e7145e8f8b0a1d3ff5e7b1f60f3f7975",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeViewFactory.kt": "c4ae375ddb641d3d1c6e7696d185b2b2df21c2a66e22f70b430aae7fb51ef75b",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "0e22dc50536860651f698dc488a0150cb96e9089a189a5c77dc28d957cdc7cef",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinator.kt": "477b0c4fd00486f25b1495b694ced6945de140e2cf999e8171164d9dd6aeac6f",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoOutput.kt": "eb43c0228dc1a69f1512b8427c609c48bbf5610dcfc28d612b2ea64c0864ab6d",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSurfaceSize.kt": "baff60ded9d14fc6c33be7f4a99f7b320def6ec440137e300655da1f641b5330",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashCodecHandoffTest.kt": "dfc4ff5f77a6fdf79abe1d08ca06aa06e3be95fa3566207a373ba9aa10362a22",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt": "2509b845552e3edc1bede88862555bfb9f4bb5428c0d7177724c24d780618408",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3StatePolicyTest.kt": "839527e834807e6b7a17c6b889b6a10d5b7189e35af6857667a2a9ba10046bba",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinatorTest.kt": "c7f96aaf6fc04a5f3522bec46460913e47324051efb006daf2ed2f2b4ff875b0"
+  },
+  "archiveSha256": "99c4cb0f4f99cdfa86a2af6fdae8f200d581da0320c4a7cf04728002902cd9e9"
+}

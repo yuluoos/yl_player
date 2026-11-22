@@ -134,6 +134,7 @@ internal class YlMedia3Core(
     private var status = "idle"
     private var metricsCollector = YlMetricsCollector()
     private var hasBeenReady = false
+    private var playingChangeSequence = 0L
     private var rebufferCount = 0
     private var bufferingStartedAtMs: Long? = null
     private var rebufferDurationMs = 0L
@@ -723,14 +724,30 @@ internal class YlMedia3Core(
     override fun onIsPlayingChanged(eventTime: AnalyticsListener.EventTime, isPlaying: Boolean) {
         if (!isCurrentEvent(eventTime)) return
         if (!active) return
+        val sequence = ++playingChangeSequence
         if (isPlaying && lifecycle.state.focusPaused) {
             cancelFocusGrace()
             lifecycle.reduce(YlLifecycleEvent.FOCUS_GAIN)
         }
         syncRtmpDemand()
         if (exoPlayer.playbackState == Player.STATE_READY) {
-            status = YlMedia3StatePolicy.readyStatus(status, isPlaying)
-            emitState()
+            if (isPlaying || exoPlayer.playWhenReady) {
+                status = YlMedia3StatePolicy.readyStatus(status, isPlaying)
+                emitState()
+            } else {
+                // Media3 updates playWhenReady on the app looper before the playback
+                // looper stops its clock. Publish the paused position after that command.
+                val generation = sourceGeneration
+                exoPlayer.createMessage { _, _ ->
+                    handler.post {
+                        if (!disposed && !stopped && active && generation == sourceGeneration && sequence == playingChangeSequence &&
+                            !exoPlayer.playWhenReady && exoPlayer.playbackState == Player.STATE_READY) {
+                            status = YlMedia3StatePolicy.readyStatus(status, false)
+                            emitState()
+                        }
+                    }
+                }.send()
+            }
         }
         refreshStallWatchdog()
     }

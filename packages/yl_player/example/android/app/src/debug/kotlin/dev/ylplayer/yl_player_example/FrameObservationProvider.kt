@@ -75,6 +75,10 @@ private class FrameObservation(private val flutter: FlutterEngine) {
                                 "dropped" to counters?.droppedBufferCount)
                         }
                     }
+                    "bufferBudget" -> {
+                        val current = checkNotNull(attached)
+                        onWorker(current.handler, result) { current.bufferBudget() }
+                    }
                     "read" -> {
                         val current = checkNotNull(attached)
                         onWorker(current.handler, result) { current.records.toList() }
@@ -142,7 +146,17 @@ private class FrameObservation(private val flutter: FlutterEngine) {
                 }
             }
             player.addAnalyticsListener(listener)
-            val value = Attached(handler, player, listener, records)
+            val value = Attached(handler, player, listener, records) {
+                val control = checkNotNull(field(core, "loadControl"))
+                val allocator = field(control, "allocator") as androidx.media3.exoplayer.upstream.Allocator
+                val normal = checkNotNull(field(control, "normalProfile"))
+                val process = android.app.ActivityManager.RunningAppProcessInfo()
+                android.app.ActivityManager.getMyMemoryState(process)
+                mapOf("normalBytes" to field(normal, "targetBufferBytes") as Int,
+                    "lastTrimLevel" to process.lastTrimLevel,
+                    "targetBytes" to control.javaClass.getMethod("getTargetBufferBytes").invoke(control) as Int,
+                    "allocatedBytes" to allocator.totalBytesAllocated)
+            }
             main.post { if (closed) handler.post { player.removeAnalyticsListener(listener) } else attached = value }
             mapOf("sessionId" to id, "privateSurfaceId" to System.identityHashCode(privateSurface))
         }
@@ -170,7 +184,7 @@ private class FrameObservation(private val flutter: FlutterEngine) {
         attached = null
         current?.handler?.post { current.player.removeAnalyticsListener(current.listener) }
     }
-    private data class Attached(val handler: Handler, val player: ExoPlayer, val listener: AnalyticsListener, val records: ArrayList<Map<String, Any>>)
+    private data class Attached(val handler: Handler, val player: ExoPlayer, val listener: AnalyticsListener, val records: ArrayList<Map<String, Any>>, val bufferBudget: () -> Map<String, Int>)
 }
 
 private fun field(owner: Any, name: String): Any? = owner.javaClass.getDeclaredField(name).apply { isAccessible = true }.get(owner)

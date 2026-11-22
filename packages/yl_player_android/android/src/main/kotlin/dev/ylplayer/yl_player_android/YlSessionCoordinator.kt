@@ -310,6 +310,9 @@ internal class YlSessionCoordinator(
         override val needsExclusiveLease get() = session.engine.needsExclusiveLease
         override val canRestore get() = !resourcesFailed && !closed && !stopping && !backgrounded && active?.identity == session.identity
         var suspended: YlLeaseSnapshot? = null
+        var displacedByPeer = false
+            private set
+        var deferredForeground = false
         var quiescing = false
             private set
         private var quiesceOperation: Deferred<YlLeaseSnapshot>? = null
@@ -460,6 +463,10 @@ internal class YlSessionCoordinator(
             if (restore == null) session.engine.activate(output) else {
                 beginRestore()
                 session.engine.restore(restorePoint(restore.runtime), output)
+                if (deferredForeground && canRestore) {
+                    session.engine.onForeground()
+                    deferredForeground = false
+                }
             }
             // Player volume can change while codec initialization is suspended.
             session.engine.setVolume(effectiveVolume())
@@ -475,6 +482,7 @@ internal class YlSessionCoordinator(
             leaseCommitVersion++
             activeLease = this
             suspended = null
+            displacedByPeer = false
             transacting = false
             if (!committedOnce) {
                 inCommit = true
@@ -493,6 +501,7 @@ internal class YlSessionCoordinator(
         override fun deactivateAfterLeaseTransfer() {
             transacting = false
             if (active?.identity == session.identity) {
+                displacedByPeer = true
                 releaseAudio()
                 reducer.pauseForLifecycle()
             }
@@ -801,7 +810,15 @@ internal class YlSessionCoordinator(
                     if (backgrounded || generation != lifecycleGeneration || activeLease !== lease) return@runEngine
                     lease.ensureResourcesUsable()
                     intent = backgroundPlayIntent?.takeIf { it.first == session.identity }
+                    // A peer already owned the video decoder before HOME. Keep the
+                    // displaced session paused until an explicit play reacquires it.
+                    if (lease.displacedByPeer && intent?.second != true) {
+                        lease.deferredForeground = true
+                        applied = true
+                        return@runEngine
+                    }
                     if (intent?.second == false) pause()
+                    lease.deferredForeground = false
                     if (lease.quiescing || lease.suspended != null) leases.acquire(lease) {}
                     if (backgrounded || generation != lifecycleGeneration || activeLease !== lease) return@runEngine
                     onForeground()

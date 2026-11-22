@@ -603,6 +603,29 @@ class YlSessionCoordinatorTest {
         assertTrue(first.engines.single().playing && second.engines.single().playing)
         first.finish(); second.finish()
     }
+    @Test fun `foreground restores only the video owner until the displaced peer requests play`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val shared = YlDecoderLeaseCoordinator(dispatcher) { testScheduler.currentTime }
+        val first = SessionFixture(dispatcher, 1).also { it.coordinator.bindLeases(shared) }
+        val second = SessionFixture(dispatcher, 2).also { it.coordinator.bindLeases(shared) }
+        val prior = first.coordinator.load(request("old").withAutoplay(true)); runCurrent()
+        first.coordinator.pause(AndroidSessionCommand(prior.sessionId)); runCurrent()
+        second.coordinator.load(request("current").withAutoplay(true)); runCurrent()
+        val displaced = first.engines.single()
+        val owner = second.engines.single()
+        first.coordinator.onBackground(); second.coordinator.onBackground(); runCurrent()
+        second.coordinator.onForeground(); first.coordinator.onForeground(); runCurrent()
+        assertEquals(0, displaced.restores)
+        assertTrue(owner.playing)
+        assertFalse(displaced.playing)
+        second.coordinator.stop()
+        first.coordinator.play(AndroidSessionCommand(prior.sessionId)); runCurrent()
+        assertEquals(1, displaced.restores)
+        assertFalse(displaced.backgrounded)
+        assertTrue(displaced.playing)
+        first.finish(); second.finish()
+    }
+
     @Test fun `peer retains metadata and reacquires lease on play`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         val shared = YlDecoderLeaseCoordinator(dispatcher) { testScheduler.currentTime }

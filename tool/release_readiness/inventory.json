@@ -1232,6 +1232,11 @@
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-dash-first-frame-and-hevc.md",
       "kind": "report",
       "sha256": "3dde21a4a282f5bc282c91568e3ad1af61dd5a4565467fe4771c2cbd64b9eb29"
+    },
+    "android-mitv-memory-lifecycle-and-focus-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-memory-lifecycle-and-audio-focus.md",
+      "kind": "report",
+      "sha256": "5e58a3fcef8e62a5b4201c7e27269854afc3fbf5b2652e07b6a6b78e58273e21"
     }
   },
   "rows": [
@@ -2511,10 +2516,11 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-memory-lifecycle-and-focus-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-route-interruption-and-peers-after-oppo-background-resume"
+      "nextAction": "verify-external-route-changes-after-mitv-peer-focus-pass"
     },
     {
       "requirement": "REG-AUDIO",
@@ -2562,10 +2568,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-memory-lifecycle-and-focus-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
+      "nextAction": "verify-candidate-overlap-reconnect-and-seek-budgets-after-mitv-memory-pressure-pass"
     },
     {
       "requirement": "REG-BUF",
@@ -2617,10 +2624,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-mitv-api28-20261121"
+        "android-mitv-api28-20261121",
+        "android-mitv-memory-lifecycle-and-focus-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
+      "nextAction": "verify-remaining-hardware-required-fallback-profiles-after-mitv-avc-rebuild"
     },
     {
       "requirement": "REG-DEC",
@@ -2714,10 +2722,11 @@
         "android-oppo-playback-regressions-20261121",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-memory-lifecycle-and-focus-20261122"
       ],
       "acceptance": null,
-      "nextAction": "resolve-mitv-dash-foreground-rebuild-after-public-replacement-pass"
+      "nextAction": "qualify-other-profiles-after-mitv-low-memory-peer-foreground-rebuild"
     },
     {
       "requirement": "REG-LIFE",
