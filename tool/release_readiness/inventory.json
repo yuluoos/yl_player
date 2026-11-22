@@ -1212,6 +1212,11 @@
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-format-recovery.md",
       "sha256": "1cf69c0f54236b16d1501d1d72d21e2b1c771daa5880a7f3e1406993e6882151",
       "kind": "report"
+    },
+    "android-mitv-remaining-acceptance-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-remaining-acceptance.md",
+      "sha256": "bf87997222af50d042c64079ea26b68df6ac449ea2bdd7f822067e5108ee0193",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1229,10 +1234,11 @@
         "abr-recovery-20261027",
         "android-oppo-abr-20261121",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-api24-and-physical-output-after-repeated-api31-auto-recovery"
+      "nextAction": "verify-high-low-high-and-recover-after-starvation-on-api28"
     },
     {
       "requirement": "CAP-ABR",
@@ -1298,7 +1304,7 @@
       "requirement": "CAP-DASH",
       "platform": "android",
       "implementation": "partial",
-      "verification": "not_run",
+      "verification": "failed",
       "evidence": [
         "p01",
         "remaining-acceptance-20261026",
@@ -1307,10 +1313,11 @@
         "android-oppo-dash-network-and-resolver-20261121",
         "android-oppo-av-dns-script-followup-20261121",
         "android-oppo-dash-frame-timing-20261121",
-        "android-oppo-dash-av-optimization-20261121"
+        "android-oppo-dash-av-optimization-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-additional-device-profiles-after-oppo-dash-av-gate-pass"
+      "nextAction": "resolve-api28-selection-rejection-and-avc-output-buffer-failure-on-mitv"
     },
     {
       "requirement": "CAP-DASH",
@@ -1655,7 +1662,8 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-dash-network-and-resolver-20261121",
         "android-oppo-av-dns-script-followup-20261121",
-        "android-oppo-substitute-script-behavior-20261121"
+        "android-oppo-substitute-script-behavior-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "supply-nine-hash-matched-originals-before-device-handoffs"
@@ -1692,7 +1700,7 @@
       "requirement": "CAP-LIVE",
       "platform": "android",
       "implementation": "implemented",
-      "verification": "not_run",
+      "verification": "failed",
       "evidence": [
         "p04",
         "p05",
@@ -1701,10 +1709,11 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-source-clock-and-frozen-targets-after-two-oppo-mode-baselines"
+      "nextAction": "resolve-mitv-hls-and-flv-low-latency-pause-resume"
     },
     {
       "requirement": "CAP-LIVE",
@@ -1740,7 +1749,7 @@
       "requirement": "CAP-PERIOD",
       "platform": "android",
       "implementation": "partial",
-      "verification": "not_run",
+      "verification": "failed",
       "evidence": [
         "p01",
         "p02",
@@ -1751,10 +1760,11 @@
         "android-oppo-dash-network-and-resolver-20261121",
         "android-oppo-av-dns-script-followup-20261121",
         "android-oppo-dash-frame-timing-20261121",
-        "android-oppo-dash-av-optimization-20261121"
+        "android-oppo-dash-av-optimization-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-additional-device-profiles-after-oppo-dash-av-gate-pass"
+      "nextAction": "qualify-api28-programme-and-lifecycle-after-selector-and-output-buffer-failures"
     },
     {
       "requirement": "CAP-PERIOD",
@@ -1791,7 +1801,7 @@
       "requirement": "CAP-RTMP",
       "platform": "android",
       "implementation": "partial",
-      "verification": "not_run",
+      "verification": "failed",
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
@@ -1799,10 +1809,11 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-additional-device-and-stream-boundaries-after-oppo-faults-and-owned-sustained-playback"
+      "nextAction": "resolve-mitv-system-default-startup-before-faults-and-sustained-playback"
     },
     {
       "requirement": "CAP-RTMP",
@@ -1843,7 +1854,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1930,10 +1942,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-oppo-av-dns-script-followup-20261121"
+        "android-oppo-av-dns-script-followup-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-connected-dns-response-and-request-budgets-after-oppo-offline-system-lookup"
+      "nextAction": "qualify-api28-segment-system-dns-after-selector-rejection"
     },
     {
       "requirement": "ERR-02",
@@ -1977,7 +1990,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "complete-forbidden-diagnostics-and-other-request-boundaries-after-single-request-oppo-dash-pass"
@@ -2022,7 +2036,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-other-devices-after-oppo-native-timeout-and-reuse"
@@ -2065,7 +2080,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-other-devices-after-oppo-invalid-result-and-host-api-regressions"
@@ -2110,7 +2126,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-other-rtmp-peers-after-oppo-handshake-and-disconnect-regressions"
@@ -2198,7 +2215,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-av1-hardware-required-20261121",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-other-device-resource-limits-after-oppo-native-budget-and-av1-error-regressions"
@@ -2283,7 +2301,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-font-and-graphics-resource-failures-after-malformed-external-subtitle-isolation"
@@ -2371,7 +2390,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -2467,7 +2487,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "verify-route-interruption-and-peers-after-oppo-background-resume"
@@ -2517,7 +2538,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -2668,10 +2690,11 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
-      "nextAction": "run-final-replacement-cancel-and-release-races"
+      "nextAction": "resolve-mitv-dash-foreground-rebuild-after-public-replacement-pass"
     },
     {
       "requirement": "REG-LIFE",
@@ -2722,7 +2745,8 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-oppo-av-dns-script-followup-20261121"
+        "android-oppo-av-dns-script-followup-20261121",
+        "android-mitv-remaining-acceptance-20261122"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"

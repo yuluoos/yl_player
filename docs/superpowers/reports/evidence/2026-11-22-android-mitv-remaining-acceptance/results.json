@@ -1,0 +1,788 @@
+{
+  "model": "MiTV-MTTP0",
+  "apiLevel": 28,
+  "sourceCommit": "a1363b8687a393e3fefb755090349d61c02b68b8",
+  "suiteResults": {
+    "android_audio_tracks_test": {
+      "target": "android_audio_tracks_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 2,
+      "failed": 0
+    },
+    "android_dash_playback_test": {
+      "target": "android_dash_playback_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 6,
+      "failed": 0
+    },
+    "android_dash_segment_base_test": {
+      "target": "android_dash_segment_base_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 2
+    },
+    "android_managed_fault_isolation_test": {
+      "target": "android_managed_fault_isolation_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 3,
+      "failed": 0
+    },
+    "android_multi_player_rollback_test": {
+      "target": "android_multi_player_rollback_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0
+    },
+    "android_network_start_failure_test": {
+      "target": "android_network_start_failure_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 2,
+      "failed": 1
+    },
+    "android_overlapping_release_test": {
+      "target": "android_overlapping_release_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "videoCodecCounts": {
+        "idle": {
+          "min": 0,
+          "max": 1,
+          "last": 1,
+          "samples": 9
+        },
+        "both": {
+          "min": 1,
+          "max": 1,
+          "last": 1,
+          "samples": 5
+        },
+        "peer": {
+          "min": 1,
+          "max": 1,
+          "last": 1,
+          "samples": 5
+        },
+        "reopened": {
+          "min": 1,
+          "max": 1,
+          "last": 1,
+          "samples": 4
+        },
+        "stopped": {
+          "min": 0,
+          "max": 0,
+          "last": 0,
+          "samples": 5
+        }
+      }
+    },
+    "android_progressive_playback_test": {
+      "target": "android_progressive_playback_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 2,
+      "failed": 0,
+      "hostLifecycle": [
+        "background",
+        "foreground"
+      ]
+    },
+    "android_session_replacement_test": {
+      "target": "android_session_replacement_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 3,
+      "failed": 0
+    },
+    "dash_candidate_playback_test": {
+      "target": "dash_candidate_playback_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 3
+    },
+    "dash_program_cancellation_test": {
+      "target": "dash_program_cancellation_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 2
+    },
+    "dash_program_periods_test": {
+      "target": "dash_program_periods_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 19
+    },
+    "dash_video_gap_subtitle_test": {
+      "target": "dash_video_gap_subtitle_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 3,
+      "failed": 0
+    },
+    "fixed-period": {
+      "target": "abr_fixed_period_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0
+    },
+    "joint": {
+      "passed": false,
+      "pairedSamples": 0
+    },
+    "mitv-adaptive": {
+      "target": "abr_network_profile_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "network": {
+        "frameworkPassed": true,
+        "outcome": "completed",
+        "sampleCount": 488,
+        "endPositionUs": 120000000,
+        "mediaBytesByPhase": [
+          67625,
+          402827,
+          6114253
+        ],
+        "rebufferCount": 1,
+        "requestCount": 333,
+        "seconds": 120,
+        "captureComplete": true,
+        "violations": [],
+        "adaptationObserved": false,
+        "upshiftLatencyUs": null,
+        "recoveryHighRequestLatencyUs": 2213276,
+        "downshiftLatencyUs": null,
+        "requestFailures": 0
+      }
+    },
+    "mitv-adaptive-repeat": {
+      "target": "abr_network_profile_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "network": {
+        "frameworkPassed": true,
+        "outcome": "completed",
+        "sampleCount": 487,
+        "endPositionUs": 120000000,
+        "mediaBytesByPhase": [
+          104113,
+          385349,
+          6095243
+        ],
+        "rebufferCount": 1,
+        "requestCount": 333,
+        "seconds": 120,
+        "captureComplete": true,
+        "violations": [],
+        "adaptationObserved": false,
+        "upshiftLatencyUs": null,
+        "recoveryHighRequestLatencyUs": 1874816,
+        "downshiftLatencyUs": null,
+        "requestFailures": 0
+      }
+    },
+    "mitv-flv-low-01": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "live": {
+        "frameworkPassed": true,
+        "sampleCount": 143,
+        "protocol": "flv",
+        "baselineMode": "lowLatency",
+        "captureComplete": true,
+        "violations": [],
+        "rebufferCountDelta": 0,
+        "rebufferDurationUsDelta": 0,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          451846,
+          642195,
+          571466
+        ]
+      }
+    },
+    "mitv-flv-smooth-01": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "live": {
+        "frameworkPassed": true,
+        "sampleCount": 143,
+        "protocol": "flv",
+        "baselineMode": "smoothPlayback",
+        "captureComplete": true,
+        "violations": [],
+        "rebufferCountDelta": 0,
+        "rebufferDurationUsDelta": 0,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          451849,
+          642195,
+          567657
+        ]
+      }
+    },
+    "mitv-flv-switch-01": {
+      "target": "live_mode_switch_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 1,
+      "live": {
+        "frameworkPassed": false,
+        "sampleCount": 177,
+        "protocol": "flv",
+        "baselineMode": null,
+        "captureComplete": false,
+        "violations": [
+          "mode_commits_incomplete",
+          "rapid_switch_unverified",
+          "smooth-again_clock_not_advancing",
+          "smooth-again_mode_mismatch",
+          "stale_stop_unverified"
+        ],
+        "rebufferCountDelta": 0,
+        "rebufferDurationUsDelta": 0,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          451849,
+          642195,
+          91941
+        ]
+      }
+    },
+    "mitv-hls-low-01": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "live": {
+        "frameworkPassed": true,
+        "sampleCount": 143,
+        "protocol": "hls",
+        "baselineMode": "lowLatency",
+        "captureComplete": true,
+        "violations": [],
+        "rebufferCountDelta": 0,
+        "rebufferDurationUsDelta": 0,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          626983,
+          503707,
+          802835
+        ]
+      }
+    },
+    "mitv-hls-smooth-01": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "live": {
+        "frameworkPassed": true,
+        "sampleCount": 143,
+        "protocol": "hls",
+        "baselineMode": "smoothPlayback",
+        "captureComplete": true,
+        "violations": [],
+        "rebufferCountDelta": 1,
+        "rebufferDurationUsDelta": 1883000,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          579654,
+          502761,
+          851350
+        ]
+      }
+    },
+    "mitv-hls-switch-reconnected": {
+      "target": "live_mode_switch_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 1,
+      "live": {
+        "frameworkPassed": false,
+        "sampleCount": 177,
+        "protocol": "hls",
+        "baselineMode": null,
+        "captureComplete": false,
+        "violations": [
+          "mode_commits_incomplete",
+          "rapid_switch_unverified",
+          "smooth-again_clock_not_advancing",
+          "smooth-again_mode_mismatch",
+          "stale_stop_unverified"
+        ],
+        "rebufferCountDelta": 0,
+        "rebufferDurationUsDelta": 0,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          579174,
+          515312,
+          309668
+        ]
+      }
+    },
+    "mitv-rtmp-low-01": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "live": {
+        "frameworkPassed": true,
+        "sampleCount": 143,
+        "protocol": "rtmp",
+        "baselineMode": "lowLatency",
+        "captureComplete": true,
+        "violations": [],
+        "rebufferCountDelta": 0,
+        "rebufferDurationUsDelta": 0,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          401167,
+          639376,
+          588887
+        ]
+      }
+    },
+    "mitv-rtmp-smooth-01": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "live": {
+        "frameworkPassed": true,
+        "sampleCount": 143,
+        "protocol": "rtmp",
+        "baselineMode": "smoothPlayback",
+        "captureComplete": true,
+        "violations": [],
+        "rebufferCountDelta": 0,
+        "rebufferDurationUsDelta": 0,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          413006,
+          633304,
+          576319
+        ]
+      }
+    },
+    "mitv-rtmp-switch-01": {
+      "target": "live_mode_switch_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 1,
+      "failed": 0,
+      "live": {
+        "frameworkPassed": true,
+        "sampleCount": 193,
+        "protocol": "rtmp",
+        "baselineMode": null,
+        "captureComplete": true,
+        "violations": [],
+        "rebufferCountDelta": 2,
+        "rebufferDurationUsDelta": 3879000,
+        "networkPhasesObserved": [
+          0,
+          1,
+          2
+        ],
+        "networkPhaseBytes": [
+          396984,
+          613295,
+          1336716
+        ]
+      }
+    },
+    "mitv-stall": {
+      "target": "abr_network_profile_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 1,
+      "network": {
+        "frameworkPassed": false,
+        "outcome": "failed",
+        "sampleCount": 79,
+        "endPositionUs": 4023000,
+        "mediaBytesByPhase": [
+          138236,
+          0,
+          0
+        ],
+        "rebufferCount": 1,
+        "requestCount": 18,
+        "seconds": 40
+      }
+    },
+    "mitv-stall-repeat": {
+      "target": "abr_network_profile_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 1,
+      "network": {
+        "frameworkPassed": false,
+        "outcome": "failed",
+        "sampleCount": 79,
+        "endPositionUs": 4014000,
+        "mediaBytesByPhase": [
+          138236,
+          0,
+          0
+        ],
+        "rebufferCount": 1,
+        "requestCount": 18,
+        "seconds": 40
+      }
+    },
+    "native-additional": {
+      "YlDashDnsInstrumentedTest": {
+        "expected": 2,
+        "passed": 2,
+        "failed": 0
+      },
+      "YlDashPcmInstrumentedTest": {
+        "expected": 8,
+        "passed": 8,
+        "failed": 0
+      },
+      "YlDashJointInstrumentedTest#nativeJointBaseline": {
+        "expected": 1,
+        "passed": 0,
+        "failed": 1
+      },
+      "YlDashLifecycleInstrumentedTest": {
+        "expected": 1,
+        "passed": 0,
+        "failed": 1
+      }
+    },
+    "native-resources": {
+      "nativeFrameBudgetFailureIsResourceExhaustedAndReleasesEverything": 0,
+      "actualEngineBudgetFailureIsOneTerminalEventAndCleanup": 0,
+      "foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress": -2
+    },
+    "rtmp_handoff_recheck": {
+      "target": "rtmp_handoff_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 1,
+      "peerOutcome": {
+        "kind": "nonzero_exit",
+        "commandExitCode": 1
+      },
+      "peerCleaned": true
+    },
+    "rtmp_handoff_test": {
+      "target": "rtmp_handoff_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 1,
+      "peerOutcome": {
+        "kind": "success",
+        "commandExitCode": 0
+      },
+      "peerCleaned": true
+    },
+    "rtmp_playback_test": {
+      "target": "rtmp_playback_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 6,
+      "peerOutcome": {
+        "kind": "nonzero_exit",
+        "commandExitCode": 1
+      },
+      "peerCleaned": true
+    },
+    "rtmp_sustained_playback_test": {
+      "target": "rtmp_sustained_playback_test.dart",
+      "frameworkPassed": false,
+      "frameworkTerminal": true,
+      "passed": 0,
+      "failed": 1,
+      "peerOutcome": {
+        "kind": "nonzero_exit",
+        "commandExitCode": 1
+      },
+      "peerCleaned": true
+    },
+    "script_runtime_test": {
+      "target": "script_runtime_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 9,
+      "failed": 0
+    },
+    "substitute_behavior_test": {
+      "target": "substitute_behavior_test.dart",
+      "frameworkPassed": true,
+      "frameworkTerminal": true,
+      "passed": 9,
+      "failed": 0
+    }
+  },
+  "harnessErrors": {
+    "mitv-hls-switch-01/harness-error.txt": "CalledProcessError(1, ['adb', '-s', '192.168.1.21:5555', 'reverse', '--remove', 'tcp:54713'])"
+  },
+  "archiveSha256": "a5e915c8317e2db7c886e9048b472f54b95f593dca023daafbdd99dd3fe66c27",
+  "files": {
+    "android_audio_tracks_test/capture.log": "724e645f54c81a1596bb5b72aee7e750e39333ccfcf1205acb97012ecf965da5",
+    "android_audio_tracks_test/installed.json": "164dc9bb572a416de5972a768f55baa85dcf3a67b3511f4b6808fd82dfc3b085",
+    "android_audio_tracks_test/receipt.json": "7741c812feb65adb040fb630df4b761f58b99897d3f5657a52039572a04188de",
+    "android_dash_playback_test/capture.log": "95447daba67ba77861152b1b41a33627e5321f3498fc002743a72968e55dcc1f",
+    "android_dash_playback_test/installed.json": "744ebd59dd1db94b4471babb1ec421731a3efd62263349782457e4196c22ad45",
+    "android_dash_playback_test/receipt.json": "c2c4fb8186b9b06545d3301588c91df0e1ca88847095d8a15fed6b40cc16892a",
+    "android_dash_segment_base_test/capture.log": "24b02f07e491675ebdc1838939a3d5f0e8fb6b52e0a1e1f107c2b463336d02d3",
+    "android_dash_segment_base_test/failure-context.log": "84bbd99d1f2ade7d243695f2ceef9cad0a3dde03fd82f535d0b25cc148a730a0",
+    "android_dash_segment_base_test/installed.json": "d8317813d66d830a338598310e315afef6fb0fb19260e4e77a19948934b34604",
+    "android_dash_segment_base_test/receipt.json": "f211165ac8b8485edeacf194f0c8617dcb1ed0918a84d4e7a408dff60ca15dc6",
+    "android_managed_fault_isolation_test/capture.log": "aaad6bf5a1772de8b52a296870c61de6bb6e7138a1d52f80b2fa2dcae4608c6e",
+    "android_managed_fault_isolation_test/receipt.json": "1bb149344f778255a3749c414a0399637795806e9da104d03e4f1724c71642fe",
+    "android_multi_player_rollback_test/capture.log": "ae471303be31be13e817bb2e48020b0d136783581d54baf488d0b2d1949528eb",
+    "android_multi_player_rollback_test/installed.json": "98a3fefa0204e46a4882b896438e30c9ae04b32d89f934a8fca9830eeaecbb66",
+    "android_multi_player_rollback_test/receipt.json": "c1a880c7c3a856203ad6d54e11752681fa3c6e51f8b98194c5d62983c909c815",
+    "android_network_start_failure_test/capture.log": "5c63e505c2155dfc784105ac12f3f0fb299fad157d997ed0dd3e2f3f2718ed55",
+    "android_network_start_failure_test/failure-context.log": "3b6fed3ab7ede32bf03fb041d52ae1cd94c5853494505c9c430ad588eb3de087",
+    "android_network_start_failure_test/installed.json": "3d1dff2b0bc5923f79f0513ba2a577b0072f0f5db49bed49b3d2c23ee5d74a28",
+    "android_network_start_failure_test/receipt.json": "2758d2d7be58340803498fe4bf15ffae6dc6c035c136b4d3b97cbc73dcf0c685",
+    "android_overlapping_release_test/capture.log": "2cba2553c51709d3fa2d055dc9d3e9a33bf7757d7a068dc4e6985850299cfd4a",
+    "android_overlapping_release_test/codec-counts.json": "48bd29c639a6fedee770d0b1e8e720d424d7005b0b36bce1133de28bf8f12756",
+    "android_overlapping_release_test/receipt.json": "3ee6b1b25aae83d54af63dc8aaea5bd9b3391843f1e5ed63d623483e8bf352fc",
+    "android_progressive_playback_test/capture.log": "20ccb8fe6f9125593735cf3259b602fbde0ee348060918d31aa1ad307c7d4784",
+    "android_progressive_playback_test/installed.json": "a672723f5505b069036bf276f9171347bb0debda9e6855b800f99f12a36f2789",
+    "android_progressive_playback_test/lifecycle.json": "72928cbc6d5439dc1f00fa87216972a4b4b472df0ed6f709ce6cf488187754f8",
+    "android_progressive_playback_test/receipt.json": "008726d7c5f96227118c5779a9b740497dbef25e600461a33c0d31a2cca63528",
+    "android_session_replacement_test/capture.log": "4b7d610f78a1cd6a19d84c2bc801b7ad63d8b81abbb74b9cc1150c51c2a17812",
+    "android_session_replacement_test/installed.json": "a4dbb24c64206679587aa3d287fea353815d86e7f26feb7b0564e059d7ea71be",
+    "android_session_replacement_test/receipt.json": "df0381772cfc8e16c3a6ea605e00870bec1ef480c8227879b1f93fec6ad3ea8b",
+    "dash_candidate_playback_test/capture.log": "17bc7cdc31133fa63379279a9b77e87c2d0445a4978eb490e28762b8a827852a",
+    "dash_candidate_playback_test/failure-context.log": "9420e1ea8d6b2b4d732fc50f226d1b62ea409fbe4c32aa0583f536b380dc8a77",
+    "dash_candidate_playback_test/installed.json": "f3f67ee50b577dfd377adc99e84e4f626833841e15674f3525903d798c4fa2f5",
+    "dash_candidate_playback_test/receipt.json": "35d6accdcde8936c867706a690903c73636fee59223ff30148f8c1176e21addb",
+    "dash_program_cancellation_test/capture.log": "3c13180c1a06993dc3a5d9e51d8a555d3f14591ee34f15708e797e4cf7cd2360",
+    "dash_program_cancellation_test/failure-context.log": "7b84a3399a7db748c99015b868e13598e51abfcd77d8ea1fcc71514c9a9c2bb3",
+    "dash_program_cancellation_test/installed.json": "e94e17e7ffc86ae44565d50007a4c1c85a938141da500693e7bc4952f5cb9598",
+    "dash_program_cancellation_test/receipt.json": "0f0f9e6adb0975f1262f7c69df35ecac8a21cf1abe2ed196eb84786a997ab05a",
+    "dash_program_cancellation_test/selector.log": "0b611d6b737c8117051a5e99dc3030c3dcf8b001dab78bb79a90bd82090ca0e0",
+    "dash_program_periods_test/capture.log": "c47608016d427a70eecb6f174a4a2f6a4f9578e65f06ddc95054d65a9306c068",
+    "dash_program_periods_test/failure-context.log": "595ae9bf87bca832cf884b10bb6a25f7d823c307d0af7597e0e3ba09af1aa476",
+    "dash_program_periods_test/installed.json": "1c74e7f097de1388bbc88eb4044844ac564b0c83a4090e7e878ca21d13d1ee73",
+    "dash_program_periods_test/receipt.json": "3fb98dd04cdc8ad1dfc7cd65a1557153a24115278aab2f605370ac83de1dfb1c",
+    "dash_program_periods_test/selector.log": "f178df8396182ee9ceae04d046747316f838b8a32991cd86710def37a9e97c31",
+    "dash_video_gap_subtitle_test/capture.log": "9d765036c506b9c8a3bf7e077313c0ab89e6558ac4e88cb4fb76da637c51b900",
+    "dash_video_gap_subtitle_test/installed.json": "1454f4656601bd17e26c236b53aada82ca51f07049a3fc5e3e8a61adb7426d86",
+    "dash_video_gap_subtitle_test/receipt.json": "321887770de0472fb57045650427ecf7ed7abeea3141a421dc5021aa83f8f4c1",
+    "fixed-period/capture.log": "c7e20e380512c48a44916b404932dacdb374090fbcf23de4b6c5b1543825ed54",
+    "fixed-period/installed.json": "7e85d42541de40a58f19df338ed816249c25bde78447450b7f25f0195f05cd40",
+    "fixed-period/receipt.json": "eb9257a082061da9c788a5e3cdc269c756668fc96bbe033de6a3a39fbdef9770",
+    "fixed-period/requests.jsonl": "6489452c83a7fec6d4c500e2a6471fc9334943adc69796733bc5f28243a0911e",
+    "fixed-period/server.log": "077bef716d1817b2e22ddb655492ed0397c84a0b7f1352c4179ba0139e0dc7bc",
+    "fixtures/dns-preflight.txt": "e0c8d467b078fdc23efa5f0f3c5861af9c826b56a28247860028aac6a05462f6",
+    "fixtures/fixture-120-SHA256SUMS": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0",
+    "fixtures/fixture-120.json": "e047a42ce0020f8260b1b0c8e1feb695c5ee7ed8879116c0b151f4b2ec6475df",
+    "fixtures/fixture-40-SHA256SUMS": "957404b9e5cdbee9631fde621e5ced7cba12bf2a368abcaad64f5271f737c9c4",
+    "fixtures/fixture-40.json": "be340432bd9f9fcffa763781a21e3196f4939fbe02c3fb18d4b1b1d09b0673c2",
+    "fixtures/outage-profile.json": "90297a72a22ca1e5bcf71736c669c0fa417bb35b90ed60518beb99c43ae7d8ab",
+    "fixtures/period-fixture-SHA256SUMS": "e38b944c34d16d60a92be170cd5968443200e3d81c020ba6889d890420d54986",
+    "fixtures/period-fixture.json": "ad5463764304267e67cfd4583bfe051f9d2b40da7910296746b7fbca7bfd1056",
+    "joint/junit.log": "0d50cbd7a7723ce7a0cb1ef887ef91922e1dbdf6945d0445a9b317142220c418",
+    "joint/observations-error.log": "ba2a16b9721561432a7b4646901b9ee8dc885ded1e41fb27e3e130dafec750e3",
+    "joint/receipt.json": "297940ae68f4055f0806b28ec556005b2864bc53e15803c3da84161869be1ce3",
+    "joint/renderer.log": "3d257baa4f54bc3ba9aef88631bc1796013f398ad4a972febffbd22e825d0557",
+    "joint/samples.log": "8cd686f4d0bde6480c53709f3ba3bec5fb2677347c50f9558faa6fce034f82d2",
+    "joint/timing-error.log": "8d25b2ac62c06ae6e7e6637010db9528e05fde63cc7352dc1a7eb066a01ebd3e",
+    "mitv-adaptive-repeat/capture.log": "7f024a3d73c1025d08d9a43ecb5e3db6f1f9103e4d6cdb8e3ba8f8ad81c17ee0",
+    "mitv-adaptive-repeat/installed.json": "ff1d133e2008bc7fe2013c0d0b9a0d01d71bc22ba922a9cfed3c6aaf83992d81",
+    "mitv-adaptive-repeat/receipt.json": "3c7d0fd6706a255e82c2871654da344dba12466b4ea9138266c9d14fe95b1f8d",
+    "mitv-adaptive-repeat/requests.jsonl": "70aa0741f6f60a4abdf4d0ac101cd4b3806e524e5554cbd2f0cc6a61521363c5",
+    "mitv-adaptive-repeat/server.log": "23a13165098b2e3f7b2d75d62c1a654934a0fe47a2edb578e1538dc33978e5c5",
+    "mitv-adaptive-repeat/summary.json": "8a69d478bc09a997df7f92a5f5043957ca2fb04b8b5d196360ff75f09e45e0ca",
+    "mitv-adaptive/capture.log": "a45179b6fe3a6679faf4f0efc30e52c650269ced0cec2db1b6a414788f9b90b5",
+    "mitv-adaptive/receipt.json": "351be18a2fa5ab71dcdbeb8f7659216d3a5994c2171823b4597f2bdd77337e40",
+    "mitv-adaptive/requests.jsonl": "9a3d9110be0d9436f38ccf51faaa84b1d0363afb4bcc6dde0fd8aba0e41df3b9",
+    "mitv-adaptive/server.log": "382906a95aaefc6cc6b5dbd1e09f28fcaa8d6739cd4debe1e18bd4a0b560225b",
+    "mitv-adaptive/summary.json": "cf52ffb8920ee2b4cbec1791f4225189d86aaaeac5d7c4f5083b00e2381e1b98",
+    "mitv-flv-low-01/capture.log": "47a3e9dc4abc55896ff3d02e48ccbcf9255a0f08ccab66af77c17e11c72da301",
+    "mitv-flv-low-01/connections.jsonl": "4b85a0ceb78c1d0c7724ef5b561e6b7636b65ddc1714e62f7316bdf491544cac",
+    "mitv-flv-low-01/installed.json": "dbda6f333da1f3222f20f07bad82931252c1c319e709ffd59c6d54a16af7966a",
+    "mitv-flv-low-01/receipt.json": "34c430fb714856deb6f32f13c26e462e64c6cb98602bf6e8aa6e5c03c53892ba",
+    "mitv-flv-low-01/relay-receipt.json": "8e7c35224e36d0c8a8936fb028cdb935fd85eb27fd322abd3f2b55ed899bd546",
+    "mitv-flv-low-01/source/receipt.json": "a17e0bfc8827d901757deb3079fa487e4b80cea0cefdda98c093197d55cdac6e",
+    "mitv-flv-low-01/summary.json": "93ec29e993c2e5545ceb896c8a09f00e442af5ef3f44dfff9bab1c1751cc8544",
+    "mitv-flv-smooth-01/capture.log": "2c8943751b70414a8833f97e6a93ca92009338920b6ab87b81c87fbe1d57074d",
+    "mitv-flv-smooth-01/connections.jsonl": "80ccf0aa8a5497eba7e644790dae713d036861f2dad918ebf9f4917382045557",
+    "mitv-flv-smooth-01/installed.json": "270b3f3dc9f6325350249d920afdf3c546f712eeede2b14e4520a94d2048c936",
+    "mitv-flv-smooth-01/receipt.json": "8fc64d175cea79b8511ad2b8e4ccfe5bb706826d46eadcd83205585823e66c32",
+    "mitv-flv-smooth-01/relay-receipt.json": "095b42e505f6baee478f370d856c67257fed178ca16228da7690ef22170ad763",
+    "mitv-flv-smooth-01/source/receipt.json": "e1b2804654ec3776572d20f02f42555caf30d982f12a01bcae055d8428ebbc75",
+    "mitv-flv-smooth-01/summary.json": "259bde5790ddc6e3e7e3826aa4330c2caea49492ab4edb0494313745020cd2da",
+    "mitv-flv-switch-01/capture.log": "2c0b03ce833b4935be94ba6ec6cf99feb5f94bc168b662387ba7776cb0c3cac7",
+    "mitv-flv-switch-01/connections.jsonl": "896a4f7df8ef611a704fb78a00c148a9a9fdae72eb6afc9aff6c66b6d10397ed",
+    "mitv-flv-switch-01/failure-context.log": "384361086b93b417159b6500f3cbbba80763536547f87202fdab18e6620894b5",
+    "mitv-flv-switch-01/receipt.json": "7cd89f1d16cdc83a78362c0a41237f88b0ea62e81624cee8d6cee0fdd7b2e5f6",
+    "mitv-flv-switch-01/relay-receipt.json": "4e1cc684f4b25374ec9eb5c9869cc124ac2dc71ade7bcc02d369c2911b9d54db",
+    "mitv-flv-switch-01/source/receipt.json": "5bc8fbe88f4dc9c9f28471e503d0ef4f4b3380d1f6e65037e287955da8eaf322",
+    "mitv-flv-switch-01/summary.json": "4f78e575382f6cc0afb4b58f2347c8f827c7123d06fc514887a7e6c8ad9d5478",
+    "mitv-hls-low-01/capture.log": "a4273dcd12d83ba05862b297f02d1d5adc42e9aec4bbc280df7692dd8d9be2f4",
+    "mitv-hls-low-01/connections.jsonl": "bf16cb7ad17cd524b438f3ba571f9ec9899f07f95cb40369887f62d9a56b3034",
+    "mitv-hls-low-01/installed.json": "9db9a69874752cfe38e2ad52f53c1f986ebbd0a57d31c1a25ed03bc8b8df3315",
+    "mitv-hls-low-01/receipt.json": "6d75f2fb9f63bc945c98ed6b8e134564e964f6f3c790c16703db3d944d19c9f1",
+    "mitv-hls-low-01/relay-receipt.json": "1f46233239806191ff91e502acd6111b871906519249bbe0d2fda38a6e7db9e9",
+    "mitv-hls-low-01/source/receipt.json": "74a8b9e0265d61a9f72aa4646bdc1712ff7a9ec7efa1053d8637e056c7d2132b",
+    "mitv-hls-low-01/summary.json": "25161019d739f25ab05a6148b81834cd6edf1ca67b42c28543c27b752097537c",
+    "mitv-hls-smooth-01/capture.log": "56c9d509758e556c2d980406d48349b6cce82ccaa6f03732cddb6f72d3686784",
+    "mitv-hls-smooth-01/connections.jsonl": "bf1fa0a3d56dc1f3eefa962640948b9e472fe1c40b81da5131a83967e857bca4",
+    "mitv-hls-smooth-01/installed.json": "20145b85194b3d7b1e944024a7e0fe25ff0c735b6986d46b6fd01f9f33701f9f",
+    "mitv-hls-smooth-01/receipt.json": "2149dbc70c1c35ba627f5575367a7848cbe57a2e8e57d8bdccaefc229a7c28e3",
+    "mitv-hls-smooth-01/relay-receipt.json": "cce67b727b25c2f7480529223f9f6913e26f3916d9da0d9c0da28fd3e08d70b0",
+    "mitv-hls-smooth-01/source/receipt.json": "63eb882891054262ff2f4b1aaeac3f642de991534647c3f138e3b39a2fff1531",
+    "mitv-hls-smooth-01/summary.json": "87d2f0d4637ca612a802720e7a85b0d9b6574edf44fd63a3375fad20d96b3974",
+    "mitv-hls-switch-01/connections.jsonl": "1db5d205cb61543d566f0d99b5a58a5f5a28a45953f457e8a5c733eece6392bc",
+    "mitv-hls-switch-01/harness-error.txt": "f7123dbd4c0139d1a2a8dfb43b2ae5960e6fac7b2e37c509f86da5c5d9c4584b",
+    "mitv-hls-switch-01/interruption.json": "2e66785dee01481ec28967ee27a9dc4c3cfee987ff0a076ad799710c06d39013",
+    "mitv-hls-switch-01/relay-receipt.json": "737ed5959316966b332998b618a26d9a5fc168652cd35f08d7b8f6874f396d4f",
+    "mitv-hls-switch-01/source/receipt.json": "61e95750149afe9e87aa30f07460f16abfbaffa3923cf81dbf881db04078b6f7",
+    "mitv-hls-switch-reconnected/capture.log": "a24f5894842e42b0efae37116b58f13235f0503bcd6269cb42a87ed488af2ca3",
+    "mitv-hls-switch-reconnected/connections.jsonl": "78bb8eaa59a42eaad0b56eda3522d8814f5a9c8a3354584ded2fdd610a4a5bc8",
+    "mitv-hls-switch-reconnected/failure-context.log": "ca889989f910f755395b33a1a51b35ff8a3d9237ec2598475069d7891e53b85e",
+    "mitv-hls-switch-reconnected/installed.json": "227299a0f061ddde7808fc10b9117ea79305fc37f49c7a38139b01d5500f2093",
+    "mitv-hls-switch-reconnected/receipt.json": "ec15af8d02f5e656e648e27a7992fc4370bdfdbaf392de83ca7574e69168a28b",
+    "mitv-hls-switch-reconnected/relay-receipt.json": "4091a69e9eb59e7b997da9808fe5dc76b6581f9cb89b9930783c6e24e85fbb8c",
+    "mitv-hls-switch-reconnected/source/receipt.json": "59ee706f29ada274e2ab045d61fc9439184bd93ef5eb05e45058292df264ba44",
+    "mitv-hls-switch-reconnected/summary.json": "f680c7a875c494ec4e029221c668cdfbf4e3211f62cc0fee6500cbc465059e63",
+    "mitv-rtmp-low-01/capture.log": "0d8d6d61517a25a66db25afa24990c1a40040d7e10a57191ea4048e8501ec839",
+    "mitv-rtmp-low-01/connections.jsonl": "2a94712b66157f29773474842b57d2be54ea6d72970847017361d0623c094eaf",
+    "mitv-rtmp-low-01/installed.json": "2913699a38fb12958d8cb741c422e3598681b3d0ffaa1f0ce0536681e59b5c7a",
+    "mitv-rtmp-low-01/receipt.json": "b7dac449b19d0eb38d5ef654a75b5fb0a7a794b2ad0728ee80bfb8dd4b16d3be",
+    "mitv-rtmp-low-01/relay-receipt.json": "00b1810d87d52d56c5fc592c0554c8c69bcecc9dd5792fb58a621a51d1c9698e",
+    "mitv-rtmp-low-01/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "mitv-rtmp-low-01/summary.json": "5eda72c9edb7ccccfd725cb9266143cbccaa7dd8447b0d5422012c3079475819",
+    "mitv-rtmp-smooth-01/capture.log": "05ed7a02247b9c50de7f408f1bc658cf74c783333caafe3fe16d15d7e60005b5",
+    "mitv-rtmp-smooth-01/connections.jsonl": "3ffd1cd54b402461cc9d8c977765941dd0ed4f7b37327d9334565b012e64a8e7",
+    "mitv-rtmp-smooth-01/installed.json": "d0e3a6582069c7f96e053e61eb0c623bac1f63df651ba347787afff4c1b36d90",
+    "mitv-rtmp-smooth-01/receipt.json": "768cd31fdeb411e6455b28cc6cd9d052422b1b17e577ebaa12aa26a1edbebc21",
+    "mitv-rtmp-smooth-01/relay-receipt.json": "514e88d2b624511c98afffa80f994d3f93b876ff844cdc6120b8945ff4da8925",
+    "mitv-rtmp-smooth-01/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "mitv-rtmp-smooth-01/summary.json": "1bc8efc489e510137d8873810a9a9cfec9c7b23027cf0d816ec5f41b84159079",
+    "mitv-rtmp-switch-01/capture.log": "4c21fb345759d3288ccd0e55ec26f6f18161dd3b3b6cf5af6134d6e6b11e35a5",
+    "mitv-rtmp-switch-01/connections.jsonl": "9ad41261bc61a983616ccd64e498da77558d8d40ade5ac64d8fc98e2285595da",
+    "mitv-rtmp-switch-01/installed.json": "7b2b871c1ed30db68a857fd796054384183ffe0e97c1387b2b6279a888cb0781",
+    "mitv-rtmp-switch-01/receipt.json": "52b8847d2a8f65e414ba5fdc841121f0d8684bf640f6cb056922eb7f68ee6ff6",
+    "mitv-rtmp-switch-01/relay-receipt.json": "58707b5392b29d059ef84c577df624fdedeb7500f6908ce28e279125b3d53616",
+    "mitv-rtmp-switch-01/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "mitv-rtmp-switch-01/summary.json": "eec77fc247d14009200e4eff583155194603788a15ffab3ffda2899ed4900488",
+    "mitv-stall-repeat/capture.log": "11229bfb3cdddafde7234764b4f5d306318e50760d25fb3efbc076baeb43aa9a",
+    "mitv-stall-repeat/failure-context.log": "77710d9878726d9fb9e915a652cf47a3bf97de0d1e164544342a51211c6863bf",
+    "mitv-stall-repeat/installed.json": "5ac45db29f82bbbaf3bf7f448b7014787edd1e4bc1fdae9283f4021179a8fbc6",
+    "mitv-stall-repeat/receipt.json": "19c8aa46ba8cb3102ddc2094df6aa7f75dc4d0794c37dd69ba4b94af5e93e313",
+    "mitv-stall-repeat/requests.jsonl": "c9a2ce5e7cb0b99a436265924735c7eaa47f19e79415aa454624fe826ae5ab2a",
+    "mitv-stall-repeat/server.log": "a4a26eb4ea4c0f254c55411c9187f25b78359657d2a52de979f2d1a127415739",
+    "mitv-stall/capture.log": "784dc5f993059bde4628e87d6a1857baf409cd1a128cf03e9f6f883a3e718869",
+    "mitv-stall/failure-context.log": "c093a84541982ad82f55a23b2c5e5c762aad8a12f2312a1ec81ba4c6df3ad2c5",
+    "mitv-stall/receipt.json": "8ff3012c78979e1867ae4890ccb23f5ec9e506f5bf36d06c337baed2e259cd01",
+    "mitv-stall/requests.jsonl": "34568aacb282c6d72a6fe5eaaa91cba57b53e758eae207282afb8bf355cd3e60",
+    "mitv-stall/server.log": "ebdfdede0697709a72ae6468db47ee55dfb9b043e91f1917ad4eefbdcc4873d9",
+    "native-additional/YlDashDnsInstrumentedTest.log": "897da8464977f5921267d4bcc34eca932f146125e32e2615ea84952f24f4b1c9",
+    "native-additional/YlDashDnsInstrumentedTest.samples": "4333e46377a1a7ecc56e12047364c96c88f1bd3a862a186fbdce173d6a693cb5",
+    "native-additional/YlDashJointInstrumentedTest#nativeJointBaseline.log": "b720b1ff3a21e1948d6e0a33894220e92252d64790cffd5e17805fe5361f1223",
+    "native-additional/YlDashJointInstrumentedTest#nativeJointBaseline.samples": "628229906d11aa48ad8925972a4da028b248f3c3a878cb9abc668e8d05105b7a",
+    "native-additional/YlDashLifecycleInstrumentedTest.log": "b2b46b8fe771e6083b8e1d38f0869233ab77d7f1313475305b3809f1c3b24c31",
+    "native-additional/YlDashLifecycleInstrumentedTest.samples": "294f39b70ca9d87c4c38b5452f52de80e2364865c248d00ab146c0ce0d2809c7",
+    "native-additional/YlDashPcmInstrumentedTest.log": "cbb9a01951b548f23cb102ffc3daef8b5555a211dc76cc9265b1a1042045d362",
+    "native-additional/YlDashPcmInstrumentedTest.samples": "7a53c8b238e967acf549c3cc674525eb52263972291daa8a999f599a04ccba2f",
+    "native-additional/receipt.json": "c247cf82f334bb03f53371e33b874c82d61404d7b3e021e077086b1fbd3382f1",
+    "native-resources/instrumentation.log": "0c4a3f53d0e763968f6708abfd81a00142d25cd61db03c8ae1e883e7918599af",
+    "native-resources/receipt.json": "4d2c7ed9939efb1a53c42bc1aefc03c5544ada525aaa811d87557f00aa1d331a",
+    "native-resources/selector.log": "f90df7ee35e8b9e051464afa8e853bdde8bab739b59c10b1b7e980c5620ab038",
+    "rtmp_handoff_recheck/capture.log": "3520ef7c52ab19e32a5f9be1857ae67dbbb283f4fbb4cef11499e717de07fed1",
+    "rtmp_handoff_recheck/failure-context.log": "00d78bcbe46b06d9f3326e8072b6baebdc209eacb07fab365b53f49ce579c787",
+    "rtmp_handoff_recheck/installed.json": "a0fccf5f117716b6a452505ea0f13c6d3b4801ace0a522e9ee05b5b720dfc384",
+    "rtmp_handoff_recheck/peer-receipt.json": "69a8a587bdb4ff8463206708bcb7d2070bbe81a43388f400411d4d32eb51dd1b",
+    "rtmp_handoff_recheck/receipt.json": "37c75ae04d8dd31b8f9f0808a962696a93270e8497c50caaa3fd5def4e970b1b",
+    "rtmp_handoff_test/capture.log": "b146d526da4ae4ce7c989853f2d726aafe60966262248e653b9dad4bd41c53a4",
+    "rtmp_handoff_test/failure-context.log": "a58b06883a3bf8e9a6709a8b404d72c35a903f60efddb183a1c6a2f8e7608633",
+    "rtmp_handoff_test/installed.json": "97815101ef58ab0faba3885f051dd631de9aac7ce01811e9a78190bef57b5f1f",
+    "rtmp_handoff_test/peer-receipt.json": "0a322b3c4880a26524476156f8295aa0aa4bbcd0859f97897c7bde4c3fb31dbb",
+    "rtmp_handoff_test/receipt.json": "bf90aa89412e8a06d1c087c320ec162b247b34b0139949e7732df9ac01cf8991",
+    "rtmp_playback_test/capture.log": "071ebdcf9dea7d9045d446d6ddf6c907a7347b0238ac85709e550f339c7f2969",
+    "rtmp_playback_test/failure-context.log": "2c530c8563c57898d4675f7796d65713b6b62131ec32e975a309ced10a5443d3",
+    "rtmp_playback_test/peer-receipt.json": "9abf6ee693e2772a7005e23bee51c78c5f8e9799aa150eed94be012f1dc5da23",
+    "rtmp_playback_test/receipt.json": "fe6dc3b74acf5f362af02ae375a13e426056fdf9d02cbd9d3644153ea0d994c5",
+    "rtmp_sustained_playback_test/capture.log": "343b87f08f3f992beafaf3bf2118d4b12a7aa0d07b059123eafa9c0c63d394d8",
+    "rtmp_sustained_playback_test/failure-context.log": "589c72513930759a7c44d95d2eea19caa36e509f0b74d45a9a07297defbc671a",
+    "rtmp_sustained_playback_test/installed.json": "52cd8cebe7d2236351ebf8442ee276a7e63ce2969b775f898379b80232f8d37e",
+    "rtmp_sustained_playback_test/peer-receipt.json": "64155486afd686afe2e1ec966ec1d0409d724b6bba1040b2ef593cf47f3a8735",
+    "rtmp_sustained_playback_test/receipt.json": "daa8f4eda3f8da96c14379327cd6a9225007c4b8a9e53f71e25377ac9ea4f650",
+    "script_runtime_test/capture.log": "8a4e9fd3a479a7cbc85ca4543ca77ac43893f32aec9d6d876f11d62c538f5bb5",
+    "script_runtime_test/installed.json": "d6bb7b49f9f4da95911114f424146b7dce10011f9afc46d96df9b5b3bba38305",
+    "script_runtime_test/receipt.json": "96973569abcf9945f274149a5e3358a3cf290af55522dea7d942aefe11476e55",
+    "script_runtime_test/script-handoff.log": "ebd1c8d07a064ee61863a3789c8f520f576f26074a9030c47b5ce67ef36fc503",
+    "substitute_behavior_test/capture.log": "045b4e2399d01c742c71154dd48e1370c1dd7c45adde07285b8a5ad383381632",
+    "substitute_behavior_test/installed.json": "17c0e55bd6f6a1043a494989b133b425d78ad1fcb0ab222d2cf8cc2949490738",
+    "substitute_behavior_test/post-dispose-codecs.json": "44d626d00048e6505d438b144ad7d07ae2501e9c60a40729fc4849162b50be2d",
+    "substitute_behavior_test/receipt.json": "ba95a94fdab9ad2d34511f92a1a3e3fa011c7e5c7296ce6caefc40ad4bcb2ad4"
+  }
+}
