@@ -1227,6 +1227,11 @@
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-dash-recovery-and-transitions.md",
       "kind": "report",
       "sha256": "c960e3c257df333d8082e1a4d723ab5f16f01593eaf0b8f49458b456c5c05d12"
+    },
+    "android-mitv-dash-first-frame-and-hevc-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-dash-first-frame-and-hevc.md",
+      "kind": "report",
+      "sha256": "3dde21a4a282f5bc282c91568e3ad1af61dd5a4565467fe4771c2cbd64b9eb29"
     }
   },
   "rows": [
@@ -1328,10 +1333,11 @@
         "android-oppo-dash-av-optimization-20261121",
         "android-mitv-remaining-acceptance-20261122",
         "android-mitv-decoder-playback-retest-20261122",
-        "android-mitv-dash-recovery-and-transitions-20261122"
+        "android-mitv-dash-recovery-and-transitions-20261122",
+        "android-mitv-dash-first-frame-and-hevc-20261122"
       ],
       "acceptance": null,
-      "nextAction": "resolve-api28-cross-codec-av-skew-and-qualify-paused-startup-clock-projection"
+      "nextAction": "resolve-api28-avc-to-hevc-first-output-skew-after-cold-start-clock-qualification"
     },
     {
       "requirement": "CAP-DASH",
@@ -1777,7 +1783,8 @@
         "android-oppo-dash-av-optimization-20261121",
         "android-mitv-remaining-acceptance-20261122",
         "android-mitv-decoder-playback-retest-20261122",
-        "android-mitv-dash-recovery-and-transitions-20261122"
+        "android-mitv-dash-recovery-and-transitions-20261122",
+        "android-mitv-dash-first-frame-and-hevc-20261122"
       ],
       "acceptance": null,
       "nextAction": "reduce-api28-avc-to-hevc-output-gap-with-one-decoder"

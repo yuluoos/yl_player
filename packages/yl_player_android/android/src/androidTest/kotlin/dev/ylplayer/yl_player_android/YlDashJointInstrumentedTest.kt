@@ -35,6 +35,10 @@ class YlDashJointTimingControlTest {
     }
 }
 
+class YlDashPausedPreviewInstrumentedTest {
+    @Test fun previewBeforePlay() = DashJointMeasurement.measure("paused-preview", 0)
+}
+
 private object DashJointMeasurement {
     private data class Frame(val ptsUs: Long, val formatId: String?, val periodStartUs: Long, val metadataNs: Long, val audioAtMetadataUs: Long?)
     fun measure(name: String, run: Int) {
@@ -42,6 +46,7 @@ private object DashJointMeasurement {
         val context = instrumentation.targetContext
         val assets = instrumentation.context.assets
         val done = CountDownLatch(1)
+        val preview = CountDownLatch(1)
         var failure: Throwable? = null
         var player: ExoPlayer? = null
         var sink: AudioSink? = null
@@ -62,7 +67,7 @@ private object DashJointMeasurement {
                 if (path.contains("..")) return MockResponse().setResponseCode(404)
                 val asset = when (path) {
                     "same-format-1500ms.mpd" -> "manifest.mpd"
-                    "delayed-audio-init.mpd" -> "independent-pto.mpd"
+                    "paused-preview.mpd", "delayed-audio-init.mpd" -> "independent-pto.mpd"
                     else -> path
                 }
                 var bytes = assets.open(asset).use { it.readBytes() }
@@ -139,9 +144,14 @@ private object DashJointMeasurement {
                 val profile = YlAndroidDeviceProfile.collect(context)
                 renderers.allowDashPrewarming = profile.tier != YlDeviceTier.CONSTRAINED
                 renderers.dashDecoderSizing = YlDashDecoderSizing.forDevice(profile)
+                val wantsPlayback = java.util.concurrent.atomic.AtomicBoolean()
+                renderers.dashPlayWhenReady = wantsPlayback::get
                 player = ExoPlayer.Builder(context, renderers).build().also { exo ->
                     exo.addAnalyticsListener(trace)
                     exo.addListener(object : Player.Listener {
+                        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                            wantsPlayback.set(playWhenReady)
+                        }
                         override fun onPlaybackStateChanged(state: Int) {
                             trace.mark("playerState", "state" to state)
                             if (state == Player.STATE_ENDED) done.countDown()
@@ -177,11 +187,20 @@ private object DashJointMeasurement {
                             .put("rawDeltaUs", if (audio != null && video != null) video - audio else JSONObject.NULL)
                             .put("deltaUs", if (projected != null && video != null) video - projected else JSONObject.NULL)
                         synchronized(rows) { rows += row }
+                        if (frame?.ptsUs == 0L) preview.countDown()
                     }, { error -> failure = error; done.countDown() })
                     exo.setVideoSurface(output.surface)
                     exo.setMediaSource(YlDashProgramMediaSource(item, DefaultHttpDataSource.Factory(),
                         YlDashManifestParser(null), DefaultLoadErrorHandlingPolicy(0), YlDashGapGroups(), renderers.dashDecoderSizing))
-                    exo.prepare(); exo.play()
+                    exo.prepare()
+                    if (name != "paused-preview") exo.play()
+                }
+            }
+            if (name == "paused-preview") {
+                assertTrue("Paused startup did not produce a preview", preview.await(5, TimeUnit.SECONDS))
+                instrumentation.runOnMainSync {
+                    assertFalse(player!!.playWhenReady)
+                    player!!.play()
                 }
             }
             assertTrue("Native AV did not finish", done.await(25, TimeUnit.SECONDS))

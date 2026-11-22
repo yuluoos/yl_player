@@ -1,0 +1,1369 @@
+{
+  "model": "MiTV-MTTP0",
+  "apiLevel": 28,
+  "baseCommit": "4ab877c7143ed8fbba8b1d7797500e9e6fcabb3a",
+  "sourceSha256": {
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "f04b9aabecc993be59932f9bff60c23fdbe8b8a576bec7c34a5081923dc58c7b",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashStartupFrameGate.kt": "49dab56ac9a249ee5b0ed22602ead3384fc7eb6498ab5fb41acb0887958623b4",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "956fb7944e90dfe23a72e5360e2e6b06c40cdcc71cd0b1bd2a6b02628d781428",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "3b512edb3532bc02dc5ec86f857a202ebbea81aaa9de5d7eea5e5cc133384c4c",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashStartupFrameGateTest.kt": "13e30cfce389b8ba9df047b3cbc29b737a05669f983b6b6b91d3ad2a7e45c64a"
+  },
+  "frozenLimitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+  "previous": {
+    "source": "cfd292049c8ece77d4e1cdbd4e2baf8bcf4ef031",
+    "startupMaxUs": 176957,
+    "startupOverLimit": 12,
+    "medianFirstMpdToReleaseMs": 754.309166
+  },
+  "runs": {
+    "joint": {
+      "apkSha256": "fb1788681757232f68e1a8d2272a97224bb18dc2f114b73f2e301ec3c0a4134a",
+      "nativeJUnit": true,
+      "frozenGate": {
+        "passed": false,
+        "reason": "manifest: outside frozen native AV pair envelope"
+      },
+      "rows": 1514,
+      "missingPairs": 0,
+      "startupMaxUs": 150529,
+      "startupOverLimit": 3,
+      "medianFirstMpdToReleaseMs": 892.13975,
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "rows": 192,
+          "firstDeltaUs": 150529,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": -141.286,
+          "firstMpdToReleaseMs": 2146.5735,
+          "switchDeltaUs": 14536,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "rows": 192,
+          "firstDeltaUs": 20854,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": 12.312334,
+          "firstMpdToReleaseMs": 1006.53925,
+          "switchDeltaUs": 20197,
+          "switchGapExcessMs": -8.333670000000005,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "rows": 192,
+          "firstDeltaUs": 30309,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": 16.697083,
+          "firstMpdToReleaseMs": 902.788333,
+          "switchDeltaUs": 8857,
+          "switchGapExcessMs": 24.99965999999999,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "rows": 96,
+          "firstDeltaUs": 61216,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": -27.54825,
+          "firstMpdToReleaseMs": 788.379499,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "rows": 96,
+          "firstDeltaUs": -795,
+          "firstAudioAtMetadataUs": 4503,
+          "firstAudioReadUs": 33677,
+          "firstReleaseAfterSinkPlayMs": 15.171333,
+          "firstMpdToReleaseMs": 795.716999,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "rows": 96,
+          "firstDeltaUs": -11500,
+          "firstAudioAtMetadataUs": 14023,
+          "firstAudioReadUs": 69888,
+          "firstReleaseAfterSinkPlayMs": 120.822334,
+          "firstMpdToReleaseMs": 928.848334,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "rows": 84,
+          "firstDeltaUs": 17327,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": 12.250917,
+          "firstMpdToReleaseMs": 789.536917,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "rows": 84,
+          "firstDeltaUs": 835,
+          "firstAudioAtMetadataUs": 3696,
+          "firstAudioReadUs": 53681,
+          "firstReleaseAfterSinkPlayMs": 81.530917,
+          "firstMpdToReleaseMs": 870.101167,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "rows": 83,
+          "firstDeltaUs": 30517,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": 18.45,
+          "firstMpdToReleaseMs": 850.187833,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 64,
+          "firstDeltaUs": 99325,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 72935,
+          "firstReleaseAfterSinkPlayMs": 22.321667,
+          "firstMpdToReleaseMs": 881.9005,
+          "switchDeltaUs": -169705,
+          "switchGapExcessMs": 202.481087,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -169705
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "rows": 64,
+          "firstDeltaUs": 59065,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 15815,
+          "firstReleaseAfterSinkPlayMs": 23.397333,
+          "firstMpdToReleaseMs": 975.916498,
+          "switchDeltaUs": -168709,
+          "switchGapExcessMs": 199.372448,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -168709
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "rows": 64,
+          "firstDeltaUs": 59517,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 20976,
+          "firstReleaseAfterSinkPlayMs": 18.622332999999998,
+          "firstMpdToReleaseMs": 898.23525,
+          "switchDeltaUs": -257899,
+          "switchGapExcessMs": 274.325783,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -257899
+            }
+          ]
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "rows": 69,
+          "firstDeltaUs": 7577,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 64688,
+          "firstReleaseAfterSinkPlayMs": 105.1695,
+          "firstMpdToReleaseMs": 934.555333,
+          "switchDeltaUs": 13796,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "rows": 69,
+          "firstDeltaUs": 64036,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": 17.489832999999997,
+          "firstMpdToReleaseMs": 887.290166,
+          "switchDeltaUs": 6987,
+          "switchGapExcessMs": 24.99965999999999,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "rows": 69,
+          "firstDeltaUs": 87112,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": 19.183,
+          "firstMpdToReleaseMs": 892.13975,
+          "switchDeltaUs": 4862,
+          "switchGapExcessMs": 24.99965999999999,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        }
+      ]
+    },
+    "clock-start": {
+      "apkSha256": "142e59b1e61da9fa2b3352c1c3396a3c3437df5e1fe80353639d887e6d272345",
+      "nativeJUnit": true,
+      "frozenGate": {
+        "passed": false,
+        "reason": "cross-codec: outside frozen native AV pair envelope"
+      },
+      "rows": 1510,
+      "missingPairs": 0,
+      "startupMaxUs": 41663,
+      "startupOverLimit": 0,
+      "medianFirstMpdToReleaseMs": 992.943667,
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "rows": 191,
+          "firstDeltaUs": 715,
+          "firstAudioAtMetadataUs": 6662,
+          "firstAudioReadUs": 68276,
+          "firstReleaseAfterSinkPlayMs": 101.350917,
+          "firstMpdToReleaseMs": 2215.457583,
+          "switchDeltaUs": 6482,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "rows": 192,
+          "firstDeltaUs": -11305,
+          "firstAudioAtMetadataUs": 17211,
+          "firstAudioReadUs": 64978,
+          "firstReleaseAfterSinkPlayMs": 96.327083,
+          "firstMpdToReleaseMs": 968.444916,
+          "switchDeltaUs": 15151,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "rows": 191,
+          "firstDeltaUs": -11759,
+          "firstAudioAtMetadataUs": 14342,
+          "firstAudioReadUs": 44385,
+          "firstReleaseAfterSinkPlayMs": 100.241417,
+          "firstMpdToReleaseMs": 1033.868917,
+          "switchDeltaUs": 11669,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "rows": 96,
+          "firstDeltaUs": -16384,
+          "firstAudioAtMetadataUs": 19757,
+          "firstAudioReadUs": 46091,
+          "firstReleaseAfterSinkPlayMs": 125.637833,
+          "firstMpdToReleaseMs": 891.229083,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "rows": 96,
+          "firstDeltaUs": -5926,
+          "firstAudioAtMetadataUs": 11752,
+          "firstAudioReadUs": 59492,
+          "firstReleaseAfterSinkPlayMs": 106.35341700000001,
+          "firstMpdToReleaseMs": 952.486333,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "rows": 95,
+          "firstDeltaUs": -9972,
+          "firstAudioAtMetadataUs": 14070,
+          "firstAudioReadUs": 66311,
+          "firstReleaseAfterSinkPlayMs": 95.442333,
+          "firstMpdToReleaseMs": 879.270083,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "rows": 84,
+          "firstDeltaUs": -2456,
+          "firstAudioAtMetadataUs": 3886,
+          "firstAudioReadUs": 16794,
+          "firstReleaseAfterSinkPlayMs": 96.9665,
+          "firstMpdToReleaseMs": 948.405167,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "rows": 84,
+          "firstDeltaUs": -15281,
+          "firstAudioAtMetadataUs": 21563,
+          "firstAudioReadUs": 73534,
+          "firstReleaseAfterSinkPlayMs": 117.086416,
+          "firstMpdToReleaseMs": 924.820083,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "rows": 84,
+          "firstDeltaUs": -2386,
+          "firstAudioAtMetadataUs": 6777,
+          "firstAudioReadUs": 42522,
+          "firstReleaseAfterSinkPlayMs": 163.108084,
+          "firstMpdToReleaseMs": 899.813083,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 65,
+          "firstDeltaUs": -27481,
+          "firstAudioAtMetadataUs": 29070,
+          "firstAudioReadUs": 55751,
+          "firstReleaseAfterSinkPlayMs": 116.869917,
+          "firstMpdToReleaseMs": 1004.126333,
+          "switchDeltaUs": -199799,
+          "switchGapExcessMs": 208.595463,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -199799
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "rows": 62,
+          "firstDeltaUs": -5715,
+          "firstAudioAtMetadataUs": 10893,
+          "firstAudioReadUs": 52956,
+          "firstReleaseAfterSinkPlayMs": 144.393,
+          "firstMpdToReleaseMs": 992.943667,
+          "switchDeltaUs": -212675,
+          "switchGapExcessMs": 247.20408899999998,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -212675
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "rows": 65,
+          "firstDeltaUs": -13449,
+          "firstAudioAtMetadataUs": 12514,
+          "firstAudioReadUs": 64535,
+          "firstReleaseAfterSinkPlayMs": 101.30125,
+          "firstMpdToReleaseMs": 1031.594083,
+          "switchDeltaUs": -177910,
+          "switchGapExcessMs": 202.170758,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -177910
+            }
+          ]
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "rows": 68,
+          "firstDeltaUs": -6546,
+          "firstAudioAtMetadataUs": 4498,
+          "firstAudioReadUs": 39161,
+          "firstReleaseAfterSinkPlayMs": 110.07775,
+          "firstMpdToReleaseMs": 998.725083,
+          "switchDeltaUs": 5854,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "rows": 69,
+          "firstDeltaUs": -13216,
+          "firstAudioAtMetadataUs": 13674,
+          "firstAudioReadUs": 71311,
+          "firstReleaseAfterSinkPlayMs": 101.682084,
+          "firstMpdToReleaseMs": 997.220833,
+          "switchDeltaUs": 12317,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "rows": 68,
+          "firstDeltaUs": -41663,
+          "firstAudioAtMetadataUs": 48707,
+          "firstAudioReadUs": 108785,
+          "firstReleaseAfterSinkPlayMs": 113.911833,
+          "firstMpdToReleaseMs": 995.455416,
+          "switchDeltaUs": 14278,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        }
+      ]
+    },
+    "final": {
+      "apkSha256": "0a8aedc1d0012710d383da188952c53f77e9a7cd6e4bb239a1dd09e9282d56bf",
+      "nativeJUnit": true,
+      "frozenGate": {
+        "passed": false,
+        "reason": "cross-codec: outside frozen native AV pair envelope"
+      },
+      "rows": 1514,
+      "missingPairs": 0,
+      "startupMaxUs": 19032,
+      "startupOverLimit": 0,
+      "medianFirstMpdToReleaseMs": 997.679583,
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "rows": 191,
+          "firstDeltaUs": 3991,
+          "firstAudioAtMetadataUs": 5221,
+          "firstAudioReadUs": 67854,
+          "firstReleaseAfterSinkPlayMs": 96.97533299999999,
+          "firstMpdToReleaseMs": 1867.555416,
+          "switchDeltaUs": 11178,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "rows": 192,
+          "firstDeltaUs": -9863,
+          "firstAudioAtMetadataUs": 15928,
+          "firstAudioReadUs": 65380,
+          "firstReleaseAfterSinkPlayMs": 91.839667,
+          "firstMpdToReleaseMs": 997.679583,
+          "switchDeltaUs": 10476,
+          "switchGapExcessMs": 24.99965999999999,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "rows": 192,
+          "firstDeltaUs": -13133,
+          "firstAudioAtMetadataUs": 18402,
+          "firstAudioReadUs": 60916,
+          "firstReleaseAfterSinkPlayMs": 115.261917,
+          "firstMpdToReleaseMs": 1023.551416,
+          "switchDeltaUs": 13725,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "rows": 96,
+          "firstDeltaUs": -5456,
+          "firstAudioAtMetadataUs": 9688,
+          "firstAudioReadUs": 44308,
+          "firstReleaseAfterSinkPlayMs": 98.235416,
+          "firstMpdToReleaseMs": 873.988666,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "rows": 96,
+          "firstDeltaUs": -589,
+          "firstAudioAtMetadataUs": 2849,
+          "firstAudioReadUs": 29566,
+          "firstReleaseAfterSinkPlayMs": 93.703917,
+          "firstMpdToReleaseMs": 917.634167,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "rows": 95,
+          "firstDeltaUs": -5218,
+          "firstAudioAtMetadataUs": 5483,
+          "firstAudioReadUs": 54011,
+          "firstReleaseAfterSinkPlayMs": 108.108167,
+          "firstMpdToReleaseMs": 946.9655,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "rows": 84,
+          "firstDeltaUs": -14995,
+          "firstAudioAtMetadataUs": 20404,
+          "firstAudioReadUs": 66980,
+          "firstReleaseAfterSinkPlayMs": 96.910583,
+          "firstMpdToReleaseMs": 921.899083,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "rows": 84,
+          "firstDeltaUs": 1637,
+          "firstAudioAtMetadataUs": 2322,
+          "firstAudioReadUs": 34817,
+          "firstReleaseAfterSinkPlayMs": 118.988583,
+          "firstMpdToReleaseMs": 837.868333,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "rows": 84,
+          "firstDeltaUs": -12153,
+          "firstAudioAtMetadataUs": 17604,
+          "firstAudioReadUs": 62338,
+          "firstReleaseAfterSinkPlayMs": 107.39725,
+          "firstMpdToReleaseMs": 865.074666,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 65,
+          "firstDeltaUs": -16624,
+          "firstAudioAtMetadataUs": 21444,
+          "firstAudioReadUs": 84176,
+          "firstReleaseAfterSinkPlayMs": 107.739667,
+          "firstMpdToReleaseMs": 1036.927333,
+          "switchDeltaUs": -210185,
+          "switchGapExcessMs": 224.38875199999998,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -210185
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "rows": 66,
+          "firstDeltaUs": -845,
+          "firstAudioAtMetadataUs": 3849,
+          "firstAudioReadUs": 67926,
+          "firstReleaseAfterSinkPlayMs": 94.537334,
+          "firstMpdToReleaseMs": 989.26425,
+          "switchDeltaUs": -175485,
+          "switchGapExcessMs": 195.49878,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -175485
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "rows": 63,
+          "firstDeltaUs": 1588,
+          "firstAudioAtMetadataUs": 2839,
+          "firstAudioReadUs": 39019,
+          "firstReleaseAfterSinkPlayMs": 139.070834,
+          "firstMpdToReleaseMs": 1036.595334,
+          "switchDeltaUs": -203616,
+          "switchGapExcessMs": 241.534792,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -203616
+            }
+          ]
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "rows": 68,
+          "firstDeltaUs": -8421,
+          "firstAudioAtMetadataUs": 12362,
+          "firstAudioReadUs": 44392,
+          "firstReleaseAfterSinkPlayMs": 107.776583,
+          "firstMpdToReleaseMs": 1029.849416,
+          "switchDeltaUs": 6726,
+          "switchGapExcessMs": 24.99965999999999,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "rows": 69,
+          "firstDeltaUs": -14523,
+          "firstAudioAtMetadataUs": 20975,
+          "firstAudioReadUs": 68994,
+          "firstReleaseAfterSinkPlayMs": 108.816333,
+          "firstMpdToReleaseMs": 1039.87625,
+          "switchDeltaUs": 11994,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "rows": 69,
+          "firstDeltaUs": -19032,
+          "firstAudioAtMetadataUs": 22927,
+          "firstAudioReadUs": 49968,
+          "firstReleaseAfterSinkPlayMs": 102.25625,
+          "firstMpdToReleaseMs": 1015.365167,
+          "switchDeltaUs": 6660,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        }
+      ]
+    },
+    "repeat": {
+      "apkSha256": "0a8aedc1d0012710d383da188952c53f77e9a7cd6e4bb239a1dd09e9282d56bf",
+      "nativeJUnit": true,
+      "frozenGate": {
+        "passed": false,
+        "reason": "cross-codec: outside frozen native AV pair envelope"
+      },
+      "rows": 1508,
+      "missingPairs": 0,
+      "startupMaxUs": 19400,
+      "startupOverLimit": 0,
+      "medianFirstMpdToReleaseMs": 999.685583,
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "rows": 190,
+          "firstDeltaUs": -2235,
+          "firstAudioAtMetadataUs": 8354,
+          "firstAudioReadUs": 59162,
+          "firstReleaseAfterSinkPlayMs": 131.54874900000002,
+          "firstMpdToReleaseMs": 1877.966999,
+          "switchDeltaUs": 5502,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "rows": 191,
+          "firstDeltaUs": -11128,
+          "firstAudioAtMetadataUs": 16391,
+          "firstAudioReadUs": 58149,
+          "firstReleaseAfterSinkPlayMs": 103.067583,
+          "firstMpdToReleaseMs": 1028.519083,
+          "switchDeltaUs": 12957,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "rows": 192,
+          "firstDeltaUs": -10126,
+          "firstAudioAtMetadataUs": 11236,
+          "firstAudioReadUs": 17296,
+          "firstReleaseAfterSinkPlayMs": 87.871917,
+          "firstMpdToReleaseMs": 1012.564833,
+          "switchDeltaUs": 15673,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "rows": 96,
+          "firstDeltaUs": -11707,
+          "firstAudioAtMetadataUs": 16892,
+          "firstAudioReadUs": 59182,
+          "firstReleaseAfterSinkPlayMs": 92.107833,
+          "firstMpdToReleaseMs": 869.196333,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "rows": 96,
+          "firstDeltaUs": 1363,
+          "firstAudioAtMetadataUs": 2043,
+          "firstAudioReadUs": 29456,
+          "firstReleaseAfterSinkPlayMs": 136.694166,
+          "firstMpdToReleaseMs": 820.058583,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "rows": 96,
+          "firstDeltaUs": -7563,
+          "firstAudioAtMetadataUs": 9935,
+          "firstAudioReadUs": 27692,
+          "firstReleaseAfterSinkPlayMs": 95.8305,
+          "firstMpdToReleaseMs": 901.066417,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "rows": 84,
+          "firstDeltaUs": -11287,
+          "firstAudioAtMetadataUs": 13250,
+          "firstAudioReadUs": 27562,
+          "firstReleaseAfterSinkPlayMs": 100.969584,
+          "firstMpdToReleaseMs": 940.068584,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "rows": 84,
+          "firstDeltaUs": -7535,
+          "firstAudioAtMetadataUs": 12978,
+          "firstAudioReadUs": 58124,
+          "firstReleaseAfterSinkPlayMs": 108.18825,
+          "firstMpdToReleaseMs": 879.628917,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "rows": 84,
+          "firstDeltaUs": -11806,
+          "firstAudioAtMetadataUs": 17654,
+          "firstAudioReadUs": 66278,
+          "firstReleaseAfterSinkPlayMs": 93.107916,
+          "firstMpdToReleaseMs": 859.992416,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "rows": 63,
+          "firstDeltaUs": -4426,
+          "firstAudioAtMetadataUs": 9965,
+          "firstAudioReadUs": 54666,
+          "firstReleaseAfterSinkPlayMs": 15.181666,
+          "firstMpdToReleaseMs": 913.827916,
+          "switchDeltaUs": -244156,
+          "switchGapExcessMs": 271.150404,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -244156
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "rows": 65,
+          "firstDeltaUs": -13368,
+          "firstAudioAtMetadataUs": 18312,
+          "firstAudioReadUs": 58636,
+          "firstReleaseAfterSinkPlayMs": 222.461084,
+          "firstMpdToReleaseMs": 1024.578083,
+          "switchDeltaUs": -188272,
+          "switchGapExcessMs": 204.70088,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -188272
+            }
+          ]
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "rows": 61,
+          "firstDeltaUs": -19400,
+          "firstAudioAtMetadataUs": 24914,
+          "firstAudioReadUs": 79028,
+          "firstReleaseAfterSinkPlayMs": 108.835833,
+          "firstMpdToReleaseMs": 1033.810249,
+          "switchDeltaUs": -256494,
+          "switchGapExcessMs": 270.35092899999995,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder",
+            "OMX.MS.HEVC.Decoder"
+          ],
+          "overLimitAfterStartup": [
+            {
+              "ptsUs": 1500000,
+              "deltaUs": -256494
+            }
+          ]
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "rows": 69,
+          "firstDeltaUs": -8217,
+          "firstAudioAtMetadataUs": 12754,
+          "firstAudioReadUs": 50218,
+          "firstReleaseAfterSinkPlayMs": 112.98175,
+          "firstMpdToReleaseMs": 1020.255166,
+          "switchDeltaUs": 12015,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "rows": 68,
+          "firstDeltaUs": -13242,
+          "firstAudioAtMetadataUs": 16400,
+          "firstAudioReadUs": 41471,
+          "firstReleaseAfterSinkPlayMs": 105.836917,
+          "firstMpdToReleaseMs": 1077.559083,
+          "switchDeltaUs": 8714,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "rows": 69,
+          "firstDeltaUs": -11073,
+          "firstAudioAtMetadataUs": 16035,
+          "firstAudioReadUs": 56786,
+          "firstReleaseAfterSinkPlayMs": 114.940916,
+          "firstMpdToReleaseMs": 999.685583,
+          "switchDeltaUs": 15911,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        }
+      ]
+    },
+    "controls": {
+      "apkSha256": "0a8aedc1d0012710d383da188952c53f77e9a7cd6e4bb239a1dd09e9282d56bf",
+      "nativeJUnit": true,
+      "frozenGate": null,
+      "rows": 498,
+      "missingPairs": 0,
+      "startupMaxUs": 17508,
+      "startupOverLimit": 0,
+      "medianFirstMpdToReleaseMs": 996.3439994999999,
+      "runs": [
+        {
+          "fixture": "same-format-1500ms",
+          "run": 0,
+          "rows": 71,
+          "firstDeltaUs": -14160,
+          "firstAudioAtMetadataUs": 22759,
+          "firstAudioReadUs": 95184,
+          "firstReleaseAfterSinkPlayMs": 98.873583,
+          "firstMpdToReleaseMs": 1983.891416,
+          "switchDeltaUs": 11020,
+          "switchGapExcessMs": -8.333670000000005,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "delayed-audio-init",
+          "run": 0,
+          "rows": 95,
+          "firstDeltaUs": -3943,
+          "firstAudioAtMetadataUs": 4416,
+          "firstAudioReadUs": 10816,
+          "firstReleaseAfterSinkPlayMs": 100.558584,
+          "firstMpdToReleaseMs": 917.68175,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "same-format-1500ms",
+          "run": 1,
+          "rows": 70,
+          "firstDeltaUs": -17508,
+          "firstAudioAtMetadataUs": 24541,
+          "firstAudioReadUs": 82878,
+          "firstReleaseAfterSinkPlayMs": 150.259334,
+          "firstMpdToReleaseMs": 1067.491917,
+          "switchDeltaUs": 11405,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "delayed-audio-init",
+          "run": 1,
+          "rows": 95,
+          "firstDeltaUs": -11066,
+          "firstAudioAtMetadataUs": 30994,
+          "firstAudioReadUs": 82440,
+          "firstReleaseAfterSinkPlayMs": 126.634083,
+          "firstMpdToReleaseMs": 904.044833,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "same-format-1500ms",
+          "run": 2,
+          "rows": 71,
+          "firstDeltaUs": -13244,
+          "firstAudioAtMetadataUs": 15782,
+          "firstAudioReadUs": 88658,
+          "firstReleaseAfterSinkPlayMs": 121.319417,
+          "firstMpdToReleaseMs": 1035.968833,
+          "switchDeltaUs": 6412,
+          "switchGapExcessMs": 8.332994999999997,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        },
+        {
+          "fixture": "delayed-audio-init",
+          "run": 2,
+          "rows": 96,
+          "firstDeltaUs": -2906,
+          "firstAudioAtMetadataUs": 3353,
+          "firstAudioReadUs": 10478,
+          "firstReleaseAfterSinkPlayMs": 89.139416,
+          "firstMpdToReleaseMs": 956.719166,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        }
+      ]
+    },
+    "paused": {
+      "apkSha256": "0a8aedc1d0012710d383da188952c53f77e9a7cd6e4bb239a1dd09e9282d56bf",
+      "nativeJUnit": true,
+      "frozenGate": null,
+      "rows": 96,
+      "missingPairs": 0,
+      "startupMaxUs": 125116,
+      "startupOverLimit": 1,
+      "medianFirstMpdToReleaseMs": 1555.533666,
+      "runs": [
+        {
+          "fixture": "paused-preview",
+          "run": 0,
+          "rows": 96,
+          "firstDeltaUs": 125116,
+          "firstAudioAtMetadataUs": 0,
+          "firstAudioReadUs": 0,
+          "firstReleaseAfterSinkPlayMs": -164.060917,
+          "firstMpdToReleaseMs": 1555.533666,
+          "switchDeltaUs": null,
+          "switchGapExcessMs": null,
+          "decoderNames": [
+            "OMX.MS.AVC.Decoder"
+          ],
+          "overLimitAfterStartup": []
+        }
+      ]
+    }
+  },
+  "hevcTrace": [
+    {
+      "playbackThread": "26267",
+      "run": 0,
+      "outerBegin": 65754.290069,
+      "outerEnd": 65754.44144,
+      "phases": [
+        {
+          "stage": "createCodec:OMX.MS.HEVC.Decoder",
+          "beginTraceSeconds": 65754.291931,
+          "endTraceSeconds": 65754.301696,
+          "durationMs": 9.765
+        },
+        {
+          "stage": "configureCodec",
+          "beginTraceSeconds": 65754.301775,
+          "endTraceSeconds": 65754.31584,
+          "durationMs": 14.065
+        },
+        {
+          "stage": "startCodec",
+          "beginTraceSeconds": 65754.315883,
+          "endTraceSeconds": 65754.441329,
+          "durationMs": 125.446
+        }
+      ]
+    },
+    {
+      "playbackThread": "26322",
+      "run": 1,
+      "outerBegin": 65758.916706,
+      "outerEnd": 65759.062105,
+      "phases": [
+        {
+          "stage": "createCodec:OMX.MS.HEVC.Decoder",
+          "beginTraceSeconds": 65758.918077,
+          "endTraceSeconds": 65758.930399,
+          "durationMs": 12.322
+        },
+        {
+          "stage": "configureCodec",
+          "beginTraceSeconds": 65758.930437,
+          "endTraceSeconds": 65758.939987,
+          "durationMs": 9.55
+        },
+        {
+          "stage": "startCodec",
+          "beginTraceSeconds": 65758.940031,
+          "endTraceSeconds": 65759.06201,
+          "durationMs": 121.979
+        }
+      ]
+    },
+    {
+      "playbackThread": "26374",
+      "run": 2,
+      "outerBegin": 65763.611875,
+      "outerEnd": 65763.752071,
+      "phases": [
+        {
+          "stage": "createCodec:OMX.MS.HEVC.Decoder",
+          "beginTraceSeconds": 65763.614239,
+          "endTraceSeconds": 65763.625801,
+          "durationMs": 11.562
+        },
+        {
+          "stage": "configureCodec",
+          "beginTraceSeconds": 65763.625841,
+          "endTraceSeconds": 65763.639003,
+          "durationMs": 13.162
+        },
+        {
+          "stage": "startCodec",
+          "beginTraceSeconds": 65763.639066,
+          "endTraceSeconds": 65763.75196,
+          "durationMs": 112.894
+        }
+      ]
+    }
+  ],
+  "publicPeriods": {
+    "apkSha256": "a15fadf39c7afc97666dfc98adb7b151f90123afec386464e73758418ceebd98",
+    "cases": [
+      "managed DASH fixed AVC disappears and HEVC can be fixed",
+      "managed DASH programme independent-pto",
+      "managed DASH programme clip-end",
+      "managed DASH programme gap",
+      "managed DASH programme overlap",
+      "managed DASH programme unknown-middle",
+      "managed DASH programme multiple-base",
+      "managed DASH programme fractional-microsecond",
+      "managed DASH programme cross-codec",
+      "managed DASH programme resolution",
+      "managed DASH programme audio-added",
+      "managed DASH programme absolute-base",
+      "managed DASH programme absolute-list",
+      "managed DASH programme audio-gap-leading",
+      "managed DASH programme audio-gap-internal",
+      "managed DASH programme audio-gap-trailing",
+      "managed DASH programme video-gap-leading",
+      "managed DASH programme video-gap-internal",
+      "managed DASH programme video-gap-trailing"
+    ]
+  },
+  "platformQueueExperiment": {
+    "model": "MiTV-MTTP0",
+    "apiLevel": 28,
+    "apkSha256": "80ea6eb7ef373f077faa07db47c9b89959ac4a3470f1434c5dccea2d665de94b",
+    "installedApkSha256": "80ea6eb7ef373f077faa07db47c9b89959ac4a3470f1434c5dccea2d665de94b",
+    "passed": false,
+    "colourTransitions": [],
+    "inProduction": false
+  },
+  "jvm": {
+    "tests": 641,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "archiveSha256": "b101fee2d5f421b3c054ce3189a1f5d7ce967e0c2b64700c60b54597b67a643a"
+}

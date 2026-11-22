@@ -84,6 +84,7 @@ internal class YlMedia3Core(
         ),
         backBufferDurationUs = if (useMiTvPlatformRate) 2_000_000L else 0L,
     )
+    @Volatile private var wantsDashPlayback = false
     private lateinit var exoPlayer: ExoPlayer
     private var audioIntent: YlAudioIntent? = null
     private val dashVideoFamily = if (dashAudio && protectedDrm == null) YlDashVideoFamilyPolicy() else null
@@ -214,6 +215,7 @@ internal class YlMedia3Core(
         val renderersFactory = (renderersFactoryOverride?.invoke(context, outputObserver)
             ?: YlOutputRenderersFactory(context, outputObserver))
             .also {
+                it.dashPlayWhenReady = { wantsDashPlayback }
                 it.allowDashPrewarming = dashVideoFamily != null && deviceProfile.tier != YlDeviceTier.CONSTRAINED
                 it.dashDecoderSizing = dashDecoderSizing.takeIf { dashVideoFamily != null }
                 it.allowEac3SoftwareAudio = protectedDrm == null && dashVideoFamily == null &&
@@ -734,6 +736,7 @@ internal class YlMedia3Core(
     }
 
     override fun onPlayWhenReadyChanged(eventTime: AnalyticsListener.EventTime, playWhenReady: Boolean, reason: Int) {
+        wantsDashPlayback = playWhenReady
         if (!isCurrentEvent(eventTime)) return
         resetHealthWindow(SystemClock.elapsedRealtime())
         if (!playWhenReady) healthMonitor.discardObservation()
