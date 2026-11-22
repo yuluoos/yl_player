@@ -1,0 +1,464 @@
+{
+  "device": {
+    "ro.product.model": "MiTV-MTTP0",
+    "ro.product.cpu.abi": "armeabi-v7a",
+    "ro.build.version.sdk": "28",
+    "ro.build.fingerprint": "xiaomi/hugo/hugo:9/PPR2.180905.006.A1/2872:user/release-keys"
+  },
+  "matrixId": "2977a986-5ad8-4ac5-afc0-99ea767f8b39",
+  "acceptanceApkSha256": "b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+  "installedApkFinalSha256": "b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+  "package": "dev.ylplayer.yl_player_example",
+  "sourceBaseCommit": "fe4a0d84f355509b6510ee05610d71e17f3a3290",
+  "buildArguments": [
+    "./gradlew",
+    "--offline",
+    ":app:assembleDebug",
+    "-PskipDependencyChecks=true",
+    "-Ptarget=integration_test/bound_av_test.dart",
+    "-PylBoundAV=true",
+    "-Ptarget-platform=android-arm"
+  ],
+  "attempts": [
+    {
+      "caseId": "avi-avc-mp3",
+      "transport": "file",
+      "runId": "3e0a43b3-a291-42fb-8f0b-3906b3871a2c",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10199\nComplete"
+    },
+    {
+      "caseId": "avi-avc-mp3",
+      "transport": "http",
+      "runId": "3ca22e7e-d6a7-4a04-8d71-702f69f9fcb7",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10183\nComplete"
+    },
+    {
+      "caseId": "flv-avc-mp3",
+      "transport": "file",
+      "runId": "d88ac620-858c-4a21-80d1-4a1d37ce9018",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10231\nComplete"
+    },
+    {
+      "caseId": "flv-avc-mp3",
+      "transport": "http",
+      "runId": "63333ea5-b24e-448b-8b26-7620e38ad393",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10170\nComplete"
+    },
+    {
+      "caseId": "mkv-av1-opus",
+      "transport": "file",
+      "runId": "5273578b-6c9a-42e4-8273-c10c7c2b8ff5",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10220\nComplete"
+    },
+    {
+      "caseId": "mkv-av1-opus",
+      "transport": "http",
+      "runId": "23338ce4-2cc5-4427-b351-9294d8c3b02a",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10209\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-aac",
+      "transport": "file",
+      "runId": "a6f0c234-b9b8-4ee9-acfb-8a651dcf5301",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10257\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-aac",
+      "transport": "http",
+      "runId": "e43848ae-4708-40c8-a596-7472db277b0b",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10210\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-aac-no-cues",
+      "transport": "file",
+      "runId": "107e97c8-d184-429e-8c80-f609efa8014d",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10177\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-aac-no-cues",
+      "transport": "http",
+      "runId": "eac418aa-7377-4c02-b107-760994858711",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10211\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-ac3-51",
+      "transport": "file",
+      "runId": "f70dfee2-ff08-4869-af5e-9f622683a0e3",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10146\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-ac3-51",
+      "transport": "http",
+      "runId": "28bdf912-43bd-4ddc-9722-df8277af7fcb",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10227\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-dts",
+      "transport": "file",
+      "runId": "ac7feaab-5ae9-4609-a141-42220943d8cd",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10166\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-dts",
+      "transport": "http",
+      "runId": "e285aed2-13d7-4542-ab4f-7de4ac19d5e7",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10163\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-eac3",
+      "transport": "file",
+      "runId": "aeeeb379-122e-48aa-8cc3-8ee89c485d12",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10221\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-eac3",
+      "transport": "http",
+      "runId": "6378905a-74cd-43f8-aa25-c0e51b3b2142",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10231\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-flac",
+      "transport": "file",
+      "runId": "f3fd9e5b-1869-49fa-8a0e-61b8ea4af5f1",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10166\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-flac",
+      "transport": "http",
+      "runId": "444a05d3-ec26-4e1b-a8d4-ceec4a85f70a",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10200\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-opus",
+      "transport": "file",
+      "runId": "5b121b71-2739-485b-b97a-22f62e525d25",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10187\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-opus",
+      "transport": "http",
+      "runId": "0e281f84-a79c-4f22-b46e-9e8684a6214e",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10188\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-opus-hybrid",
+      "transport": "file",
+      "runId": "fa5d2c5a-c4ab-446e-aea2-16a600bc08cc",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10197\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-opus-hybrid",
+      "transport": "http",
+      "runId": "f0d3cefc-1d8a-47f0-a614-8979cf40aeb2",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10154\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-opus-silk",
+      "transport": "file",
+      "runId": "ec3351f2-05d5-420d-88c8-355d38e89579",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10205\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-opus-silk",
+      "transport": "http",
+      "runId": "400a51e4-f73b-41af-ad4a-577ae205468b",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10228\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-vorbis",
+      "transport": "file",
+      "runId": "e880608f-7cdb-41ff-a067-b1de7475b10d",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10173\nComplete"
+    },
+    {
+      "caseId": "mkv-avc-vorbis",
+      "transport": "http",
+      "runId": "6a3d2aaf-d18e-4988-93a5-ddc5d73ec21c",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10206\nComplete"
+    },
+    {
+      "caseId": "mkv-hevc-main10-aac",
+      "transport": "file",
+      "runId": "c31a0527-3cb0-4914-992b-ceeea19de22e",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10228\nComplete"
+    },
+    {
+      "caseId": "mkv-hevc-main10-aac",
+      "transport": "http",
+      "runId": "df8455f7-e1ba-4106-801b-9d54fc344fb5",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10194\nComplete"
+    },
+    {
+      "caseId": "mov-hevc-aac",
+      "transport": "file",
+      "runId": "df133910-1319-4ac0-a1b5-5fd00ab52474",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10161\nComplete"
+    },
+    {
+      "caseId": "mov-hevc-aac",
+      "transport": "http",
+      "runId": "ee549af6-667f-45cf-8996-661a80f8d401",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10218\nComplete"
+    },
+    {
+      "caseId": "mp4-avc-aac",
+      "transport": "file",
+      "runId": "12fc9ce2-8bc5-4131-9ef7-9d455b627ce6",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10171\nComplete"
+    },
+    {
+      "caseId": "mp4-avc-aac",
+      "transport": "http",
+      "runId": "4f599c67-be5c-4011-911e-49c8f25ec672",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "flutterMilestones": [
+        "P03_PUBLIC begin mp4-avc-aac",
+        "P03_PUBLIC ready a1-s1",
+        "P03_PUBLIC playAckUs=118595",
+        "P03_PUBLIC firstFrameUs=150682",
+        "P03_PUBLIC completed a1-s1",
+        "P03_PUBLIC seek a1-s1 1250",
+        "P03_PUBLIC seek accepted a1-s1 1250",
+        "P03_PUBLIC seek a1-s1 2250",
+        "P03_PUBLIC seek accepted a1-s1 2250",
+        "P03_PUBLIC seek a1-s1 0",
+        "P03_PUBLIC seek accepted a1-s1 0",
+        "P03_PUBLIC disposing a1-s1"
+      ]
+    },
+    {
+      "caseId": "mp4-truncated",
+      "transport": "file",
+      "runId": "df7d7818-50c4-4052-a254-9955e3430e39",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10200\nComplete",
+      "flutterMilestones": [
+        "P03_PUBLIC begin mp4-truncated"
+      ]
+    },
+    {
+      "caseId": "mp4-truncated",
+      "transport": "http",
+      "runId": "4d8dca7b-3026-4410-a935-861e5654bd66",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10265\nComplete",
+      "flutterMilestones": [
+        "P03_PUBLIC begin mp4-truncated"
+      ]
+    },
+    {
+      "caseId": "ps-avc-mp3",
+      "transport": "file",
+      "runId": "d68e0cdb-9d83-4e1c-9daf-475ab07fd263",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10223\nComplete"
+    },
+    {
+      "caseId": "ps-avc-mp3",
+      "transport": "http",
+      "runId": "202f5f1f-94e2-4bf5-99a7-7d10eaf9de3b",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10224\nComplete"
+    },
+    {
+      "caseId": "ps-mpeg2-mp3",
+      "transport": "file",
+      "runId": "872ffe77-18a5-4a43-8578-de323f062d90",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10161\nComplete",
+      "flutterMilestones": [
+        "P03_PUBLIC begin ps-mpeg2-mp3"
+      ]
+    },
+    {
+      "caseId": "ps-mpeg2-mp3",
+      "transport": "http",
+      "runId": "7361cfbd-27d9-43e1-a610-33b7815c080c",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10196\nComplete",
+      "flutterMilestones": [
+        "P03_PUBLIC begin ps-mpeg2-mp3"
+      ]
+    },
+    {
+      "caseId": "ts-avc-ac3",
+      "transport": "file",
+      "runId": "35394f5f-69e6-4bf0-8149-d5dd9aeefa1b",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10198\nComplete"
+    },
+    {
+      "caseId": "ts-avc-ac3",
+      "transport": "http",
+      "runId": "0950511b-36c2-4e23-aeda-0476e891a6bf",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10225\nComplete"
+    },
+    {
+      "caseId": "webm-vp9-opus",
+      "transport": "file",
+      "runId": "836b71a1-fc31-494f-aafe-3f0bd65b4445",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10189\nComplete"
+    },
+    {
+      "caseId": "webm-vp9-opus",
+      "transport": "http",
+      "runId": "bc0af58d-440a-461f-99db-b689779dde81",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10178\nComplete"
+    },
+    {
+      "caseId": "webm-vp9-vorbis",
+      "transport": "file",
+      "runId": "70fc0cca-1bac-42b5-b7cf-6d57017f0e38",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10200\nComplete"
+    },
+    {
+      "caseId": "webm-vp9-vorbis",
+      "transport": "http",
+      "runId": "41c3db26-185b-4443-9a46-e15cb7f2e62f",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10191\nComplete"
+    },
+    {
+      "caseId": "mp4-avc-aac",
+      "transport": "http",
+      "runId": "5b580b64-dc52-4a29-8a93-1af2083f6ddc",
+      "install": "Reused installed APK with SHA-256 b1a2688eebebe1da11f0eb639d61285dbc15c8ccfff7994c98f6306f55a4dd0d",
+      "launch": "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }\nStatus: timeout\nActivity: dev.ylplayer.yl_player_example/.MainActivity\nWaitTime: 10176\nComplete"
+    }
+  ],
+  "candidateFiles": {
+    "packages/yl_player/example/integration_test/bound_av_test.dart": "5df7667d32fbd3b941020a28ef81fe575368a721deb22e307b929900e12e0566",
+    "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundFlutterProbe.kt": "b2624a3d70385febdbf20e7ea31b606a016a0da00926fbac762128cadbf62864",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "a13e92516208735a80a6f5d586db89bbd1270a3532a3dcdd09abc6ee62d3e31c",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeFallbackEngine.kt": "06f4e14f2790bbb8659cf69de09e07d62c41602d7f5a064ff056eb3fe3cf4bc1",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlCandidateVideoOutputTest.kt": "8d79893ea0955f3b84d1218300783dcb460d6be1fd369a0831bffa4d8cd80480"
+  },
+  "jvmTests": {
+    "tests": 636,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "suites": 82,
+    "passed": 633,
+    "testReportHashes": {
+      "TEST-dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest.xml": "bda80ff2ff837f7e2dbb1ec577390a67c2f93a8e8a66485e012af2e80e6737cd",
+      "TEST-dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest.xml": "195f188355de94727ca6bf10f4c713a818d7ffa539611b520ea662d2ca9ca5e6",
+      "TEST-dev.ylplayer.yl_player_android.YlAndroidMemoryPolicyTest.xml": "6aa7b48167755823f83616105b4906d4193b8b8134d1e08d59c20b4a36d62586",
+      "TEST-dev.ylplayer.yl_player_android.YlAnnexBTest.xml": "5435d44e838645d5d82a0aaf5bf70fb6bea792125988c3032436381deb13b5c5",
+      "TEST-dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest.xml": "1e68701d6149e3e1958db072cfafc694c8084089b32f9b492a9ccf0b87f33160",
+      "TEST-dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.xml": "a7e7c485d8c1aa01d23cf042a88f3c1a87cebc4e9bfe029a922a19b749907cc7",
+      "TEST-dev.ylplayer.yl_player_android.YlCallbackDispatcherTest.xml": "0bccbb98d4a9ae2891b6a97f64607ebe58c6d4688b6d5b3de672024111f878a2",
+      "TEST-dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest.xml": "ef796f088d0315c07113c43e0f32482f7c6eb118f80e0f3c6bd4f23402c8490e",
+      "TEST-dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest.xml": "79771d59bd6c96fa60f6f32f411ef8da808a310394c08ae66a0555643b99de0b",
+      "TEST-dev.ylplayer.yl_player_android.YlConsumedAudioClockTest.xml": "e4d19d895558bdebefa4443a92bc764ee35ab0bf688c3c5254f20774a8b95196",
+      "TEST-dev.ylplayer.yl_player_android.YlCoreFrameHealthTest.xml": "7c2133be5fb1d65631128e0205b68846dfd6b5eaf8b1c43a4f5dddeee3586bcc",
+      "TEST-dev.ylplayer.yl_player_android.YlCoreSpeedDiagnosticsTest.xml": "ced0138701156d4ad950c803ab2eeef32b2b316d41ef959d588425d3a7c4c38a",
+      "TEST-dev.ylplayer.yl_player_android.YlDashCandidateHttpTest.xml": "b7ea9a5113eda6ca53350254d7f5303efb655f8eb3ee93c0f07599a547616d73",
+      "TEST-dev.ylplayer.yl_player_android.YlDashCandidateRegistryTest.xml": "41940f076e11fd3fbf2269ac079a42ca3bffe21439972cd51cf6d816eb7e6b56",
+      "TEST-dev.ylplayer.yl_player_android.YlDashManifestParserTest.xml": "7c5eaa7e37f831e7d5955d1d0bddaa694c54d09b2295e6f58caec9fe0391ba70",
+      "TEST-dev.ylplayer.yl_player_android.YlDashPcmWindowTest.xml": "da4255dbc0922d28e0614cffeb80b793d7a50811181f7f255625af2705b5fa51",
+      "TEST-dev.ylplayer.yl_player_android.YlDashProtectedRouteTest.xml": "3aca4faf2fac5eaa7b21d93fb9d8f99f840a33a0605030faa82e2d5d24090598",
+      "TEST-dev.ylplayer.yl_player_android.YlDashVideoCoverageTest.xml": "09906a12d5ea79391b40cca6eb0b48f8aad970a03529c5c838c7031e53097456",
+      "TEST-dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest.xml": "338ba3218e1a9a7a48d90fd59ff6cb13819e81ddd2eee02e6238c7bdbb2d9d86",
+      "TEST-dev.ylplayer.yl_player_android.YlDrmBridgeTest.xml": "754d5d141df87594c100c46ae11a1b91b09601b251350e749f78832bef116ebe",
+      "TEST-dev.ylplayer.yl_player_android.YlDrmKeySessionTest.xml": "d2afc80a35809e85db33d74ab020cc0e5b5540aacb4afe59603c65ad3554b58a",
+      "TEST-dev.ylplayer.yl_player_android.YlEac3AudioRendererTest.xml": "59f73084db6fedc6d1d751df76837e0c4c9eabd0e80b493ccbc9dc0642736358",
+      "TEST-dev.ylplayer.yl_player_android.YlFailureMapperTest.xml": "238531ca5ee22f5bea1d2907553e89ecbd0684b190e0bc9769eafc4522629fcf",
+      "TEST-dev.ylplayer.yl_player_android.YlFallbackRoutingPolicyTest.xml": "3f1c438b09b49038d496ac0ef19708239db1f9f9c730ab349e1e98d4ab0c6761",
+      "TEST-dev.ylplayer.yl_player_android.YlFinalBoundaryTest.xml": "44ccfbf100c8942afd3896084bb9ea566cab6117f8cbc5f23e614ea4445c90fc",
+      "TEST-dev.ylplayer.yl_player_android.YlFirstFrameGateTest.xml": "588c31096800718e981a40796e9c51f6a1a80ce7f61fb6991755975a5508b9b4",
+      "TEST-dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest.xml": "b48001bca29ed9a7fb8b46d1fffc23d049dfcea8cfefeafd832fb1e50d1ca360",
+      "TEST-dev.ylplayer.yl_player_android.YlHeapBufferBudgetTest.xml": "426142de98440cff5407724631b2e694f863fc37d825a0a628ea82ada92df2b7",
+      "TEST-dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest.xml": "fca008f8e9a89acce7ad6aa4e470c462115f27dd3dba7d081ab20a3bb67ecd84",
+      "TEST-dev.ylplayer.yl_player_android.YlLifecyclePolicyTest.xml": "946edddc41c9e9f465a5594634a1bc8cae1fe5aeda724b91bac4aba8281dd261",
+      "TEST-dev.ylplayer.yl_player_android.YlLiveModePolicyTest.xml": "63419839f21c982ade1702a8c6a93cdfa3fabbebb4fc3d0365f2a5b923c01590",
+      "TEST-dev.ylplayer.yl_player_android.YlLivePlaybackModeTest.xml": "28c2c6e361bfbc67189e2e827e7a10d671d367b91fe6ba8f8f6b701d14e6a46d",
+      "TEST-dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest.xml": "6419be03c97998dacb1f2bfa0958475de608aef7360d4f4c1385ff2b5ecd41ed",
+      "TEST-dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest.xml": "9fc1e2234b41dc6a8cdd78d2a1754bc8b1f9e7cacc5e17cf568e432160796ab6",
+      "TEST-dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest.xml": "022288d6bb886626024be19cd465c4f94e6133734570e1393511ccdb8b240893",
+      "TEST-dev.ylplayer.yl_player_android.YlMedia3AcknowledgementTest.xml": "72c14a0fdb100c3057eea19e1d3e03cf92fd5c6a40aeddc394628c4e0681d753",
+      "TEST-dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest.xml": "445483df2695a692f53e288544d34605c378546aa8dcc63e0812acd0d4a23cf0",
+      "TEST-dev.ylplayer.yl_player_android.YlMedia3ConfigurationTest.xml": "8184e4e09ad4c585d7346338d028a749bd925bc1d16960f76fbdd681e7174532",
+      "TEST-dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest.xml": "8d9f4aec0c6792f6463655cbe28da9a0c659547717b09b699be25f0d1df121bf",
+      "TEST-dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest.xml": "d2ff6592949001cb7ed00153a0e56b6a35d8dc9060ed5ca36214d4818b72c6bd",
+      "TEST-dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest.xml": "9748cf93a571c78edc6fd77523465871a04fb81278546f3e33918769414b6c57",
+      "TEST-dev.ylplayer.yl_player_android.YlMedia3StatePolicyTest.xml": "139477c2e4010e8e54716b45314bab675182506e67aefa9c730478c6a18d7718",
+      "TEST-dev.ylplayer.yl_player_android.YlMetricsCollectorTest.xml": "e48bf60be60c849054ffe2824c1ed067b6946e56067eaa8779a79159c6bb4f0a",
+      "TEST-dev.ylplayer.yl_player_android.YlMiTvPcmOutputTest.xml": "23753adea313e7302993d5d786de4ccf59726f0bcda59663719e59fda23651f9",
+      "TEST-dev.ylplayer.yl_player_android.YlNativeByteSourceCancellationTest.xml": "cc1c9a4116c61525162ad4edd2a3cf435a60955ca62f2154a012793465dd5a2d",
+      "TEST-dev.ylplayer.yl_player_android.YlNativeCodecProbeTest.xml": "b6046c28a943c2c95ebecf22705e326bfb715df35009259273f94b74b406eb2d",
+      "TEST-dev.ylplayer.yl_player_android.YlNativePcmPrerollTest.xml": "58c4783a2cd6ed7b934ab82367b789007955990dbbd795ea4d8a591653b769dd",
+      "TEST-dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest.xml": "aeada8b6595d88cbc8b3b3e23b9d847bbc0f14f6e9299e4c299a3b5a3edfbb95",
+      "TEST-dev.ylplayer.yl_player_android.YlNativeViewBindingTest.xml": "5de9eb96a5db31e03265e1fb54875d5dd2f44892a75d0e7c25bc48a25545595e",
+      "TEST-dev.ylplayer.yl_player_android.YlNetworkByteCounterTest.xml": "9b435a85c693207e480371fa6175b3189af79b9bf46f9b03286927f7b6c20cde",
+      "TEST-dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest.xml": "ec18df34f6a3e5f18dc5cf5f6a41c9a66b48047d15cfa2d7fc6ef8e6b298b9d1",
+      "TEST-dev.ylplayer.yl_player_android.YlPlaybackPolicyTest.xml": "1340cc377d1a038af4cafc07ad0dcbd9a818ce34762bcab0b858c206df0ee872",
+      "TEST-dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest.xml": "e8be5f4f2014bdc4b72cee6d1c9fe9abe2a8f05bce76bbea98f1ce57384897b8",
+      "TEST-dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest.xml": "2e7e71128666308ec821a002504ae7be0c0940674657c2d2b0e242c9a9b01dc2",
+      "TEST-dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest.xml": "f840556b59a36ff5e9594ff9b05d5b0338274c39bd6d666a210196c8b3a23385",
+      "TEST-dev.ylplayer.yl_player_android.YlPlayerRegistryTest.xml": "760b1c09ebe78ecf2268e255645f323e1543e558ab5fe8062658865472844dd6",
+      "TEST-dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest.xml": "d9734ad85e846e9d8784d9c2775bce0429623abb25cdf0213d3bcdbe15c8bf46",
+      "TEST-dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest.xml": "fe519f1a256a861a9365036b339e5dc590a83c42328fe88734532a15bafd71c1",
+      "TEST-dev.ylplayer.yl_player_android.YlProtectedOutputTest.xml": "0e4bd7b9728480cacfd8f3b761c767304061ea004ab6bed8ab6062ae9d69298f",
+      "TEST-dev.ylplayer.yl_player_android.YlProtectedViewTest.xml": "82fb84ac9f069a8cbddae08dcc2d0f09ff623bee4d9f908da3b41501fe7de47d",
+      "TEST-dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest.xml": "88db2011753346314c5afe36353d1f843fe59caa85888d3c1dbf0aa0f797b428",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpAdmissionTest.xml": "0437c01e2628c305d5191bdcad96b86556ed1f2779107eda0c4576d07de37f3c",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpControlTest.xml": "0c86df154ca197354098533e191f7ed9065da82abef6a7683e079573380604a6",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpExtractorTest.xml": "9120b2a765aa2f4b0bb074c694a879fd8433bbf97db85cccf3029afc205327d4",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpFlowControlTest.xml": "f4f6176a1cf76932408f62817d2deba2fb34475d4a0d52c85e2dc77d3f41f6be",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpLifecycleTest.xml": "a8e0f917c900fb757f6d8641e6bc29b14f7f66a16319afd829bfc0ac3a17858b",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpProtocolTest.xml": "0d9ba5b4d4e49d7fb05984d00f680c4f4724bf6a91319e78efc2dd0fe4d55320",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpReadinessTest.xml": "a6276f3c7f7064abfad6caf4f2d2d93eee77884ddeb6d82a63172619f0a1909c",
+      "TEST-dev.ylplayer.yl_player_android.YlRtmpTransportTest.xml": "9e59138af4384ad3116c0db6bb181ba530b596d76ddb06dc43b49b6361570e9d",
+      "TEST-dev.ylplayer.yl_player_android.YlSessionAudioTest.xml": "e40ceba1fadb02481a3eb2d40fb655725956eb6005a625e79945ffa6e012c145",
+      "TEST-dev.ylplayer.yl_player_android.YlSessionCoordinatorTest.xml": "95feee3f24c223058034183c079d87605496950a546552178d2e1e963ebb8be5",
+      "TEST-dev.ylplayer.yl_player_android.YlSoftwareDecodeBudgetTest.xml": "30af1d50dc9a521feda42b24ee3d47e7d490028ad9c87edcac20782e087a6edb",
+      "TEST-dev.ylplayer.yl_player_android.YlSourceAssessmentTest.xml": "d96f9a46cf466cb3db07f64cc1d486fa7cf9b09711e8b27744721db3a12a818f",
+      "TEST-dev.ylplayer.yl_player_android.YlSpeedLoadControlTest.xml": "2846c104239de2148e32be294345be394e056d2dfe9447de4c6428d3924a6d14",
+      "TEST-dev.ylplayer.yl_player_android.YlStateReducerTest.xml": "4dc5df506ee2fc776961e0103138a4b79cbafff3e9fa03ef4b2e20e4ff5cb5b9",
+      "TEST-dev.ylplayer.yl_player_android.YlStopPolicyTest.xml": "d7888cfb86959e4b254dea63acdc841c24c4066a38d10e85609489b54e8745d8",
+      "TEST-dev.ylplayer.yl_player_android.YlTvAudioBufferSizeProviderTest.xml": "c0ec028d3d5f32f069b89757585f22d6f807a6d615a1cd594b5a8ea873ad81ec",
+      "TEST-dev.ylplayer.yl_player_android.YlTvAudioSinkTest.xml": "92a6dfa583eee8837aca9546d453bc4fab44e6d5661fd66a0a5211e786e34a65",
+      "TEST-dev.ylplayer.yl_player_android.YlUnavailableDecoderGateTest.xml": "eacbf4152528715ec59e0af6d93d4fe082377fae110bdd7fc8a44a21e03e0b3d",
+      "TEST-dev.ylplayer.yl_player_android.YlVideoFrameCounterTest.xml": "c933843644dd2369f4298902ce09a3e917f7b8159785221cf9e467a65bd62d10",
+      "TEST-dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest.xml": "e3ebcd2992423d83331954dc6bdfeea68c0e29ff729e928cf16148b9f5d0d6e7",
+      "TEST-dev.ylplayer.yl_player_android.YlWidevineDriverTest.xml": "25fa033dd7d520616663c88468e07b7df3b7bb1aaa6ded63acea0d45711a00af"
+    }
+  }
+}

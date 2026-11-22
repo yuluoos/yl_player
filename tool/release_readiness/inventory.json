@@ -1207,6 +1207,11 @@
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-format-matrix.md",
       "sha256": "a9d8a9dfcbac5c643759567fa63b99a2ce16039a1ffa1b1cc4dfbe02244a1ed0",
       "kind": "report"
+    },
+    "android-mitv-format-recovery-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-format-recovery.md",
+      "sha256": "1cf69c0f54236b16d1501d1d72d21e2b1c771daa5880a7f3e1406993e6882151",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1573,7 +1578,7 @@
       "requirement": "CAP-FORMAT",
       "platform": "android",
       "implementation": "partial",
-      "verification": "failed",
+      "verification": "not_run",
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
@@ -1583,10 +1588,11 @@
         "android-hevc-main10-20261121",
         "android-oppo-format-matrix-20261121",
         "android-mitv-api28-20261121",
-        "android-mitv-format-matrix-20261122"
+        "android-mitv-format-matrix-20261122",
+        "android-mitv-format-recovery-20261122"
       ],
       "acceptance": null,
-      "nextAction": "resolve-mitv-hevc-startup-av-pairing-and-dts-avi-ps-audio-clock-timeouts-after-32-of-40-same-build-passes"
+      "nextAction": "qualify-remaining-device-track-switch-and-audio-route-boundaries-after-40-of-40-mitv-same-apk-passes"
     },
     {
       "requirement": "CAP-FORMAT",

@@ -66,6 +66,7 @@ class YlBoundFlutterProbe private constructor(private val flutter: FlutterEngine
                     "retain" -> {checkNotNull(current).retain(args["phase"] as String);null}
                     "seekPhase" -> {checkNotNull(current).beginSeek((args["targetMs"] as Number).toLong());null}
                     "awaitPhase" -> {withTimeout(5000){while(!checkNotNull(current).phaseReady)delay(5)};null}
+                    "diagnostics" -> checkNotNull(current).recordDiagnostics(args)
                     "finishCase" -> {
                         val c=checkNotNull(current);val a=checkNotNull(c.active)
                         try { withTimeout(5000){while(!a.disposed || !a.audioClosed())delay(5)} }
@@ -96,8 +97,7 @@ class YlBoundFlutterProbe private constructor(private val flutter: FlutterEngine
         val a=Attempt(c,media3);c.active=a;c.clear()
         val engine=if(media3)YlMedia3Engine(context,id,source,load,player,renderersFactory=a.audio::factory)
         else YlNativeFallbackEngine(context,id,source,load,player,
-            observePcm={synchronized(c.lock){if(c.active===a)c.pcm.add(it)}},
-            observeAudioClock={synchronized(c.lock){if(c.active===a)c.clock=it to now()}})
+            observePcm={synchronized(c.lock){if(c.active===a)c.pcm.add(it)}})
         a.engine=engine
         return object:YlPlaybackEngineAdapter by engine {
             override fun registerCallback(callback:(YlSessionIdentity,YlEngineEvent)->Unit) {
@@ -147,21 +147,26 @@ class YlBoundFlutterProbe private constructor(private val flutter: FlutterEngine
             .put("identityVerified",true).put("audioClockMethod","audiotrack-playback-head")
             .put("publicApi","YlPlayerController/YlPlayerView").put("pixelSource","flutter-repaint-boundary")
             .put("runtime",android.os.Build.FINGERPRINT).put("outcome","failed").put("phases",JSONArray())
-        fun clear()=synchronized(lock){pcm.clear();pixels.clear();clock=null;pending=null}
+        fun clear()=synchronized(lock){pcm.clear();pixels.clear();clock=null;pending=null;token++}
         fun flushed()=synchronized(lock){clear();if(seeking){phaseReady=true;seeking=false}}
         fun beginSeek(target:Long)=synchronized(lock) {
             val expected=plan.getJSONArray("phases").getJSONObject(row.getJSONArray("phases").length()).getString("phase")
-            check(expected=="seek-$target");phaseReady=false;seeking=true;pending=null
+            check(expected=="seek-$target");phaseReady=false;seeking=true;pending=null;token++
         }
         /** Clock token can pair with exactly one screenshot, within 200 ms of the real head read. */
-        fun sampleClock():Long {
+        suspend fun sampleClock():Long {
             val a=checkNotNull(active)
-            val observed=if(a.media3)a.audio.consumedUs()?.let {it to now()} else synchronized(lock){clock}
-            return synchronized(lock) {
-                token++
-                pending=observed?.takeIf {now()-it.second in 0..200_000}?.let {Triple(token,it.first,it.second)}
-                token
+            val sampleToken = synchronized(lock) { ++token }
+            val observed=if(a.media3)a.audio.consumedUs()?.let {it to now()}
+                else (a.engine as YlNativeFallbackEngine).sampleAudioHead()
+            synchronized(lock) {
+                if (sampleToken == token && a === active && phaseReady) {
+                    clock = observed
+                    pending = observed?.takeIf { now() - it.second in 0..200_000 }
+                        ?.let { Triple(sampleToken, it.first, it.second) }
+                }
             }
+            return sampleToken
         }
         /** Returns only the actual consumption paired with this screenshot, never public position. */
         fun pixel(value:Long,rgb:List<*>)=synchronized(lock) {
@@ -174,6 +179,14 @@ class YlBoundFlutterProbe private constructor(private val flutter: FlutterEngine
             consumed
         }
         fun origin()=JSONObject().put("runId",plan.getString("runId")).put("buildSha256",plan.getString("buildSha256")).put("sessionId",checkNotNull(id).sessionId)
+        fun recordDiagnostics(args: Map<*,*>) = synchronized(lock) {
+            row.put("unfinishedPhase", JSONObject()
+                .put("publicStatus", args["publicStatus"]).put("positionMs", args["positionMs"])
+                .put("engine", if (active?.media3 == true) "media3" else "native-fallback")
+                .put("completed", completed).put("observedClockUs", clock?.first)
+                .put("pcmBlocks", pcm.size).put("pixels", JSONArray(pixels)))
+            null
+        }
         fun retain(phase:String)=synchronized(lock) {
             val expected=plan.getJSONArray("phases").getJSONObject(row.getJSONArray("phases").length())
             check(expected.getString("phase")==phase)
@@ -186,8 +199,12 @@ class YlBoundFlutterProbe private constructor(private val flutter: FlutterEngine
                 val bytes=ByteBuffer.allocate(8192*channels*4).order(ByteOrder.LITTLE_ENDIAN);var first:Long?=null
                 for(block in pcm) {
                     check(block.sampleRate==48000 && block.channelCount==channels)
+                    val frameCount = block.data.size / (2 * channels)
+                    if (!bytes.hasRemaining() || frameCount == 0 || block.presentationTimeUs >= start + 500_000 ||
+                        block.presentationTimeUs + (frameCount - 1) * 1_000_000L / 48000 < start) continue
                     val input=ByteBuffer.wrap(block.data).order(ByteOrder.LITTLE_ENDIAN)
-                    for(frame in 0 until block.data.size/(2*channels)) {
+                    for(frame in 0 until frameCount) {
+                        if (!bytes.hasRemaining()) break
                         val pts=block.presentationTimeUs+frame*1_000_000L/48000
                         repeat(channels) {val sample=input.short
                             if(pts>=start && pts<start+500_000 && bytes.hasRemaining()) {if(first==null)first=pts;bytes.putFloat(sample/32768f)}

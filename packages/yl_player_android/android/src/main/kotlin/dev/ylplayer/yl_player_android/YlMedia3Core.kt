@@ -312,7 +312,18 @@ internal class YlMedia3Core(
     }
     fun switchOutput(surface: Surface, output: YlOutputIdentity) {
         if (protectedDrm != null) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
-        videoOutput.switchTo(surface, output, ::attachSurface); ensureHealthy()
+        // The legacy MStar HEVC codec must be recreated on a Surface change.
+        // Its private decoder may already have consumed the first GOP. Restart the
+        // seekable item at its retained position so the public decoder gets that GOP.
+        val replay = decoderName?.let { needsLegacyHevcSurfaceRestart(it) } == true &&
+            videoOutput.renderedIdentity(surface) == null &&
+            exoPlayer.playbackState in listOf(Player.STATE_BUFFERING, Player.STATE_READY) &&
+            exoPlayer.isCurrentMediaItemSeekable && !exoPlayer.isCurrentMediaItemLive &&
+            source.intent != AndroidStreamIntent.LIVE
+        if (replay) exoPlayer.stop()
+        videoOutput.switchTo(surface, output, ::attachSurface)
+        ensureHealthy()
+        if (replay) exoPlayer.prepare()
     }
     fun switchProtectedOutput(surface: Surface, output: YlOutputIdentity) {
         if (disposed || stopped) throw YlBoundaryException(YlFailureKind.SESSION_STALE)

@@ -401,10 +401,14 @@ void main() {
           });
         } catch (_) {
           caseFailed = true;
-          if ((Platform.isMacOS || Platform.isIOS) && sessionId != null) {
+          if (sessionId != null) {
             try {
               await bridge.invokeMethod('diagnostics', {
                 'sessionId': sessionId,
+                if (Platform.isAndroid) ...{
+                  'publicStatus': player?.state.status.name,
+                  'positionMs': player?.state.timeline.position.inMilliseconds,
+                },
               });
             } catch (_) {
               /* Keep the original playback/cleanup failure. */

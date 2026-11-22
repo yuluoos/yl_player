@@ -1,0 +1,25 @@
+[
+  {
+    "caseId": "mp4-avc-aac",
+    "transport": "http",
+    "initial": "4f599c67-be5c-4011-911e-49c8f25ec672",
+    "repeat": "5b580b64-dc52-4a29-8a93-1af2083f6ddc",
+    "selected": "5b580b64-dc52-4a29-8a93-1af2083f6ddc",
+    "repeatOutcome": {
+      "caseId": "mp4-avc-aac",
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "requirement": "required",
+      "transport": "http",
+      "accepted": true,
+      "identityBound": true,
+      "collectorPassed": true,
+      "extractionValid": true,
+      "exitCode": 0,
+      "rawErrors": [],
+      "failure": null,
+      "collectorError": null,
+      "runId": "5b580b64-dc52-4a29-8a93-1af2083f6ddc"
+    },
+    "launchExit": 0
+  }
+]

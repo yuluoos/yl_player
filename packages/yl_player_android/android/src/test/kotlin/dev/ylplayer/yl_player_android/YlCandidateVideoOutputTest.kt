@@ -9,6 +9,29 @@ import io.flutter.view.TextureRegistry
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlCandidateVideoOutputTest {
+    @Test fun `legacy HEVC replays seekable samples only when moving to a different surface`() = withCore { core, player, _ ->
+        core.field("decoderName", "OMX.MS.HEVC.Decoder")
+        `when`(player.playbackState).thenReturn(androidx.media3.common.Player.STATE_READY)
+        `when`(player.isCurrentMediaItemSeekable).thenReturn(true)
+        val surface = mock(Surface::class.java)
+        val id = YlOutputIdentity(1, true)
+        core.switchOutput(surface, id)
+        inOrder(player).apply {
+            verify(player).stop()
+            verify(player).setVideoSurface(surface)
+            verify(player).prepare()
+        }
+        clearInvocations(player)
+        core.switchOutput(surface, id)
+        verify(player, never()).stop()
+        verify(player, never()).prepare()
+
+        `when`(player.isCurrentMediaItemSeekable).thenReturn(false)
+        core.switchOutput(mock(Surface::class.java), YlOutputIdentity(2, true))
+        verify(player, never()).stop()
+        verify(player, never()).prepare()
+    }
+
     @Test fun `native holder replacements fence old frames and keep parking surface until release`() {
         val candidate = FakePrivateOutput()
         val engine = YlEngineVideoOutput(candidate, retainCandidate = true)

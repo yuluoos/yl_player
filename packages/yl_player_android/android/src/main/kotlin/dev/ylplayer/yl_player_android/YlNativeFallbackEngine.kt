@@ -449,6 +449,11 @@ internal class YlNativeFallbackEngine(
         return result
     }
 
+    /** Sample the real playback head on its owning worker, including while draining or paused. */
+    internal suspend fun sampleAudioHead(): Pair<Long, Long>? = withContext(worker) {
+        audioOutput?.consumedPositionUs()?.let { it to SystemClock.elapsedRealtimeNanos() / 1000 }
+    }
+
     private fun currentPositionUs(): Long {
         audioOutput?.positionUs()?.let { audioPosition ->
             if (observeAudioClock != null) audioOutput?.consumedPositionUs()?.let(observeAudioClock)

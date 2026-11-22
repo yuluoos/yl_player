@@ -1,0 +1,502 @@
+[
+  {
+    "stage": "baseline",
+    "caseId": "avi-avc-mp3",
+    "transport": "http",
+    "buildSha256": "5b1defc43f39be508d537ca39bd517f87ec7ab116fe77484fb01fd1c9bb14e94",
+    "runId": "231b08aa-1283-4ae4-82e0-186cbbb0aad7",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 4,
+          "spanUs": 336000
+        },
+        {
+          "marker": 1,
+          "paired": 10,
+          "spanUs": 912000
+        },
+        {
+          "marker": 2,
+          "paired": 9,
+          "spanUs": 840000
+        },
+        {
+          "marker": 3,
+          "paired": 13,
+          "spanUs": 1008000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 9,
+          "spanUs": 696000
+        }
+      ]
+    },
+    "publicPassed": false,
+    "accepted": false,
+    "errors": [
+      "managed_http_unverified"
+    ],
+    "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target"
+  },
+  {
+    "stage": "baseline",
+    "caseId": "mkv-avc-dts",
+    "transport": "file",
+    "buildSha256": "5b1defc43f39be508d537ca39bd517f87ec7ab116fe77484fb01fd1c9bb14e94",
+    "runId": "0868d2f3-cfd1-40f4-8bef-ae17907d060b",
+    "phaseMarkers": {},
+    "publicPassed": false,
+    "accepted": false,
+    "errors": [
+      "invalid_session"
+    ],
+    "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target"
+  },
+  {
+    "stage": "baseline",
+    "caseId": "mov-hevc-aac",
+    "transport": "file",
+    "buildSha256": "5b1defc43f39be508d537ca39bd517f87ec7ab116fe77484fb01fd1c9bb14e94",
+    "runId": "f39839f3-44b6-4de0-9fa4-84758636d034",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 0,
+          "spanUs": null
+        },
+        {
+          "marker": 1,
+          "paired": 0,
+          "spanUs": null
+        },
+        {
+          "marker": 2,
+          "paired": 15,
+          "spanUs": 1128000
+        },
+        {
+          "marker": 3,
+          "paired": 7,
+          "spanUs": 432000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 10,
+          "spanUs": 720000
+        }
+      ],
+      "seek-2250": [
+        {
+          "marker": 2,
+          "paired": 12,
+          "spanUs": 720000
+        }
+      ],
+      "seek-0": [
+        {
+          "marker": 0,
+          "paired": 14,
+          "spanUs": 936000
+        }
+      ]
+    },
+    "publicPassed": true,
+    "accepted": false,
+    "errors": [
+      "pixel_audio_pair_missing"
+    ],
+    "failure": null
+  },
+  {
+    "stage": "diag",
+    "caseId": "avi-avc-mp3",
+    "transport": "http",
+    "buildSha256": "023ed99eee044d16c15a9b06c3e7f463b01af2af78a3c8c08e73f9cb7f6febdc",
+    "runId": "461074d4-64d8-4203-8a70-79333915cc92",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 4,
+          "spanUs": 264000
+        },
+        {
+          "marker": 1,
+          "paired": 10,
+          "spanUs": 840000
+        },
+        {
+          "marker": 2,
+          "paired": 10,
+          "spanUs": 864000
+        },
+        {
+          "marker": 3,
+          "paired": 14,
+          "spanUs": 1056000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 9,
+          "spanUs": 744000
+        }
+      ]
+    },
+    "publicPassed": false,
+    "accepted": false,
+    "errors": [
+      "managed_http_unverified"
+    ],
+    "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target"
+  },
+  {
+    "stage": "diag",
+    "caseId": "mkv-avc-dts",
+    "transport": "file",
+    "buildSha256": "023ed99eee044d16c15a9b06c3e7f463b01af2af78a3c8c08e73f9cb7f6febdc",
+    "runId": "0fad7092-481c-4b62-8e99-3bdf208f692f",
+    "phaseMarkers": {},
+    "publicPassed": false,
+    "accepted": false,
+    "errors": [
+      "invalid_session"
+    ],
+    "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target"
+  },
+  {
+    "stage": "diag",
+    "caseId": "mov-hevc-aac",
+    "transport": "file",
+    "buildSha256": "023ed99eee044d16c15a9b06c3e7f463b01af2af78a3c8c08e73f9cb7f6febdc",
+    "runId": "c885b668-e62f-4eb3-b31b-2c65b66a5fdb",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 10,
+          "spanUs": 672000
+        },
+        {
+          "marker": 1,
+          "paired": 13,
+          "spanUs": 984000
+        },
+        {
+          "marker": 2,
+          "paired": 12,
+          "spanUs": 888000
+        },
+        {
+          "marker": 3,
+          "paired": 7,
+          "spanUs": 408000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 12,
+          "spanUs": 696000
+        }
+      ],
+      "seek-2250": [
+        {
+          "marker": 2,
+          "paired": 13,
+          "spanUs": 768000
+        }
+      ],
+      "seek-0": [
+        {
+          "marker": 0,
+          "paired": 16,
+          "spanUs": 912000
+        }
+      ]
+    },
+    "publicPassed": true,
+    "accepted": true,
+    "errors": [],
+    "failure": null
+  },
+  {
+    "stage": "diag",
+    "caseId": "ps-avc-mp3",
+    "transport": "file",
+    "buildSha256": "023ed99eee044d16c15a9b06c3e7f463b01af2af78a3c8c08e73f9cb7f6febdc",
+    "runId": "45c3b8b6-2b16-478c-88f6-be2f356ad1c7",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 5,
+          "spanUs": 384000
+        },
+        {
+          "marker": 1,
+          "paired": 10,
+          "spanUs": 888000
+        },
+        {
+          "marker": 2,
+          "paired": 11,
+          "spanUs": 936000
+        },
+        {
+          "marker": 3,
+          "paired": 13,
+          "spanUs": 1056000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 9,
+          "spanUs": 720000
+        }
+      ]
+    },
+    "publicPassed": false,
+    "accepted": false,
+    "errors": [
+      "invalid_session"
+    ],
+    "failure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target"
+  },
+  {
+    "stage": "pull",
+    "caseId": "avi-avc-mp3",
+    "transport": "http",
+    "buildSha256": "ffff3f539c658e89362b1589ca9765fe2ca103e327089d243729125066e408be",
+    "runId": "8426a4bc-95f5-45b4-a46f-a0c5fe315663",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 4,
+          "spanUs": 312000
+        },
+        {
+          "marker": 1,
+          "paired": 10,
+          "spanUs": 816000
+        },
+        {
+          "marker": 2,
+          "paired": 10,
+          "spanUs": 936000
+        },
+        {
+          "marker": 3,
+          "paired": 12,
+          "spanUs": 984000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 8,
+          "spanUs": 696000
+        }
+      ],
+      "seek-2250": [
+        {
+          "marker": 2,
+          "paired": 6,
+          "spanUs": 528000
+        }
+      ],
+      "seek-0": [
+        {
+          "marker": 0,
+          "paired": 9,
+          "spanUs": 696000
+        }
+      ]
+    },
+    "publicPassed": true,
+    "accepted": true,
+    "errors": [],
+    "failure": null
+  },
+  {
+    "stage": "pull",
+    "caseId": "mkv-avc-dts",
+    "transport": "file",
+    "buildSha256": "ffff3f539c658e89362b1589ca9765fe2ca103e327089d243729125066e408be",
+    "runId": "7baf7e39-f386-41b5-a4b4-f276f64e5c74",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 4,
+          "spanUs": 384000
+        },
+        {
+          "marker": 1,
+          "paired": 10,
+          "spanUs": 888000
+        },
+        {
+          "marker": 2,
+          "paired": 10,
+          "spanUs": 912000
+        },
+        {
+          "marker": 3,
+          "paired": 37,
+          "spanUs": 1048000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 8,
+          "spanUs": 624000
+        }
+      ],
+      "seek-2250": [
+        {
+          "marker": 2,
+          "paired": 8,
+          "spanUs": 720000
+        }
+      ],
+      "seek-0": [
+        {
+          "marker": 0,
+          "paired": 9,
+          "spanUs": 696000
+        }
+      ]
+    },
+    "publicPassed": true,
+    "accepted": true,
+    "errors": [],
+    "failure": null
+  },
+  {
+    "stage": "pull",
+    "caseId": "mkv-hevc-main10-aac",
+    "transport": "http",
+    "buildSha256": "ffff3f539c658e89362b1589ca9765fe2ca103e327089d243729125066e408be",
+    "runId": "c01d5087-3fbf-4b5c-90b1-ff7ab5175023",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 10,
+          "spanUs": 720000
+        },
+        {
+          "marker": 1,
+          "paired": 11,
+          "spanUs": 888000
+        },
+        {
+          "marker": 2,
+          "paired": 13,
+          "spanUs": 960000
+        },
+        {
+          "marker": 3,
+          "paired": 6,
+          "spanUs": 408000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 12,
+          "spanUs": 768000
+        }
+      ],
+      "seek-2250": [
+        {
+          "marker": 2,
+          "paired": 11,
+          "spanUs": 720000
+        }
+      ],
+      "seek-0": [
+        {
+          "marker": 0,
+          "paired": 13,
+          "spanUs": 936000
+        }
+      ]
+    },
+    "publicPassed": true,
+    "accepted": true,
+    "errors": [],
+    "failure": null
+  },
+  {
+    "stage": "pull",
+    "caseId": "ps-avc-mp3",
+    "transport": "file",
+    "buildSha256": "ffff3f539c658e89362b1589ca9765fe2ca103e327089d243729125066e408be",
+    "runId": "9c1fd241-e8d6-4f25-a657-499bdc0c1d8f",
+    "phaseMarkers": {
+      "play": [
+        {
+          "marker": 0,
+          "paired": 2,
+          "spanUs": 96000
+        },
+        {
+          "marker": 1,
+          "paired": 10,
+          "spanUs": 864000
+        },
+        {
+          "marker": 2,
+          "paired": 11,
+          "spanUs": 936000
+        },
+        {
+          "marker": 3,
+          "paired": 12,
+          "spanUs": 936000
+        }
+      ],
+      "seek-1250": [
+        {
+          "marker": 1,
+          "paired": 9,
+          "spanUs": 720000
+        }
+      ],
+      "seek-2250": [
+        {
+          "marker": 2,
+          "paired": 9,
+          "spanUs": 792000
+        }
+      ],
+      "seek-0": [
+        {
+          "marker": 0,
+          "paired": 12,
+          "spanUs": 984000
+        }
+      ]
+    },
+    "publicPassed": true,
+    "accepted": false,
+    "errors": [
+      "pixel_audio_pair_missing"
+    ],
+    "failure": null
+  }
+]
