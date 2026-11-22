@@ -14,7 +14,17 @@ const observer = MethodChannel('yl_player_example/debug/frame_observation');
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized().framePolicy =
       LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  const selection = String.fromEnvironment('YL_TV_CASE', defaultValue: 'all');
+  const suite = String.fromEnvironment('YL_TV_CASE', defaultValue: 'all');
+  // Select one cold-start case per process from the same installed test APK.
+  final selection = suite == 'speed-cold'
+      ? File(
+          '${Directory.systemTemp.path}/yl_tv_speed_case',
+        ).readAsStringSync().trim()
+      : suite;
+  if (suite == 'speed-cold' &&
+      !{'speed-http', 'speed-file'}.contains(selection)) {
+    throw ArgumentError.value(selection, 'yl_tv_speed_case');
+  }
   for (final name in [
     'av1-file',
     'av1-http',
@@ -206,6 +216,9 @@ void main() {
           Future<void> fromNormalSpeed(String phase, double rate) async {
             final underrunsBefore = active.state.metrics.audioUnderruns;
             final before = (await observer.invokeMethod<int>('clockMs'))!;
+            if (rate == 3) {
+              emit('$phase-command', {'deviceClockMs': before});
+            }
             final start = active.state.timeline.position;
             final wall = Stopwatch()..start();
             int? firstMediaSecondMs;

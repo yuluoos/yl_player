@@ -1257,6 +1257,11 @@
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-cold-speed-and-hls-recovery.md",
       "kind": "report",
       "sha256": "063e288b71274ca1acbf7f80ff72fefc67e5fc9c6c21909e3bf448c40f04c81c"
+    },
+    "android-mitv-3x-cold-start-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-3x-cold-start.md",
+      "kind": "report",
+      "sha256": "0aca4d8ba25cb8109f62dcd8784b1bbd6aae5c932824b79c013d6806e193e0f8"
     }
   },
   "rows": [
@@ -2878,7 +2883,8 @@
         "remaining-local-acceptance-20261028",
         "android-mitv-api28-20261121",
         "android-mitv-playback-speed-20261121",
-        "android-mitv-cold-speed-hls-20261122"
+        "android-mitv-cold-speed-hls-20261122",
+        "android-mitv-3x-cold-start-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-minimum-api24-after-low-memory-32bit-api28-run"

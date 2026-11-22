@@ -1234,6 +1234,12 @@ internal class YlMedia3Core(
         metricsCollector.dropped(droppedFrames)
     }
 
+    override fun onAudioPositionAdvancing(eventTime: AnalyticsListener.EventTime, playoutStartSystemTimeMs: Long) {
+        if (useMiTvPlatformRate && requestedPlaybackSpeed == 3f && isCurrentEvent(eventTime)) {
+            android.util.Log.d("YlPlayer", "Mi TV 3x audio advancing playoutStartSystemTimeMs=$playoutStartSystemTimeMs")
+        }
+    }
+
     override fun onAudioUnderrun(
         eventTime: AnalyticsListener.EventTime,
         bufferSize: Int,

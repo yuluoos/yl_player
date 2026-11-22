@@ -240,7 +240,7 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
     private fun videoRenderer(context: Context, mediaCodecSelector: MediaCodecSelector, enableDecoderFallback: Boolean,
         eventHandler: Handler, eventListener: VideoRendererEventListener, allowedVideoJoiningTimeMs: Long, rendererObserver: YlVideoOutputObserver): YlOutputVideoRenderer {
         val sizing = dashDecoderSizing
-        val handoff = sizing?.let { YlDashCodecHandoff(codecAdapterFactory) }
+        val handoff = if (sizing != null || useMiTvPlatformRate) YlDashCodecHandoff(codecAdapterFactory) else null
         val builder = MediaCodecVideoRenderer.Builder(context)
             .setCodecAdapterFactory(handoff ?: codecAdapterFactory)
             .setMediaCodecSelector(mediaCodecSelector)
@@ -250,8 +250,10 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
             .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY)
         val audioPosition = { if (dashPlayWhenReady()) dashStartupAudioPosition?.invoke() else null }
         val waiting = { dashAudioWaiting?.invoke() == true }
-        return if (handoff != null) {
+        return if (sizing != null && handoff != null) {
             YlDashTransitionRenderer(builder, rendererObserver, sizing, audioPosition, waiting, dashPlayWhenReady, handoff)
+        } else if (handoff != null && isMiTv3xRequested != null) {
+            YlMiTvSpeedVideoRenderer(builder, rendererObserver, checkNotNull(isMiTv3xRequested), handoff)
         } else YlOutputVideoRenderer(builder, rendererObserver, isMiTv3xRequested, sizing, audioPosition, waiting)
     }
 }

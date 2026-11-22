@@ -1,0 +1,525 @@
+{
+  "model": "MiTV-MTTP0",
+  "api": 28,
+  "sourceHead": "df5f892a7bd2221a5d89ee03557fd2dc9d6c517f",
+  "modifiedSourceSha256": {
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "bc96cfbf412a5aa5cea5b6b0d76bbe8b45752ad4dd5bfc1b41d0027164ce9a58",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "65f59f4eaaf8c033383c79324170ddd7fa168fa76c434448b895850a219c6667",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMiTvSpeedVideoRenderer.kt": "7d1d07411d4f98a835e9d76b22c81594932e57b186380bbb986bf1443e34a3ba",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashCodecHandoffTest.kt": "e146cfed75c12dcd168763103efd192046e73ef760542ace5c98ccc97b907ead",
+    "packages/yl_player/example/integration_test/android_tv_playback_test.dart": "7da0f7f0230b6d67f35934a2b17c571af2619ea242cf8ff894f1278dc359c85c"
+  },
+  "build": {
+    "target": "integration_test/android_tv_playback_test.dart",
+    "sourceSha256": "7da0f7f0230b6d67f35934a2b17c571af2619ea242cf8ff894f1278dc359c85c",
+    "sourceHead": "df5f892a7bd2221a5d89ee03557fd2dc9d6c517f",
+    "apk": "d08ec02c5eeb25080fdfaec93d2274202970e24e819ddd35d5817bb30017d17b",
+    "kernel": "1016e1ac83ec6863ce31c0e01f57f0326dfe44f0bab43bf02ea0fe1fd0a49d5f"
+  },
+  "accepted": [
+    "v2-file-1",
+    "v2-http-1",
+    "v2-http-2",
+    "v2-http-3"
+  ],
+  "attempts": {
+    "baseline": {
+      "directory": "baseline",
+      "case": "speed-http",
+      "asset": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+      "receipt": {
+        "apk": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+        "kernel": "69710071b7ec73ee3f196d530c0e7a587a8a49be067be71c468acaaae34b4cd7",
+        "pid": "11945",
+        "entry": "Android TV speed-http",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "switches": [
+        {
+          "audioPlayoutStartMs": null,
+          "phase": "fast-3.0",
+          "speed": 2.7739355053745522,
+          "underruns": 0,
+          "firstFrameMs": 560,
+          "firstMediaSecondMs": 1203,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 193,
+          "pcmConfiguredMs": 381,
+          "firstPositiveTrackTimestampMs": 719,
+          "audioAdvancingCallbackMs": null,
+          "windowMs": 12001,
+          "advancedMs": 33290
+        },
+        {
+          "audioPlayoutStartMs": null,
+          "phase": "repeat-3.0",
+          "speed": 2.763,
+          "underruns": 0,
+          "firstFrameMs": 694,
+          "firstMediaSecondMs": 1121,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 198,
+          "pcmConfiguredMs": 363,
+          "firstPositiveTrackTimestampMs": 776,
+          "audioAdvancingCallbackMs": null,
+          "windowMs": 12000,
+          "advancedMs": 33156
+        }
+      ],
+      "steady": 2.999833347221065,
+      "restored": 0.9984,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    },
+    "v1-file-1": {
+      "directory": "v1-file-1",
+      "case": "speed-file",
+      "asset": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+      "receipt": {
+        "apk": "70a5b23617779f373843ae6759143874917ec081a092a77303fed455a271edb9",
+        "kernel": "1016e1ac83ec6863ce31c0e01f57f0326dfe44f0bab43bf02ea0fe1fd0a49d5f",
+        "pid": "13603",
+        "entry": "Android TV speed-file",
+        "entrySeen": true,
+        "passed": false,
+        "terminal": true
+      },
+      "switches": [
+        {
+          "audioPlayoutStartMs": 662,
+          "phase": "fast-3.0",
+          "speed": 2.777435213732189,
+          "underruns": 0,
+          "firstFrameMs": 544,
+          "firstMediaSecondMs": 1092,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 209,
+          "pcmConfiguredMs": 222,
+          "firstPositiveTrackTimestampMs": 639,
+          "audioAdvancingCallbackMs": 826,
+          "windowMs": 12001,
+          "advancedMs": 33332
+        },
+        {
+          "audioPlayoutStartMs": 997,
+          "phase": "repeat-3.0",
+          "speed": 2.716523623031414,
+          "underruns": 0,
+          "firstFrameMs": 896,
+          "firstMediaSecondMs": 1339,
+          "avcConfigurations": 2,
+          "avcSurfaceMs": 202,
+          "pcmConfiguredMs": 445,
+          "firstPositiveTrackTimestampMs": 690,
+          "audioAdvancingCallbackMs": 1175,
+          "windowMs": 12001,
+          "advancedMs": 32601
+        }
+      ],
+      "steady": 3.050829097575202,
+      "restored": 1.0154,
+      "totalUnderruns": 0,
+      "http": null,
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": [
+        "  Actual: ['repeat-3.0 requested 3.0, measured 2.716523623031414']"
+      ]
+    },
+    "v1-http-1": {
+      "directory": "v1-http-1",
+      "case": "speed-http",
+      "asset": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+      "receipt": {
+        "apk": "70a5b23617779f373843ae6759143874917ec081a092a77303fed455a271edb9",
+        "kernel": "1016e1ac83ec6863ce31c0e01f57f0326dfe44f0bab43bf02ea0fe1fd0a49d5f",
+        "pid": "12897",
+        "entry": "Android TV speed-http",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "switches": [
+        {
+          "audioPlayoutStartMs": 633,
+          "phase": "fast-3.0",
+          "speed": 2.819,
+          "underruns": 0,
+          "firstFrameMs": 504,
+          "firstMediaSecondMs": 959,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 205,
+          "pcmConfiguredMs": 204,
+          "firstPositiveTrackTimestampMs": 549,
+          "audioAdvancingCallbackMs": 821,
+          "windowMs": 12000,
+          "advancedMs": 33828
+        },
+        {
+          "audioPlayoutStartMs": 998,
+          "phase": "repeat-3.0",
+          "speed": 2.7644362969752523,
+          "underruns": 0,
+          "firstFrameMs": 899,
+          "firstMediaSecondMs": 1212,
+          "avcConfigurations": 2,
+          "avcSurfaceMs": 200,
+          "pcmConfiguredMs": 439,
+          "firstPositiveTrackTimestampMs": 657,
+          "audioAdvancingCallbackMs": 1375,
+          "windowMs": 12001,
+          "advancedMs": 33176
+        }
+      ],
+      "steady": 2.997416881926506,
+      "restored": 0.9759024097590241,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    },
+    "v2-file-1": {
+      "directory": "v2-file-1",
+      "case": "speed-file",
+      "asset": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+      "receipt": {
+        "apk": "d08ec02c5eeb25080fdfaec93d2274202970e24e819ddd35d5817bb30017d17b",
+        "kernel": "1016e1ac83ec6863ce31c0e01f57f0326dfe44f0bab43bf02ea0fe1fd0a49d5f",
+        "pid": "15086",
+        "entry": "Android TV speed-file",
+        "entrySeen": true,
+        "terminal": true,
+        "passed": true,
+        "logRecoveredFromSamePid": true
+      },
+      "switches": [
+        {
+          "audioPlayoutStartMs": 665,
+          "phase": "fast-3.0",
+          "speed": 2.8102658111824015,
+          "underruns": 0,
+          "firstFrameMs": 545,
+          "firstMediaSecondMs": 976,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 222,
+          "pcmConfiguredMs": 228,
+          "firstPositiveTrackTimestampMs": 603,
+          "audioAdvancingCallbackMs": 850,
+          "windowMs": 12001,
+          "advancedMs": 33726
+        },
+        {
+          "audioPlayoutStartMs": 644,
+          "phase": "repeat-3.0",
+          "speed": 2.8530122489792515,
+          "underruns": 0,
+          "firstFrameMs": 517,
+          "firstMediaSecondMs": 945,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 217,
+          "pcmConfiguredMs": 222,
+          "firstPositiveTrackTimestampMs": null,
+          "audioAdvancingCallbackMs": 778,
+          "windowMs": 12001,
+          "advancedMs": 34239
+        }
+      ],
+      "steady": 2.9738376937177136,
+      "restored": 0.9602,
+      "totalUnderruns": 0,
+      "http": null,
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    },
+    "v2-http-1": {
+      "directory": "v2-http-1",
+      "case": "speed-http",
+      "asset": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+      "receipt": {
+        "apk": "d08ec02c5eeb25080fdfaec93d2274202970e24e819ddd35d5817bb30017d17b",
+        "kernel": "1016e1ac83ec6863ce31c0e01f57f0326dfe44f0bab43bf02ea0fe1fd0a49d5f",
+        "pid": "14415",
+        "entry": "Android TV speed-http",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "switches": [
+        {
+          "audioPlayoutStartMs": 661,
+          "phase": "fast-3.0",
+          "speed": 2.809099241729856,
+          "underruns": 0,
+          "firstFrameMs": 553,
+          "firstMediaSecondMs": 911,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 216,
+          "pcmConfiguredMs": 219,
+          "firstPositiveTrackTimestampMs": null,
+          "audioAdvancingCallbackMs": 804,
+          "windowMs": 12001,
+          "advancedMs": 33712
+        },
+        {
+          "audioPlayoutStartMs": 664,
+          "phase": "repeat-3.0",
+          "speed": 2.7815182068160986,
+          "underruns": 0,
+          "firstFrameMs": 541,
+          "firstMediaSecondMs": 1132,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 209,
+          "pcmConfiguredMs": 225,
+          "firstPositiveTrackTimestampMs": null,
+          "audioAdvancingCallbackMs": 867,
+          "windowMs": 12001,
+          "advancedMs": 33381
+        }
+      ],
+      "steady": 3.035077487085486,
+      "restored": 1.0206979302069794,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    },
+    "v2-http-2": {
+      "directory": "v2-http-2",
+      "case": "speed-http",
+      "asset": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+      "receipt": {
+        "apk": "d08ec02c5eeb25080fdfaec93d2274202970e24e819ddd35d5817bb30017d17b",
+        "kernel": "1016e1ac83ec6863ce31c0e01f57f0326dfe44f0bab43bf02ea0fe1fd0a49d5f",
+        "pid": "15817",
+        "entry": "Android TV speed-http",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "switches": [
+        {
+          "audioPlayoutStartMs": 721,
+          "phase": "fast-3.0",
+          "speed": 2.8164166666666666,
+          "underruns": 0,
+          "firstFrameMs": 640,
+          "firstMediaSecondMs": 1149,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 252,
+          "pcmConfiguredMs": 230,
+          "firstPositiveTrackTimestampMs": null,
+          "audioAdvancingCallbackMs": 927,
+          "windowMs": 12000,
+          "advancedMs": 33797
+        },
+        {
+          "audioPlayoutStartMs": 890,
+          "phase": "repeat-3.0",
+          "speed": 2.757103574702108,
+          "underruns": 0,
+          "firstFrameMs": 736,
+          "firstMediaSecondMs": 1211,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 236,
+          "pcmConfiguredMs": 236,
+          "firstPositiveTrackTimestampMs": 804,
+          "audioAdvancingCallbackMs": 1047,
+          "windowMs": 12001,
+          "advancedMs": 33088
+        }
+      ],
+      "steady": 2.975002083159737,
+      "restored": 0.9847015298470153,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    },
+    "v2-http-3": {
+      "directory": "v2-http-3",
+      "case": "speed-http",
+      "asset": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+      "receipt": {
+        "apk": "d08ec02c5eeb25080fdfaec93d2274202970e24e819ddd35d5817bb30017d17b",
+        "kernel": "1016e1ac83ec6863ce31c0e01f57f0326dfe44f0bab43bf02ea0fe1fd0a49d5f",
+        "pid": "16485",
+        "entry": "Android TV speed-http",
+        "entrySeen": true,
+        "passed": true,
+        "terminal": true
+      },
+      "switches": [
+        {
+          "audioPlayoutStartMs": 708,
+          "phase": "fast-3.0",
+          "speed": 2.7884166666666665,
+          "underruns": 0,
+          "firstFrameMs": 567,
+          "firstMediaSecondMs": 1208,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 223,
+          "pcmConfiguredMs": 218,
+          "firstPositiveTrackTimestampMs": 610,
+          "audioAdvancingCallbackMs": 899,
+          "windowMs": 12000,
+          "advancedMs": 33461
+        },
+        {
+          "audioPlayoutStartMs": 699,
+          "phase": "repeat-3.0",
+          "speed": 2.786368938510248,
+          "underruns": 0,
+          "firstFrameMs": 523,
+          "firstMediaSecondMs": 1154,
+          "avcConfigurations": 1,
+          "avcSurfaceMs": 201,
+          "pcmConfiguredMs": 212,
+          "firstPositiveTrackTimestampMs": 626,
+          "audioAdvancingCallbackMs": 871,
+          "windowMs": 12002,
+          "advancedMs": 33442
+        }
+      ],
+      "steady": 2.97975,
+      "restored": 1.0001,
+      "totalUnderruns": 0,
+      "http": {
+        "runId": "speed-http",
+        "mediaHash": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790",
+        "requests": 4,
+        "bytesServed": 14533226,
+        "rejected": 0
+      },
+      "display": [
+        [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      ],
+      "failures": []
+    }
+  },
+  "cleanup": {
+    "example": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+    "release": "86f6a60a3e0ae4b79f14a44bb1e0a056def7deeb8394d754e0b53d8a70f866f6",
+    "foreground": "mResumedActivity: ActivityRecord{cd181a7 u0 com.example.tvs/.MainActivity t262}",
+    "active": true,
+    "testPortsCleared": true,
+    "temporaryFixturesRestored": 0
+  },
+  "jvm": {
+    "tests": 649,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "members": {
+    "baseline/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "baseline/observations.log": "c4c231b87f88143805d11f6728e7c3fd61e4cc7e52ccbb602c434d0b4adc17d2",
+    "baseline/receipt.json": "ced899923a9dce9110d4c3322c92e90a772aee57ef84a2c3eefa45bca2aa4ec5",
+    "baseline/native.log": "d06c3482c8ada8da2de9f8a9bcd58424a979871e3aef7c54d53041f7e2a8a0ee",
+    "v1-file-1/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "v1-file-1/observations.log": "2d7976ade61f44d0587a3180f747e0f8cafdb9672aaa46fc3ac8e1a427191045",
+    "v1-file-1/receipt.json": "8c291d42821816b5d68259af09f5a62338dd0757e4ae2e38dcb55c54b50e081d",
+    "v1-file-1/native.log": "5bd5b66c6eee71b92516305fccb505954aff73a0d8404ccc0e1e6dad33fce776",
+    "v1-http-1/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "v1-http-1/observations.log": "0853a47e89175f6e1b63500a22def7be875e5ae9815dc69bb565fb2cb8363d61",
+    "v1-http-1/receipt.json": "269ebcce932edc37157335899b27e6399829cea758e0b8900f21585676b0c3c0",
+    "v1-http-1/native.log": "026c2956f8b91282d1135632d043c510b0ac5bd4750d2f2144772aef70945ff6",
+    "v2-file-1/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "v2-file-1/observations.log": "9ed58032ce383800606c437513df5163cb667b4c27ea19a0fe8b3aa1185655a3",
+    "v2-file-1/receipt.json": "2ee057878f3bbbf1ed1a6a27d5ddf3a4678172a816b1506d6d055a029429630a",
+    "v2-file-1/native.log": "c61944c9e52035468f4af74eed660de2e02fc417de08eb70abfeeda9bd545693",
+    "v2-http-1/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "v2-http-1/observations.log": "54a9a8d77fc9c2734659bbd8ace712d16c32e2e9505789fb7e7f25889a7c8f6c",
+    "v2-http-1/receipt.json": "7ec8722e947e0868ee022b62c50f453ffa936530cafd16b7fb0eb78dc5152568",
+    "v2-http-1/native.log": "98ab68e2bf1ff8b085bf2a81ff188b5076b07e22091471f2c1f5771914459183",
+    "v2-http-2/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "v2-http-2/observations.log": "7bb76f3ed2d9cb708800ede7974f87e850d1ca0b3573ecdcbcd347c22098d97f",
+    "v2-http-2/receipt.json": "aa4420a4ffc4bf98b32df98db1e9d8bce24147c767f8b9739685981b38b1e3ff",
+    "v2-http-2/native.log": "a76c6d3a0c9ee31c98ffc074acdcd206abe0ada3eb853b6c6275e1d8be93ace0",
+    "v2-http-3/display.json": "d7da89f50db3d943ae3755ee4495405cf73a62f18e18601064f48987beaf6655",
+    "v2-http-3/observations.log": "83395657c902ae23e4bcec2902974404072505feff47fd773f117c2adbcdf35f",
+    "v2-http-3/receipt.json": "99a2adef1b7382e9106e5245e92e6bcbd76c85a5ce3faa99fa3c957668ec8571",
+    "v2-http-3/native.log": "feb8199dbd6c25c7f6949ac1d402643ecdff523c7aae57ec09013b2a053631dd",
+    "v2-build.json": "c5b838ed15c806cdc1020b4ea98f0ea3de7304f844f158e08c2cca384c9a8f65",
+    "v1-build.json": "dbe464983bfdc018a51c8535751e45a8faf0d9564c49f586871d1b14aac989b6",
+    "cleanup.json": "91b4f1bb4318a81c9dedba147b992603817f0e62ebec5b03651687c74a7368a3",
+    "install-1795345343145568000.json": "5d5011663b95f82a69e0961acffbbbf3d666b4259ea0a1db2c080bcf19a405f6",
+    "install-1795344359597125000.json": "58ffb5ac36f2bbba66d665dbeb7c73c086da187406e683a31bac927fafe0deac",
+    "install-1795343868846098000.json": "7c7af167b68262bccb968d8e9e913ab01923fc95164edbb0ce59e13e2acdd7b8",
+    "jvm.json": "d114e9ac9a13d7f91de77f46882054baeee71b9412438d9c43eeca2e08f0b4f5"
+  },
+  "archiveSha256": "55947bcb2d9036deee41267e2099c4622a20825315f7452dbf81e3aa6cf56444"
+}

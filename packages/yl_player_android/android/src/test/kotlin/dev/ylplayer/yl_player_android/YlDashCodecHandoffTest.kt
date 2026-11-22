@@ -1,6 +1,7 @@
 package dev.ylplayer.yl_player_android
 
 import android.media.MediaFormat
+import android.view.Surface
 import androidx.media3.common.Format
 import androidx.media3.exoplayer.mediacodec.MediaCodecAdapter
 import androidx.media3.exoplayer.mediacodec.MediaCodecInfo
@@ -56,6 +57,24 @@ class YlDashCodecHandoffTest {
         }
         verify(old).release()
         verify(next, never()).release()
+    }
+
+    @Test fun `prepared AVC is not attached after the requested surface changes`() {
+        val original = config("OMX.MS.AVC.Decoder", "video/avc")
+        val changed = MediaCodecAdapter.Configuration.createForVideoDecoding(original.codecInfo,
+            original.mediaFormat, original.format, mock(Surface::class.java), null)
+        val unused = mock(MediaCodecAdapter::class.java)
+        val replacement = mock(MediaCodecAdapter::class.java)
+        val factory = YlDashCodecHandoff { if (it === original) unused else replacement }
+        try {
+            assertFalse(factory.ready { original })
+            val selected = factory.createAdapter(changed)
+            verify(unused).release()
+            selected.release()
+            verify(replacement).release()
+        } finally {
+            factory.discard()
+        }
     }
 
     @Test fun `discard releases an unclaimed decoder and allows a later prepare`() {
