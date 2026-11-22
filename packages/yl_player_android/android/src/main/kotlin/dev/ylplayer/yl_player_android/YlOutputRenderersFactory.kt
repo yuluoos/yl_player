@@ -15,6 +15,7 @@ import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.Renderer
 import androidx.media3.exoplayer.mediacodec.DefaultMediaCodecAdapterFactory
 import androidx.media3.exoplayer.mediacodec.MediaCodecAdapter
+import androidx.media3.exoplayer.mediacodec.MediaCodecInfo
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.source.MediaSource.MediaPeriodId
 import androidx.media3.exoplayer.video.MediaCodecVideoRenderer
@@ -139,6 +140,7 @@ internal class YlVideoOutputObserver private constructor(
  * DASH may allocate a second video renderer for Media3 to prepare a following Period. */
 internal open class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
     var allowDashPrewarming = true
+    var dashDecoderSizing: YlDashDecoderSizing? = null
     private var dashAudioWaiting: (() -> Boolean)? = null
     var allowEac3SoftwareAudio = false
     var useConstrainedTvAudioBuffer = false
@@ -238,12 +240,13 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
             .setEnableDecoderFallback(enableDecoderFallback)
             .setEventHandler(eventHandler).setEventListener(eventListener)
             .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY)
-        return YlOutputVideoRenderer(builder, rendererObserver, isMiTv3xRequested) { dashAudioWaiting?.invoke() == true }
+        return YlOutputVideoRenderer(builder, rendererObserver, isMiTv3xRequested, dashDecoderSizing) { dashAudioWaiting?.invoke() == true }
     }
 }
 
 internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver,
-    private val isMiTv3xRequested: (() -> Boolean)?, private val waitingForAudio: () -> Boolean) : MediaCodecVideoRenderer(builder) {
+    private val isMiTv3xRequested: (() -> Boolean)?, private val dashDecoderSizing: YlDashDecoderSizing?,
+    private val waitingForAudio: () -> Boolean) : MediaCodecVideoRenderer(builder) {
     // Poll on ordinary renderer iterations. A missing/late audio stream must never
     // prevent a preview, a seek or a video-only Period from producing a frame.
     private companion object { const val MAX_FIRST_FRAME_AUDIO_WAIT_MS = 250L }
@@ -280,6 +283,19 @@ internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlV
         if (messageType == Renderer.MSG_TRANSFER_RESOURCES && message is YlOutputVideoRenderer) {
             message.observer.takeOutput()
         }
+    }
+
+    override fun getCodecMaxValues(codecInfo: MediaCodecInfo,
+        format: Format, streamFormats: Array<Format>): CodecMaxValues {
+        val original = super.getCodecMaxValues(codecInfo, format, streamFormats)
+        val next = dashDecoderSizing?.nextFormat(format)
+        if (next == null || !codecInfo.adaptive || codecInfo.secure ||
+            !codecInfo.isVideoSizeAndRateSupported(next.width, next.height, next.frameRate.toDouble())) {
+            return original
+        }
+        val expanded = super.getCodecMaxValues(codecInfo, format, streamFormats + next)
+        return CodecMaxValues(maxOf(original.width, expanded.width), maxOf(original.height, expanded.height),
+            maxOf(original.inputSize, expanded.inputSize))
     }
 
     override fun codecNeedsSetOutputSurfaceWorkaround(codecName: String): Boolean =

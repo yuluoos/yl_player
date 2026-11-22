@@ -6,6 +6,29 @@ import kotlin.test.assertTrue
 
 class YlPlaybackStallWatchdogTest {
     @Test
+    fun `DASH loader retry allowance applies only to a continuous rebuffer`() {
+        val delays = mutableListOf<Long>()
+        val actions = mutableListOf<() -> Unit>()
+        val failures = mutableListOf<String>()
+        val watchdog = YlPlaybackStallWatchdog { delay, action -> delays += delay; actions += action }
+        fun refresh(rendered: Boolean, buffering: Boolean) {
+            watchdog.update(true, true, true, buffering, rendered, 15_000, "buffering", rebufferRetries = 3) {
+                error, _ -> failures += error.code
+            }
+        }
+        refresh(false, true)
+        refresh(true, true)
+        refresh(true, true)
+        refresh(true, false)
+        actions.forEach { it() }
+        assertTrue(failures.isEmpty())
+        refresh(true, true)
+        actions.last()()
+        assertEquals(listOf(15_000L, 60_000L, 60_000L), delays)
+        assertEquals(listOf("media3.stall_timeout"), failures)
+    }
+
+    @Test
     fun `first frame timeout reports network failure`() {
         var scheduledDelayMs: Long? = null
         var scheduledAction: (() -> Unit)? = null

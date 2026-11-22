@@ -19,6 +19,7 @@ internal class YlPlaybackStallWatchdog(
         firstFrameRendered: Boolean,
         timeoutMs: Long,
         playbackState: String,
+        rebufferRetries: Int = 0,
         onTimeout: (YlStableError, String) -> Unit,
     ) {
         if (!active || !wantsToPlay || !hasCurrentItem) {
@@ -52,7 +53,10 @@ internal class YlPlaybackStallWatchdog(
         val scheduledGeneration = generation
         armedPhase = phase
 
-        val timeout = timeoutMs.coerceAtLeast(0L)
+        // The loader can still recover a started DASH stream after its first read stalls.
+        // Keep one deadline for this buffering episode, including its retry allowance.
+        val attempts = if (phase == Phase.REBUFFER) 1L + rebufferRetries.coerceAtLeast(0) else 1L
+        val timeout = timeoutMs.coerceIn(0L, Long.MAX_VALUE / attempts) * attempts
         val diagnostic =
             "Media3(phase=${phase.wireName}, timeoutMs=$timeout, state=$playbackState)"
         schedule(timeout) {

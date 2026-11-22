@@ -140,6 +140,10 @@ times. Replay each capture with
 `python3 -B tool/dash_timeline/joint_timing.py captured-native.log`.
 Startup event offsets in its output are relative to the first frame's audio
 observation. A positive offset places the event after that observation.
+For the first frame, the timing summary also reports the audio clock read in the
+metadata callback, the interval from that callback to requested release, the
+projected audio position, and the interval from release to the first sink play.
+These values show when the rate-1 projection reaches back into paused startup.
 
 The summarizer retains missing pairs as counts and absent metrics as null,
 rejects duplicate runs and non-finite numbers, and never assigns test outcomes.

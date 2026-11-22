@@ -1217,6 +1217,16 @@
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-remaining-acceptance.md",
       "sha256": "bf87997222af50d042c64079ea26b68df6ac449ea2bdd7f822067e5108ee0193",
       "kind": "report"
+    },
+    "android-mitv-decoder-playback-retest-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-decoder-and-playback-retest.md",
+      "kind": "report",
+      "sha256": "ec33dc0258d66ffd7b64e6eae87d7548d3e9a5c40dfa65f2ae50f79ca26b03d9"
+    },
+    "android-mitv-dash-recovery-and-transitions-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-dash-recovery-and-transitions.md",
+      "kind": "report",
+      "sha256": "c960e3c257df333d8082e1a4d723ab5f16f01593eaf0b8f49458b456c5c05d12"
     }
   },
   "rows": [
@@ -1235,10 +1245,12 @@
         "android-oppo-abr-20261121",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122",
+        "android-mitv-dash-recovery-and-transitions-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-high-low-high-and-recover-after-starvation-on-api28"
+      "nextAction": "qualify-other-profiles-after-api28-default-dash-stall-recovery-and-finite-read-failure"
     },
     {
       "requirement": "CAP-ABR",
@@ -1314,10 +1326,12 @@
         "android-oppo-av-dns-script-followup-20261121",
         "android-oppo-dash-frame-timing-20261121",
         "android-oppo-dash-av-optimization-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122",
+        "android-mitv-dash-recovery-and-transitions-20261122"
       ],
       "acceptance": null,
-      "nextAction": "resolve-api28-selection-rejection-and-avc-output-buffer-failure-on-mitv"
+      "nextAction": "resolve-api28-cross-codec-av-skew-and-qualify-paused-startup-clock-projection"
     },
     {
       "requirement": "CAP-DASH",
@@ -1761,10 +1775,12 @@
         "android-oppo-av-dns-script-followup-20261121",
         "android-oppo-dash-frame-timing-20261121",
         "android-oppo-dash-av-optimization-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122",
+        "android-mitv-dash-recovery-and-transitions-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-api28-programme-and-lifecycle-after-selector-and-output-buffer-failures"
+      "nextAction": "reduce-api28-avc-to-hevc-output-gap-with-one-decoder"
     },
     {
       "requirement": "CAP-PERIOD",
@@ -2746,7 +2762,9 @@
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
         "android-oppo-av-dns-script-followup-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-decoder-playback-retest-20261122",
+        "android-mitv-dash-recovery-and-transitions-20261122"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"

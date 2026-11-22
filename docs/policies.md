@@ -21,6 +21,13 @@ retry (60 seconds with the default settings). The individual resource requests
 retain their own deadlines. Playback continues at its existing position when
 media arrives within that window.
 
+On Android, a clear, on-demand DASH stream using platform-default networking
+also gets a bounded recovery window after its first frame. Media3 owns the
+individual requests and can report a terminal error earlier. The source
+watchdog allows one read interval per attempt, including the media loader’s
+retry allowance. Repeated buffering notifications keep the same deadline.
+First-frame startup keeps its original timeout.
+
 `YlHttpRequest.headers` contains ordinary metadata that may follow a
 cross-origin resource. `credentials` contains Authorization, cookies, proxy
 authorization, API keys, tokens, secrets, and every custom credential-bearing

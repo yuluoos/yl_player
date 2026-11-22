@@ -59,6 +59,28 @@ class YlDashManifestParserTest {
         assertFalse(coverage.contains(2_000_000))
     }
 
+    @Test fun `single decoder sizing follows only the next compatible SD representation`() = android {
+        val sizing = YlDashDecoderSizing()
+        val timeline = """<SegmentTemplate timescale="1" media="v-${'$'}Number${'$'}.m4s"><SegmentTimeline><S t="0" d="2"/></SegmentTimeline></SegmentTemplate>"""
+        fun programme(codec: String, width: Int, height: Int): androidx.media3.exoplayer.dash.manifest.DashManifest {
+            fun period(start: Int, mimeCodec: String, w: Int, h: Int) = """
+                <Period start="PT${start}S" duration="PT2S"><AdaptationSet mimeType="video/mp4" codecs="$mimeCodec">
+                <Representation id="v" bandwidth="100000" width="$w" height="$h">$timeline</Representation>
+                </AdaptationSet></Period>"""
+            return parse("""<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" type="static" mediaPresentationDuration="PT4S" minBufferTime="PT1S">
+                ${period(0, "avc1.64001e", 320, 180)}${period(2, codec, width, height)}</MPD>""", policy())
+        }
+        val manifest = programme("avc1.64001e", 640, 360)
+        val current = manifest.getPeriod(0).adaptationSets.single().representations.single().format
+        sizing.update(manifest)
+        assertEquals(640, sizing.nextFormat(current)?.width)
+        for (other in listOf(programme("hvc1.1.6.L93.B0", 640, 360), programme("avc1.640028", 1920, 1080))) {
+            sizing.update(other)
+            assertNull(sizing.nextFormat(current))
+            assertNull(sizing.nextFormat(other.getPeriod(0).adaptationSets.single().representations.single().format))
+        }
+    }
+
     @Test fun `parser publishes initialization and media alternatives only after graph admission`() = android {
         val registry = YlDashCandidateRegistry()
         val parser = YlDashManifestParser(policy(), registry)

@@ -27,6 +27,7 @@ internal class YlDashProgramMediaSource(
     private val parser: YlDashManifestParser,
     private val policy: LoadErrorHandlingPolicy,
     private val gapGroups: YlDashGapGroups,
+    private val decoderSizing: YlDashDecoderSizing? = null,
 ) : CompositeMediaSource<Unit>(), Loader.Callback<ParsingLoadable<DashManifest>> {
     private var loader: Loader? = null
     private var child: MediaSource? = null
@@ -54,6 +55,7 @@ internal class YlDashProgramMediaSource(
         createEventDispatcher(null).loadCompleted(loadInfo(loadable, elapsedRealtimeMs, loadDurationMs), C.DATA_TYPE_MANIFEST)
         try {
             val manifest = loadable.result as YlDashProgramManifest
+            decoderSizing?.update(manifest)
             val builder = ConcatenatingMediaSource2.Builder().setMediaItem(item)
             var cursor = YlDashTime.ZERO
             for ((index, window) in manifest.program.windows.withIndex()) {
@@ -106,6 +108,7 @@ internal class YlDashProgramMediaSource(
     override fun createPeriod(id: MediaSource.MediaPeriodId, allocator: Allocator, startPositionUs: Long): MediaPeriod = requireNotNull(child).createPeriod(id, allocator, startPositionUs)
     override fun releasePeriod(mediaPeriod: MediaPeriod) = requireNotNull(child).releasePeriod(mediaPeriod)
     override fun releaseSourceInternal() {
+        decoderSizing?.clear()
         released = true; loader?.release(); loader = null
         super.releaseSourceInternal(); child = null; failure = null
     }

@@ -19,7 +19,8 @@ class YlNativeCodecProbeTest {
     private val stream = YlNativeStreamInfo(0, YlNativeStreamKind.VIDEO,
         YlNativeCodec.HEVC, 3840, 2160, 25.0, profile = 2)
 
-    @Test fun `preferred legacy vendor can decode native 4K HEVC without strict hardware proof`() {
+    @Test fun `non-strict legacy policies can decode native 4K HEVC without strict hardware proof`() {
+        assertEquals("OMX.MS.HEVC.Decoder", probe(AndroidDecoderPolicy.SYSTEM_DEFAULT))
         assertEquals("OMX.MS.HEVC.Decoder", probe(AndroidDecoderPolicy.HARDWARE_PREFERRED))
         assertNull(probe(AndroidDecoderPolicy.HARDWARE_REQUIRED))
     }

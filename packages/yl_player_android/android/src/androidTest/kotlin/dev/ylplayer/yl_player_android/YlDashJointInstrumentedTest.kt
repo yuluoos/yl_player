@@ -135,6 +135,10 @@ private object DashJointMeasurement {
                         return YlDashPcmAudioSink(actual)
                     }
                 }
+                // Use the same decoder budget as a real DASH session on this device.
+                val profile = YlAndroidDeviceProfile.collect(context)
+                renderers.allowDashPrewarming = profile.tier != YlDeviceTier.CONSTRAINED
+                renderers.dashDecoderSizing = YlDashDecoderSizing.forDevice(profile)
                 player = ExoPlayer.Builder(context, renderers).build().also { exo ->
                     exo.addAnalyticsListener(trace)
                     exo.addListener(object : Player.Listener {
@@ -176,7 +180,7 @@ private object DashJointMeasurement {
                     }, { error -> failure = error; done.countDown() })
                     exo.setVideoSurface(output.surface)
                     exo.setMediaSource(YlDashProgramMediaSource(item, DefaultHttpDataSource.Factory(),
-                        YlDashManifestParser(null), DefaultLoadErrorHandlingPolicy(0), YlDashGapGroups()))
+                        YlDashManifestParser(null), DefaultLoadErrorHandlingPolicy(0), YlDashGapGroups(), renderers.dashDecoderSizing))
                     exo.prepare(); exo.play()
                 }
             }

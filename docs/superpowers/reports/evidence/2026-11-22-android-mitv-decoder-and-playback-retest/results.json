@@ -1,0 +1,436 @@
+{
+  "model": "MiTV-MTTP0",
+  "apiLevel": 28,
+  "baseCommit": "cfd292049c8ece77d4e1cdbd4e2baf8bcf4ef031",
+  "sourceFiles": {
+    "packages/yl_player/example/integration_test/abr_network_profile_test.dart": "aa33419197228bc0cefd17c9ce7101b84338edc7063799b1a50b9141131ae97f",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "0db9106cc3135bec9254afc47503c438899baafdeee9d72ff8686e5812c70e7f",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt": "4a94189ac6e9b61ca32e8a81b0d3cc5d7f530438a5af89c9ed489f648d46f810",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelectorTest.kt": "5cb9cdd08a50e806aa97c2aba97e173b40b69e504cf7ac85bf6d6e011b0c1dc8",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlNativeCodecProbeTest.kt": "d448e70c8fb62b6322a75eead0f70059f6b92e1b95c015fcba01e65b74e87de5"
+  },
+  "suites": {
+    "adaptive-reference": {
+      "apkSha256": "96560706e3a98a3128c29800f42c090541565e15e209478df5c6c8ef1383a9f8",
+      "entry": "abr_network_profile_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "outcome": "completed",
+      "endPositionUs": 40000000,
+      "failureCode": null,
+      "networkPolicy": "platformDefault",
+      "readTimeoutMs": null,
+      "observedHeights": [
+        180.0,
+        360.0,
+        180.0,
+        360.0
+      ],
+      "mediaBytes": [
+        845452,
+        406831,
+        681325
+      ],
+      "phaseStartMs": [
+        0,
+        10000,
+        25000
+      ],
+      "rebufferCount": 0,
+      "verifiedHighLowHigh": true
+    },
+    "adaptive-warmup": {
+      "apkSha256": "7ee23884c8e818fa43600a2d6699e3c2fbf395c4da1c9faeefac4dcb9a3c8391",
+      "entry": "abr_network_profile_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "outcome": "completed",
+      "endPositionUs": 120000000,
+      "failureCode": null,
+      "networkPolicy": "platformDefault",
+      "readTimeoutMs": null,
+      "observedHeights": [
+        180.0,
+        360.0,
+        180.0,
+        360.0
+      ],
+      "mediaBytes": [
+        2259548,
+        781131,
+        3350628
+      ],
+      "phaseStartMs": [
+        0,
+        35000,
+        65000
+      ],
+      "rebufferCount": 0,
+      "verifiedHighLowHigh": true
+    },
+    "android_dash_segment_base_test": {
+      "apkSha256": "8443354a659cb84782e295b3aa687f76464a1a6cca34e65fbddca265f0c714e6",
+      "entry": "android_dash_segment_base_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 2,
+      "failed": 0
+    },
+    "android_network_start_failure_test": {
+      "apkSha256": "089af1e1d635ea8a54b0b526adf0ea436fefc06aad1625db22d4a3f5eb83afc9",
+      "entry": "android_network_start_failure_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 3,
+      "failed": 0
+    },
+    "dash_candidate_playback_test": {
+      "apkSha256": "248291e7cd936ba64458dcbc5e8a3dd4dc6467de6ef57fcd6c1dd63f3e128c7d",
+      "entry": "dash_candidate_playback_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 3,
+      "failed": 0
+    },
+    "dash_program_cancellation_test": {
+      "apkSha256": "bde336f041dbdf3bb24b4ecb36d8e554d2da89085d02dfb061c10f64156bf766",
+      "entry": "dash_program_cancellation_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 2,
+      "failed": 0
+    },
+    "dash_program_periods_test": {
+      "apkSha256": "bb161a9608e7f6655985b959dc9d4d8c5139febe9b27a5d2deb4be853679b0ee",
+      "entry": "dash_program_periods_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 19,
+      "failed": 0
+    },
+    "default-short-stall": {
+      "apkSha256": "2d490065b942eab5a9327b763467d96987f76ec7f8042685368deb44da445860",
+      "entry": "abr_network_profile_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "outcome": "completed",
+      "endPositionUs": 40000000,
+      "failureCode": null,
+      "networkPolicy": "platformDefault",
+      "readTimeoutMs": null,
+      "observedHeights": [
+        180.0,
+        360.0
+      ],
+      "mediaBytes": [
+        845452,
+        0,
+        1414467
+      ],
+      "phaseStartMs": [
+        0,
+        10000,
+        15000
+      ],
+      "rebufferCount": 0,
+      "verifiedHighLowHigh": false
+    },
+    "default-stall": {
+      "apkSha256": "84296e6cddf5f35c3fe37ddac06ca7492a37d4fd3412ae73cf795b9428c335a1",
+      "entry": "abr_network_profile_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": false,
+      "passed": 0,
+      "failed": 1,
+      "outcome": "failed",
+      "endPositionUs": 2856000,
+      "failureCode": "network.failed",
+      "networkPolicy": "platformDefault",
+      "readTimeoutMs": null,
+      "observedHeights": [
+        180.0
+      ],
+      "mediaBytes": [
+        105955,
+        0,
+        0
+      ],
+      "phaseStartMs": [
+        0,
+        5000,
+        30000
+      ],
+      "rebufferCount": 1,
+      "verifiedHighLowHigh": false
+    },
+    "joint": {
+      "apkSha256": "daf949b40b939470fb03bfa3fc7384a6b7fc5fdd9d3acc8851e5d5f7ebe7b04a",
+      "passed": true
+    },
+    "managed-stall": {
+      "apkSha256": "0f24e14879e0b38be7a95683f38c65bfb37b749a2425076c9ffa5e0e9f1d7f80",
+      "entry": "abr_network_profile_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "outcome": "completed",
+      "endPositionUs": 40000000,
+      "failureCode": null,
+      "networkPolicy": "managed",
+      "readTimeoutMs": 40000,
+      "observedHeights": [
+        180.0,
+        360.0
+      ],
+      "mediaBytes": [
+        63330,
+        1024,
+        2195565
+      ],
+      "phaseStartMs": [
+        0,
+        5000,
+        30000
+      ],
+      "rebufferCount": 1,
+      "bufferingSamples": 92,
+      "bufferingStartPositionUs": 1866000,
+      "resumedPositionUs": 1903000,
+      "verifiedHighLowHigh": false
+    },
+    "managed-zero-recheck": {
+      "apkSha256": "e7e426a26a5ac3c4418a6839a31168b008787aa06ff52d7ac94047aca8468594",
+      "entry": "abr_network_profile_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "outcome": "completed",
+      "endPositionUs": 40000000,
+      "failureCode": null,
+      "networkPolicy": "managed",
+      "readTimeoutMs": 40000,
+      "observedHeights": [
+        180.0,
+        360.0
+      ],
+      "mediaBytes": [
+        104113,
+        0,
+        2155806
+      ],
+      "phaseStartMs": [
+        0,
+        5000,
+        30000
+      ],
+      "rebufferCount": 1,
+      "bufferingSamples": 90,
+      "bufferingStartPositionUs": 2877000,
+      "resumedPositionUs": 2951000,
+      "verifiedHighLowHigh": false
+    },
+    "native-resources": {
+      "apkSha256": "18ebf2582907d9c01b898915f94b29810165f18ccf5a6ba8b746d7874ee64c3e",
+      "passed": true,
+      "tests": [
+        "dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest#nativeFrameBudgetFailureIsResourceExhaustedAndReleasesEverything",
+        "dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest#actualEngineBudgetFailureIsOneTerminalEventAndCleanup",
+        "dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest#foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress"
+      ]
+    },
+    "rtmp_handoff_recheck": {
+      "apkSha256": "860d4445b99aa1e499e1d4090a9220339eb034026116b6d5f1bfd64036e9ab30",
+      "entry": "rtmp_handoff_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "peer": {
+        "accepted": 1,
+        "closed": 1,
+        "active": 0,
+        "outcome": {
+          "kind": "success",
+          "commandExitCode": 0
+        }
+      },
+      "peerCleaned": true
+    },
+    "rtmp_playback_test": {
+      "apkSha256": "b4cbd7d142a944a6e8fce3946310d7665a911cdd2f65505909eb041a69cbe0cc",
+      "entry": "rtmp_playback_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 6,
+      "failed": 0,
+      "peer": {
+        "accepted": 15,
+        "closed": 15,
+        "active": 0,
+        "outcome": {
+          "kind": "success",
+          "commandExitCode": 0
+        }
+      },
+      "peerCleaned": true
+    },
+    "rtmp_sustained_playback_test": {
+      "apkSha256": "8e22f9f931cc3cef897d3445e82f7bb3b1d30201f980d2821e24bfd6be149c47",
+      "entry": "rtmp_sustained_playback_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "samples": 120,
+      "elapsedMs": 600353,
+      "endPositionMs": 600152,
+      "sessions": 1,
+      "peer": {
+        "accepted": 1,
+        "closed": 1,
+        "active": 0,
+        "outcome": {
+          "kind": "success",
+          "commandExitCode": 0
+        }
+      },
+      "peerCleaned": true
+    },
+    "tv-flv-switch-retest": {
+      "apkSha256": "29f87531db7987edaa7e79e187abf7e2c562026de3230aead5f5b942b9142f55",
+      "entry": "live_mode_switch_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "outcome": "completed",
+      "stage": "stop",
+      "lifecycle": [
+        {
+          "elapsedUs": 0,
+          "state": "resumed"
+        }
+      ],
+      "captureComplete": true,
+      "violations": [],
+      "networkPhases": [
+        0,
+        1,
+        2
+      ]
+    },
+    "tv-hls-switch-retest": {
+      "apkSha256": "434c7877a6ffbd672d5b94af87279cf7cc22c45431bef8996a7e807712c73b6c",
+      "entry": "live_mode_switch_test.dart",
+      "frameworkTerminal": true,
+      "frameworkPassed": true,
+      "passed": 1,
+      "failed": 0,
+      "outcome": "completed",
+      "stage": "stop",
+      "lifecycle": [
+        {
+          "elapsedUs": 0,
+          "state": "resumed"
+        }
+      ],
+      "captureComplete": true,
+      "violations": [],
+      "networkPhases": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  "jvm": {
+    "tests": 636,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "archiveSha256": "5ee8b3e35c8ad79572236864c864f706ef4397f2ce5455364da8ff5fee0aa4d0",
+  "files": {
+    "adaptive-reference/capture.log": "cb7f0cce64cf4c783ab2e3f26e4ed740ef313fcc268937e5a9ecf2e4d53adc22",
+    "adaptive-reference/receipt.json": "e3753da74baf476d4e48193acb75bbdd2b8323229ca73ab87c908c3051376f83",
+    "adaptive-reference/requests.jsonl": "153a0d2ac92fdab53473afaf1e6bef5cc1979ea9175b40656e2eece3a6d73abf",
+    "adaptive-reference/server.log": "0d1eef2914e5729d88ec4a252e3535d314a37d097d1fde7fc0d7d20bc65090f2",
+    "adaptive-reference/summary.json": "b5b2979fb0d0ee5d9cdfd965b2a480a95793f989ad6aa72a6e3b83065db8d914",
+    "adaptive-warmup/capture.log": "e96d0be2a0fae98146af64729312b953a90da957329fb882e1f2e4f0b855a34f",
+    "adaptive-warmup/receipt.json": "d3e7b59433950d077cb0e543a1d379ee548233bfe42682fd229169449a0c7d0d",
+    "adaptive-warmup/requests.jsonl": "06f78cdc5db929083344ff285cc2202d3c0e493e15e6542dab7f1d7c71fbf743",
+    "adaptive-warmup/server.log": "13c4d72a63cb252b5230a692c6c694638eba220472110c79d355186a54b7e5b1",
+    "android_dash_segment_base_test/capture.log": "c8572c80f2f6294a009de8a89483c9eccd91b8b6e0c84cfa20d118763e6d2a72",
+    "android_dash_segment_base_test/receipt.json": "d8e561b58a67cc165d6a77574782139f0b3d020fd0fcf3159b20e8b22054fd70",
+    "android_network_start_failure_test/capture.log": "b8524af595c28707e65c849f292be7a02ce0ebb1d309f4e15986cbe0c1df95df",
+    "android_network_start_failure_test/receipt.json": "beed59553547b83987c12addd4e84ed932ad205e3195c9aea091a761fda25d62",
+    "dash_candidate_playback_test/capture.log": "2ca4ef4a7994fdb9189215dad11bdab0bf828062f6f6ec9088a590f8e1636c76",
+    "dash_candidate_playback_test/receipt.json": "7311df99a6e800a3354d317f248b348e6517a88df1289e0659e1b036c6d22147",
+    "dash_program_cancellation_test/capture.log": "e1728215dcc01253d57318c6e146c18bdd1427de75da4bf70d4fe6941b97a0d0",
+    "dash_program_cancellation_test/receipt.json": "2a39b5f2a48c922f22da6a3a24871e7cad33f6c6b86729b2f847578d79e8b307",
+    "dash_program_periods_test/capture.log": "325d4ccfd39ff40cb08b3c09072c26e4fb86752dd7e3edf7660dda90b0e6564a",
+    "dash_program_periods_test/receipt.json": "a3c80868d688bf562664998c2c64354cc60e0a69641b66aa0744628c2d9778d3",
+    "default-short-stall/capture.log": "5b0434050f37af7c1d4c74a0e391d0f561f0a1da6dae300aafec1fb9f710b6fa",
+    "default-short-stall/receipt.json": "360715198cd428ebd0e8da7d3832ab57cbf16baf034e91b3d56777956084106d",
+    "default-short-stall/requests.jsonl": "9e9601e0219ea9e5b62d782463123662c8af4c4c060bb1ffd225b708bf4e1b09",
+    "default-short-stall/server.log": "5de5dd76430c4680c0a77071fca15f4d1395947203dc22fc8ff28570c1a5a97c",
+    "default-stall/capture.log": "b7e1863f9dd375cd46599ca665f47208188007840838ed266ae6619488cde261",
+    "default-stall/failure.log": "c3bf5c8e1cd5d1536422aa639232aacd238adcf30c2c549609d2fbcd5cc42989",
+    "default-stall/receipt.json": "69e206735f4396e9c2ff3ccb2445c628c37f4df9be7e8501db2efd1cf055694d",
+    "default-stall/requests.jsonl": "fa1594e45490732304c381e1fd9efa12f5b7f6269316cff487c99b5ac88f5b73",
+    "default-stall/server.log": "008ef9c1dcea7cf7c2a92315cd80e8f3310ae4e0570090dc350b0788310e1607",
+    "fixture-120-SHA256SUMS": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0",
+    "fixture-120.json": "e047a42ce0020f8260b1b0c8e1feb695c5ee7ed8879116c0b151f4b2ec6475df",
+    "fixture-40-SHA256SUMS": "957404b9e5cdbee9631fde621e5ced7cba12bf2a368abcaad64f5271f737c9c4",
+    "fixture-40.json": "be340432bd9f9fcffa763781a21e3196f4939fbe02c3fb18d4b1b1d09b0673c2",
+    "joint/gate.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "joint/junit.log": "f0db4fc37fc92d4b9d2396ef723ed8c1535ae82ffb2741fe549d125ba2f18780",
+    "joint/metrics.json": "4cd54817eaa3f25b4e05aa1e471f36e5d7b1d45ff6d246ef055ebc6d2308b6db",
+    "joint/receipt.json": "d3c6688e8cd5d27173fc101cd455eb61a429d29cb02f4b6378136dc665d99b0e",
+    "joint/samples.log": "c7314aba4005b8b3f98f9eaaa723b6c79043e0e4ec0eef0f1383df7ff69e9752",
+    "joint/timing.json": "32ddb65aada0a2626668aefdd9431ec25d10778d0f508edac47eec4406b31a77",
+    "jvm.json": "3645e2f74ab1abef88c99abb10238e60f290fddf63c925bc09f60cbdac6726c8",
+    "managed-stall/capture.log": "2c836f46d02a8f4d334125cb31a241782d0972a61f4329ba7331db4d280cf134",
+    "managed-stall/receipt.json": "e249186a9627580d3fc335656c3b4c69df85e3cdcf09dcbbc67d7b947ca31496",
+    "managed-stall/requests.jsonl": "5336352e6bd80b3746da9a02b68b95da3a377063831d48bb6f14880141969e10",
+    "managed-stall/server.log": "705fdba4a92d62d36931c5e55d4bceae4b47905743beb1f35d687e947db7ac4b",
+    "managed-zero-recheck/capture.log": "1b9f19eccd34d4686e0b89b26b71db450f17418ca34dbe465399d736be050b47",
+    "managed-zero-recheck/receipt.json": "6b3508458f2fb36fff7e5c6b5aea2c285d3887423287355cb6baed755070de11",
+    "managed-zero-recheck/requests.jsonl": "0d7a99102256947473ce1196ccc7c1a2be1425f87008b79cb735067023fbf5d1",
+    "managed-zero-recheck/server.log": "4d062cec3a4cf4b63862183716469bd70973c5c163eb803fabd23a286bf63676",
+    "native-resources/instrumentation.log": "3a4aab2ab02c6ab3fc45678d6dd634b147e29b4939bd7f2dc3c3b8d17c35d837",
+    "native-resources/receipt.json": "bdea7ea5f8688b42c3e700e4eb61e7e225b9fc4b94db9fd9a89a1567fc86dfb5",
+    "outage-profile.json": "90297a72a22ca1e5bcf71736c669c0fa417bb35b90ed60518beb99c43ae7d8ab",
+    "rtmp_handoff_recheck/capture.log": "20172d206f6de8f00b9e25d6126a7ef13b4ecfd543e181630119262d541a9987",
+    "rtmp_handoff_recheck/peer.json": "b8fb4ae853d01da3a72b5b7855674fbad9e4220f2394fae0d3e798014e412021",
+    "rtmp_handoff_recheck/receipt.json": "a584c6c36d9162e6c333807199b7cc31cf47eac0be19e9aac81d625ac6f3d074",
+    "rtmp_playback_test/capture.log": "a56aba9e669e7e18ddc12b904a1c8498780951d5cb0ca4e40b4c03a067143e78",
+    "rtmp_playback_test/peer.json": "12896d53f3c6e8f5d43c6bc7eb3bb32f33c49b581ff2304d7e0d315a364aa902",
+    "rtmp_playback_test/receipt.json": "0918fcc820743ab58c269ab2a240181a9cf17e296d3e9156896e83ac0d5667b6",
+    "rtmp_sustained_playback_test/capture.log": "cea3c26064d476e61ac288bae57f14e3a5c353a5556559a37558d276a58ab0ff",
+    "rtmp_sustained_playback_test/foreground.log": "ae57fc0d4227fb608f614542d758f6391109d35bcdefa866a6e318d5ace1bf34",
+    "rtmp_sustained_playback_test/peer.json": "ffc3c8002eac179e2ec9a03145bc39b64dfa14d3d02a52683bc4245c482a90e0",
+    "rtmp_sustained_playback_test/receipt.json": "fef0f5ef4b1fa03d9cbc499efa05dc6d4d8bf2f77891f570fbd17663ae06f4d7",
+    "tv-flv-switch-retest/capture.log": "034bb71ad178ec64aace2d556e24948c922a44ef9206aad82754f214ab612c4b",
+    "tv-flv-switch-retest/connections.jsonl": "4720b65cce7e1964028e26438848a6a4f5718d85fef2bd9dd28418eb096d2ea4",
+    "tv-flv-switch-retest/foreground.log": "7250c84ecbd1c2b6aca6f9459bab580f6ab5365157f232f9c1f57f8adcdd2b28",
+    "tv-flv-switch-retest/receipt.json": "b5347eea4e8507f78bc0def30fddb3057e45bebd4a8b4970c5160c092ad9bc27",
+    "tv-flv-switch-retest/relay-receipt.json": "a79b730308536d4831ec57a51f4e5caa0bed33bbf8dfc766d253c08fbb9415a3",
+    "tv-flv-switch-retest/summary.json": "1f89b8b7887cf02b62be16eccc4feb3277f43b26315952ed09ac52e0bb9a4283",
+    "tv-hls-switch-retest/capture.log": "141e28b61da65c9f081174b23551492ddeb4425f8d27eeb0dfc455dde9757645",
+    "tv-hls-switch-retest/connections.jsonl": "30648f2a08b5a3c26de4a6254e11590dcbae0f0af9c23c8d328e7a90b7ea2245",
+    "tv-hls-switch-retest/foreground.log": "1d6138fccb7c83ea2e32c08d158e5e15a55cf93ecc83d61fb109674df0339ed1",
+    "tv-hls-switch-retest/receipt.json": "bfa8ee5d2551133a16760fad1191013e907b6951985a2d31b7404c6db2b83462",
+    "tv-hls-switch-retest/relay-receipt.json": "e5b0f1955cdbc09c4af77be42f5f0e0cd64d839ac0166af0b2bf3959ba868419",
+    "tv-hls-switch-retest/summary.json": "61c3fd92979b183079a98be191947a035932320092ffe20974f1e80515e76a2d",
+    "tv-profile.json": "bfebb8455cc69ae93d38238078b45eaffff41a270bd6ec6170eb4c6dbdffe8e5"
+  }
+}

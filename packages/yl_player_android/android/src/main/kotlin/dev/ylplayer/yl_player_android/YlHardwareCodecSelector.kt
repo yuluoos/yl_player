@@ -111,8 +111,8 @@ internal class YlPolicyCodecSelector(
     override fun getDecoderInfos(mimeType: String, requiresSecureDecoder: Boolean, requiresTunnelingDecoder: Boolean): List<MediaCodecInfo> {
         val codecs = delegate.getDecoderInfos(mimeType, requiresSecureDecoder, requiresTunnelingDecoder)
         if (!MimeTypes.isVideo(mimeType)) return codecs
-        // Legacy vendor candidates are allowed only for hardwarePreferred. This
-        // selection preference never upgrades their public decoder evidence.
+        // Preserve platform order among eligible legacy vendor candidates. Their
+        // names do not establish hardware evidence for strict playback.
         // Unbudgeted MediaCodec software remains excluded under every policy.
         return codecs.filter { !it.softwareOnly && evidence.allowsPlayback(policy, it.name) }
     }
@@ -140,7 +140,7 @@ internal class YlDecoderEvidenceProvider(val apiLevel: Int, private val records:
     fun allowsPlayback(policy: dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy, initializedName: String?): Boolean {
         if (mode(initializedName) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE) return true
         return apiLevel < 29 &&
-            policy == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED &&
+            policy != dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_REQUIRED &&
             initializedName != null && isHardwareCodecName(initializedName)
     }
     fun satisfiesRequired(hasVideo: Boolean, initializedName: String?) = !hasVideo || mode(initializedName) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE

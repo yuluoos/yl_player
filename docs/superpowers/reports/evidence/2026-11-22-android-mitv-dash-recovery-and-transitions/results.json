@@ -1,0 +1,625 @@
+{
+  "model": "MiTV-MTTP0",
+  "androidApi": 28,
+  "baseCommit": "cfd292049c8ece77d4e1cdbd4e2baf8bcf4ef031",
+  "network": {
+    "default-outage": {
+      "apkSha256": "2ba1879fd5c8fa9037c00a0fd61b42f7539774a9b92e8d3972bb84a9ce18f972",
+      "frameworkPassed": true,
+      "cleaned": true,
+      "mappingRemoved": true,
+      "outcome": "completed",
+      "failureCode": null,
+      "manifestSha256": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+      "profileSha256": "33cc1ce91e297f7b7182b6c0cbdc07f12d9b43be0d28b1e9be4fbc17378a1e34",
+      "firstFrameUs": 6686224,
+      "samples": 253,
+      "bufferingSamples": 92,
+      "endPositionUs": 40000000,
+      "terminalElapsedUs": 70050673,
+      "timeFromFirstObservedBufferingToTerminalUs": 60670107,
+      "mediaBytesPerPhase": [
+        80937,
+        0,
+        2083504
+      ],
+      "observedStates": [
+        "ready",
+        "playing",
+        "buffering",
+        "playing",
+        "completed"
+      ],
+      "observedHeights": [
+        180.0,
+        360.0
+      ]
+    },
+    "default-sustained": {
+      "apkSha256": "a4017f32e37c5e8f055bc28dc2d8402e5c95d0e9392437f7fd9ea4f25438a361",
+      "frameworkPassed": true,
+      "cleaned": true,
+      "mappingRemoved": true,
+      "outcome": "failed",
+      "failureCode": "network.read_timeout",
+      "manifestSha256": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+      "profileSha256": "63d5ba36f6c04946120595e9a43bcebb87841dc4e172aacd52b7d3091f0a59ee",
+      "firstFrameUs": 6121205,
+      "samples": 176,
+      "bufferingSamples": 161,
+      "endPositionUs": 3150000,
+      "terminalElapsedUs": 50266714,
+      "timeFromFirstObservedBufferingToTerminalUs": 40518983,
+      "mediaBytesPerPhase": [
+        118838,
+        0
+      ],
+      "observedStates": [
+        "loading",
+        "playing",
+        "buffering",
+        "failed"
+      ],
+      "observedHeights": [
+        180.0
+      ]
+    },
+    "final-recovery": {
+      "apkSha256": "ea31fade763372d80a68095edb4d8c72cf00c6035d65cf107a37e0883293775d",
+      "frameworkPassed": true,
+      "cleaned": true,
+      "mappingRemoved": true,
+      "outcome": "completed",
+      "failureCode": null,
+      "manifestSha256": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+      "profileSha256": "33cc1ce91e297f7b7182b6c0cbdc07f12d9b43be0d28b1e9be4fbc17378a1e34",
+      "firstFrameUs": 6327553,
+      "samples": 250,
+      "bufferingSamples": 87,
+      "endPositionUs": 40000000,
+      "terminalElapsedUs": 69004918,
+      "timeFromFirstObservedBufferingToTerminalUs": 58095542,
+      "mediaBytesPerPhase": [
+        138236,
+        0,
+        2123275
+      ],
+      "observedStates": [
+        "loading",
+        "playing",
+        "buffering",
+        "playing",
+        "completed"
+      ],
+      "observedHeights": [
+        180.0,
+        360.0
+      ]
+    },
+    "final-sustained": {
+      "apkSha256": "9dd57fbddfca1cb2e2f2585148b1711122345d8adb1c61f347a1309a662555cd",
+      "frameworkPassed": true,
+      "cleaned": true,
+      "mappingRemoved": true,
+      "outcome": "failed",
+      "failureCode": "network.read_timeout",
+      "manifestSha256": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+      "profileSha256": "63d5ba36f6c04946120595e9a43bcebb87841dc4e172aacd52b7d3091f0a59ee",
+      "firstFrameUs": 6391761,
+      "samples": 176,
+      "bufferingSamples": 161,
+      "endPositionUs": 2851000,
+      "terminalElapsedUs": 50451607,
+      "timeFromFirstObservedBufferingToTerminalUs": 40490308,
+      "mediaBytesPerPhase": [
+        95715,
+        0
+      ],
+      "observedStates": [
+        "loading",
+        "playing",
+        "buffering",
+        "failed"
+      ],
+      "observedHeights": [
+        180.0
+      ]
+    }
+  },
+  "nativeAV": {
+    "joint": {
+      "apkSha256": "30bdf05ea29dc2722afd4af43c70390c400e31bf6f6d00d9ca7503945e99c894",
+      "nativeJUnit": true,
+      "limitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+      "frozenGate": {
+        "passed": false,
+        "reason": "manifest: outside frozen native AV pair envelope"
+      },
+      "runs": 15,
+      "rows": 1467,
+      "missingPairs": 0,
+      "maxAbsDeltaUs": 189535,
+      "maxExcessGapMs": {
+        "manifest": 8.332994999999997,
+        "cross-codec": 108.829985,
+        "resolution": 111.366952
+      },
+      "overLimitAfterStartup": [
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "ptsUs": 1500000,
+          "deltaUs": -82512
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "ptsUs": 1500000,
+          "deltaUs": -81652
+        }
+      ],
+      "startup": {
+        "zeroOnBothReads": 15,
+        "releaseBeforeSinkPlay": 15,
+        "frozenValuesOver70ms": 12,
+        "maxMetadataReleaseDistanceUs": 163.75
+      },
+      "gpuReadBeganBeforeReleaseMedianMs": 191.23,
+      "switches": {
+        "cross-codec": [
+          {
+            "run": 0,
+            "deltaUs": -64615,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              144,
+              152
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": -82512,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              128,
+              146
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": -37187,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              140,
+              149
+            ]
+          }
+        ],
+        "resolution": [
+          {
+            "run": 0,
+            "deltaUs": -81652,
+            "reuse": 0,
+            "discardReasons": 320,
+            "decoderInitMs": [
+              138,
+              146
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": -37709,
+            "reuse": 0,
+            "discardReasons": 320,
+            "decoderInitMs": [
+              137,
+              144
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": -38737,
+            "reuse": 0,
+            "discardReasons": 320,
+            "decoderInitMs": [
+              132,
+              155
+            ]
+          }
+        ]
+      }
+    },
+    "sizing": {
+      "apkSha256": "2cd43155cd4a9e60cafad6235e021e5df8d19456e0f29098a5d8bb43fa76067d",
+      "nativeJUnit": true,
+      "limitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+      "frozenGate": {
+        "passed": false,
+        "reason": "manifest: outside frozen native AV pair envelope"
+      },
+      "runs": 15,
+      "rows": 1513,
+      "missingPairs": 0,
+      "maxAbsDeltaUs": 258233,
+      "maxExcessGapMs": {
+        "manifest": 8.332994999999997,
+        "cross-codec": 264.18953999999997,
+        "resolution": 8.332994999999997
+      },
+      "overLimitAfterStartup": [
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "ptsUs": 1500000,
+          "deltaUs": -163018
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "ptsUs": 1500000,
+          "deltaUs": -179326
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "ptsUs": 1500000,
+          "deltaUs": -258233
+        }
+      ],
+      "startup": {
+        "zeroOnBothReads": 15,
+        "releaseBeforeSinkPlay": 15,
+        "frozenValuesOver70ms": 12,
+        "maxMetadataReleaseDistanceUs": 79.083
+      },
+      "gpuReadBeganBeforeReleaseMedianMs": 41.371,
+      "switches": {
+        "cross-codec": [
+          {
+            "run": 0,
+            "deltaUs": -163018,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              135,
+              146
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": -179326,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              155,
+              149
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": -258233,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              141,
+              158
+            ]
+          }
+        ],
+        "resolution": [
+          {
+            "run": 0,
+            "deltaUs": 19968,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              139
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": 5090,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              163
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": 14955,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              150
+            ]
+          }
+        ]
+      }
+    },
+    "async-sizing": {
+      "apkSha256": "b1e3ff1d308d05ad567902246f0c94d7eafbe206fa4c5964dc7c3bf61c153530",
+      "nativeJUnit": true,
+      "limitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+      "frozenGate": {
+        "passed": false,
+        "reason": "manifest: outside frozen native AV pair envelope"
+      },
+      "runs": 15,
+      "rows": 1511,
+      "missingPairs": 0,
+      "maxAbsDeltaUs": 200749,
+      "maxExcessGapMs": {
+        "manifest": 8.332994999999997,
+        "cross-codec": 211.550383,
+        "resolution": 24.99965999999999
+      },
+      "overLimitAfterStartup": [
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "ptsUs": 1500000,
+          "deltaUs": -178939
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "ptsUs": 1500000,
+          "deltaUs": -200749
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "ptsUs": 1500000,
+          "deltaUs": -191634
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "ptsUs": 1666666,
+          "deltaUs": -128698
+        }
+      ],
+      "startup": {
+        "zeroOnBothReads": 15,
+        "releaseBeforeSinkPlay": 15,
+        "frozenValuesOver70ms": 12,
+        "maxMetadataReleaseDistanceUs": 82.75
+      },
+      "gpuReadBeganBeforeReleaseMedianMs": 41.439,
+      "switches": {
+        "cross-codec": [
+          {
+            "run": 0,
+            "deltaUs": -178939,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              135,
+              150
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": -200749,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              139,
+              146
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": -191634,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              124,
+              148
+            ]
+          }
+        ],
+        "resolution": [
+          {
+            "run": 0,
+            "deltaUs": 5664,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              146
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": 16101,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              139
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": 12637,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              130
+            ]
+          }
+        ]
+      }
+    },
+    "final-strict": {
+      "apkSha256": "862a72b8f8bc69511ae20a4392bc9a725ef7576269ce8f6460d0310ad7ab7c08",
+      "nativeJUnit": true,
+      "limitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+      "frozenGate": {
+        "passed": false,
+        "reason": "manifest: outside frozen native AV pair envelope"
+      },
+      "runs": 15,
+      "rows": 1514,
+      "missingPairs": 0,
+      "maxAbsDeltaUs": 199274,
+      "maxExcessGapMs": {
+        "manifest": 8.332994999999997,
+        "cross-codec": 206.297854,
+        "resolution": 8.332994999999997
+      },
+      "overLimitAfterStartup": [
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "ptsUs": 1500000,
+          "deltaUs": -190128
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "ptsUs": 1500000,
+          "deltaUs": -166188
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "ptsUs": 1500000,
+          "deltaUs": -199274
+        }
+      ],
+      "startup": {
+        "zeroOnBothReads": 15,
+        "releaseBeforeSinkPlay": 15,
+        "frozenValuesOver70ms": 12,
+        "maxMetadataReleaseDistanceUs": 167.583
+      },
+      "gpuReadBeganBeforeReleaseMedianMs": 41.596,
+      "switches": {
+        "cross-codec": [
+          {
+            "run": 0,
+            "deltaUs": -190128,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              140,
+              153
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": -166188,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              146,
+              157
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": -199274,
+            "reuse": 0,
+            "discardReasons": 328,
+            "decoderInitMs": [
+              140,
+              152
+            ]
+          }
+        ],
+        "resolution": [
+          {
+            "run": 0,
+            "deltaUs": 16490,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              135
+            ]
+          },
+          {
+            "run": 1,
+            "deltaUs": 19711,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              146
+            ]
+          },
+          {
+            "run": 2,
+            "deltaUs": 20657,
+            "reuse": 2,
+            "discardReasons": 0,
+            "decoderInitMs": [
+              133
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "jvm": {
+    "tests": 638,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "nativeConfigurations": {
+    "joint": "Diagnostic only. Original sizing, one decoder, MediaCodecVideoRenderer.Builder.setEarlySchedulingThresholdUs(200000).",
+    "sizing": "Adjacent AVC size with original queue and release scheduling.",
+    "async-sizing": "Diagnostic only. Adjacent AVC size and forceEnableMediaCodecAsynchronousQueueing, original release scheduling.",
+    "final-strict": "Final production sizing with original queue and release scheduling, one decoder."
+  },
+  "publicPeriods": {
+    "apkSha256": "55b2a44320ec35ae44d93dbd5eb40dc6e53b05e4f20a024eb3e33206c0d5b2bb",
+    "frameworkPassed": true,
+    "cases": [
+      "managed DASH fixed AVC disappears and HEVC can be fixed",
+      "managed DASH programme independent-pto",
+      "managed DASH programme clip-end",
+      "managed DASH programme gap",
+      "managed DASH programme overlap",
+      "managed DASH programme unknown-middle",
+      "managed DASH programme multiple-base",
+      "managed DASH programme fractional-microsecond",
+      "managed DASH programme cross-codec",
+      "managed DASH programme resolution",
+      "managed DASH programme audio-added",
+      "managed DASH programme absolute-base",
+      "managed DASH programme absolute-list",
+      "managed DASH programme audio-gap-leading",
+      "managed DASH programme audio-gap-internal",
+      "managed DASH programme audio-gap-trailing",
+      "managed DASH programme video-gap-leading",
+      "managed DASH programme video-gap-internal",
+      "managed DASH programme video-gap-trailing"
+    ]
+  },
+  "finalSourceSha256": {
+    "packages/yl_player/example/integration_test/abr_network_profile_test.dart": "43fa006037f4c1da479b89bba769116768277a458f03fe571411fdb3d6a0626a",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "fd8219dd8db64a067df939edc80c2501be3f5a3acb5d1aae32ec3408f2ac9352",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashDecoderSizing.kt": "2f0015cfa06a094c20af6a2c2784eb1547cc3177e46940bb151d6602643da836",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt": "fa459d49e9dd489c74f2f67f7218d159db302ecaf9c87630d37fe5da478957a2",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt": "4a94189ac6e9b61ca32e8a81b0d3cc5d7f530438a5af89c9ed489f648d46f810",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "8001607af04f50f485c7851aaa729ccbf741d538fe7721d616a9483d30dd6009",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt": "446d0211363daecbedc81e33115f6b4e33417ce46ab16bc5d36e4a7e870fc79a",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "f0e29117a272a86c8382f4d7d84751e905ddc37d2bb6ef4c1efffa199145e1ee",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackStallWatchdog.kt": "c4d5a7c938f8c5b75063996e73bb239aea7ad21bfb7989245a0a7a9c3f2babaf",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt": "32c377f0133a730ef483cff74d0b7e754a1744e9503d40fa33e1d29669816688",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelectorTest.kt": "5cb9cdd08a50e806aa97c2aba97e173b40b69e504cf7ac85bf6d6e011b0c1dc8",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlNativeCodecProbeTest.kt": "d448e70c8fb62b6322a75eead0f70059f6b92e1b95c015fcba01e65b74e87de5",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlaybackStallWatchdogTest.kt": "2061c2a15af4303524b15aac2203349aa629318f253f782a144985467fa8b05d",
+    "tool/dash_timeline/README.md": "b5f750d56f34e41be76d30b6af87524be8a96541899c33cd2123b93eb4f41813",
+    "tool/dash_timeline/joint_timing.py": "261df1fdce2d657ff42182123b509a8b5638b869b13829014426f8c871c7da40"
+  },
+  "hostTestsPassed": {
+    "timeline-tests.log": 20,
+    "abr-host-qualified.log": 60
+  },
+  "archiveSha256": "9051eb2178acb8774351ea676bf40f81120333f66aef30e396a758ecf36a785f"
+}

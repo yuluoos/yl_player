@@ -38,13 +38,19 @@ def summarize_timing(log):
         enter = single_event('firstWriteEnter')
         leave = single_event('firstWriteReturn')
         clock = single_event('firstObservedClock')
+        sink_play = next(e for e in trace if e['event'] == 'sinkPlay')
         run = dict(fixture=key[0], run=key[1], frames=len(rows),
                    missingClockPtsUs=[r['videoPtsUs'] for r in rows if r['audioUs'] is None],
                    firstFrameClockUs=first['audioUs'], firstWriteEnterUs=relative_us(enter),
                    firstWriteReturnUs=relative_us(leave), firstWriteAccepted=leave['accepted'],
                    clockAtWriteEnterUs=enter['clockUs'], clockAtWriteReturnUs=leave['clockUs'],
                    firstClockObservedUs=relative_us(clock), firstClockPositionUs=clock['positionUs'],
-                   firstSinkPlayUs=relative_us(next(e for e in trace if e['event'] == 'sinkPlay')))
+                   firstSinkPlayUs=relative_us(sink_play),
+                   firstFrameAudioAtMetadataUs=first.get('audioAtMetadataUs'),
+                   firstFrameMetadataToReleaseUs=((first['imageTimestampNs'] - first['metadataHostNs']) / 1000
+                                                 if first.get('metadataHostNs') is not None else None),
+                   firstFrameProjectedAudioUs=first.get('audioProjectedAtReleaseUs'),
+                   firstFrameReleaseToSinkPlayUs=(sink_play['hostNs'] - first['imageTimestampNs']) / 1000)
         switch = next((i for i, r in enumerate(rows) if r['representation'] == 'p1-video'), None)
         if switch is not None:
             row = rows[switch]

@@ -24,6 +24,15 @@ void main() {
         'profileHash': const String.fromEnvironment('YL_ABR_PROFILE_SHA256'),
         'mediaHash': const String.fromEnvironment('YL_ABR_MEDIA_SHA256'),
       });
+      const readTimeoutMs = int.fromEnvironment('YL_ABR_MANAGED_READ_TIMEOUT_MS');
+      const expectSustainedStall = bool.fromEnvironment(
+        'YL_ABR_EXPECT_SUSTAINED_STALL',
+      );
+      final networkPolicy = readTimeoutMs == 0
+          ? const YlNetworkPolicy.platformDefault()
+          : YlNetworkPolicy.managed(
+              readTimeout: Duration(milliseconds: readTimeoutMs),
+            );
       final clock = Stopwatch();
       // An opt-in diagnostic programme; the frozen baseline remains 40 seconds.
       const programmeSeconds = int.fromEnvironment(
@@ -39,6 +48,7 @@ void main() {
       StreamSubscription<YlPlayerEvent>? subscription;
       var outcome = 'failed';
       var stage = 'preflight';
+      String? failureCode;
       int? policyAckUs;
       Map<String, int>? clockAlignment;
       var cleaned = false;
@@ -67,6 +77,7 @@ void main() {
               YlNetworkSource(
                 Uri.parse(config['url']!),
                 format: YlMediaFormat.dash,
+                networkPolicy: networkPolicy,
               ),
               options: YlLoadOptions(
                 videoConstraints: config['mode'] == 'caps'
@@ -108,7 +119,10 @@ void main() {
         stage = 'observe';
         while (clock.elapsed < const Duration(seconds: 180)) {
           series.add(player.state, clock.elapsedMicroseconds);
-          if (player.state.failure != null) throw StateError('Playback failed');
+          if (player.state.failure case final failure?) {
+            failureCode = failure.code;
+            throw StateError('Playback failed');
+          }
           if (player.state.status == YlPlaybackStatus.completed) {
             if (player.state.timeline.position <
                 const Duration(milliseconds: programmeSeconds * 1000 - 500)) {
@@ -120,6 +134,9 @@ void main() {
           await Future<void>.delayed(const Duration(milliseconds: 250));
         }
         if (outcome != 'completed') outcome = 'timeout';
+      } on YlPlayerException catch (error) {
+        failureCode = error.failure.code;
+        outcome = 'failed';
       } on TimeoutException {
         outcome = 'timeout';
       } catch (_) {
@@ -156,6 +173,9 @@ void main() {
             'platform': Platform.operatingSystem,
             'buildMode': kReleaseMode ? 'release' : (kProfileMode ? 'profile' : 'debug'),
             'outcome': outcome,
+            'networkPolicy': networkPolicy.kind.name,
+            'managedReadTimeoutMs': networkPolicy.readTimeout?.inMilliseconds,
+            'failureCode': failureCode,
             'stage': stage,
             'cleaned': cleaned,
             'sampleCount': series?.samples.length ?? 0,
@@ -174,11 +194,17 @@ void main() {
         // Preserve every sample and the result before the test process exits.
         await debugPrintDone.timeout(const Duration(seconds: 30));
       }
-      expect(
-        outcome,
-        'completed',
-        reason: 'Capture failure preserved in YL_ABR_RESULT',
-      );
+      if (expectSustainedStall) {
+        expect(stage, 'observe');
+        expect(outcome, 'failed');
+        expect(failureCode, isIn(['network.read_timeout', 'network.failed']));
+        final samples = series!.samples;
+        expect(samples.any((s) => s['status'] == 'playing'), isTrue);
+        expect(samples.any((s) => s['status'] == 'buffering'), isTrue);
+        expect(samples.last['failed'], isTrue);
+      } else {
+        expect(outcome, 'completed', reason: 'See YL_ABR_RESULT');
+      }
       expect(cleaned, isTrue, reason: 'Capture cleanup must finish');
     },
     timeout: const Timeout(Duration(minutes: 4)),

@@ -61,7 +61,8 @@ internal class YlMedia3Core(
     private var rtmpPendingFailure: YlRtmpException? = null
     private val managedNetwork = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private var inspectingDecoder = false
-    private val sourceFactory = YlMediaSourceFactory(source, configuration.network, protectedDrm, networkBytes) { attempt, delayMs ->
+    private val dashDecoderSizing = YlDashDecoderSizing.forDevice(deviceProfile)
+    private val sourceFactory = YlMediaSourceFactory(source, configuration.network, protectedDrm, networkBytes, dashDecoderSizing) { attempt, delayMs ->
         val occurredAtMs = SystemClock.elapsedRealtime()
         handler.post { if (!disposed && !stopped) recordRetry(attempt, delayMs, occurredAtMs) }
     }.also { trackSelector.isDashGapGroup = it::isDashGapGroup }
@@ -214,6 +215,7 @@ internal class YlMedia3Core(
             ?: YlOutputRenderersFactory(context, outputObserver))
             .also {
                 it.allowDashPrewarming = dashVideoFamily != null && deviceProfile.tier != YlDeviceTier.CONSTRAINED
+                it.dashDecoderSizing = dashDecoderSizing.takeIf { dashVideoFamily != null }
                 it.allowEac3SoftwareAudio = protectedDrm == null && dashVideoFamily == null &&
                     deviceProfile.isTelevision && deviceProfile.signals.apiLevel in 24..28
                 it.useConstrainedTvAudioBuffer = protectedDrm == null && dashVideoFamily == null &&
@@ -1140,6 +1142,8 @@ internal class YlMedia3Core(
             isBuffering = exoPlayer.playbackState == Player.STATE_BUFFERING,
             firstFrameRendered = firstFrameRendered,
             timeoutMs = configuration.network.readTimeoutMs.toLong(),
+            rebufferRetries = if (dashVideoFamily != null && source.kind == AndroidSourceKind.NETWORK &&
+                !sourceIsLive && !exoPlayer.isCurrentMediaItemLive) sourceFactory.mediaRetryCount else 0,
             playbackState = status,
         ) { error, diagnostic ->
             if (generation == sourceGeneration && active && status != "error") {

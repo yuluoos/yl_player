@@ -34,7 +34,7 @@ internal fun requiresHlsCredentialAncestry(
 
 /** One factory and provenance graph per source, retained through stop/restore/recovery. */
 @OptIn(UnstableApi::class)
-internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, private val drmManager: androidx.media3.exoplayer.drm.DrmSessionManager? = null, private val networkBytes: YlNetworkByteCounter? = null, onRetry: (Int, Long) -> Unit) {
+internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, private val drmManager: androidx.media3.exoplayer.drm.DrmSessionManager? = null, private val networkBytes: YlNetworkByteCounter? = null, private val dashDecoderSizing: YlDashDecoderSizing? = null, onRetry: (Int, Long) -> Unit) {
     private val routeFlvForSeek = requiresOwnedFlvSeek(source.kind, source.intent)
     private val rtmp = if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpDataSources(source.locator, networkBytes) else null
     private val managed = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
@@ -50,6 +50,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
     private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry, networkBytes = networkBytes,
         dashCandidates = dashCandidates?.let { registry -> registry::candidatesFor }) }
     private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
+    val mediaRetryCount get() = loaderPolicy.getMinimumLoadableRetryCount(C.DATA_TYPE_MEDIA)
     private val dashGapGroups = YlDashGapGroups()
     fun isDashGapGroup(group: androidx.media3.common.TrackGroup) = dashGapGroups.contains(group)
     fun create(context: Context, item: MediaItem, limitProgressiveReadAhead: Boolean = false): MediaSource {
@@ -69,7 +70,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
             .setManifestParser(YlDashManifestParser(credentials))
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .createMediaSource(item)
-        else if (dash) YlDashProgramMediaSource(item, dataSources, YlDashManifestParser(credentials, dashCandidates), loaderPolicy, dashGapGroups)
+        else if (dash) YlDashProgramMediaSource(item, dataSources, YlDashManifestParser(credentials, dashCandidates), loaderPolicy, dashGapGroups, dashDecoderSizing)
         else if (hls) HlsMediaSource.Factory(dataSources)
             .setLoadErrorHandlingPolicy(loaderPolicy)
             .apply {
