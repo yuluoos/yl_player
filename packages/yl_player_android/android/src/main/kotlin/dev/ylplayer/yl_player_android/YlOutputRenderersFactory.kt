@@ -320,7 +320,8 @@ internal open class YlOutputVideoRenderer(builder: Builder, private val observer
 
     override fun codecNeedsSetOutputSurfaceWorkaround(codecName: String): Boolean =
         super.codecNeedsSetOutputSurfaceWorkaround(codecName) ||
-            needsLegacyHevcSurfaceRestart(codecName)
+            needsLegacyHevcSurfaceRestart(codecName) ||
+            needsLegacyTunneledAvcSurfaceRestart(codecName, state != Renderer.STATE_DISABLED && configuration.tunneling)
     override fun onProcessedTunneledBuffer(presentationTimeUs: Long) {
         super.onProcessedTunneledBuffer(presentationTimeUs)
         observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)

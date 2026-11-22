@@ -1247,6 +1247,11 @@
       "path": "docs/superpowers/reports/2026-11-22-android-mitv-memory-lifecycle-and-audio-focus.md",
       "kind": "report",
       "sha256": "5e58a3fcef8e62a5b4201c7e27269854afc3fbf5b2652e07b6a6b78e58273e21"
+    },
+    "android-mitv-request-budgets-consumer-20261122": {
+      "path": "docs/superpowers/reports/2026-11-22-android-mitv-request-budgets-and-consumer.md",
+      "kind": "report",
+      "sha256": "6799917b413ab2dc6d2615750e3262182f232df476a8792440981d826931f8a2"
     }
   },
   "rows": [
@@ -1853,7 +1858,8 @@
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
         "android-mitv-remaining-acceptance-20261122",
-        "android-mitv-decoder-playback-retest-20261122"
+        "android-mitv-decoder-playback-retest-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-remaining-stream-and-device-boundaries-after-mitv-faults-and-sustained-single-connection-pass"
@@ -1941,10 +1947,11 @@
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-html-empty-refresh-retains-current-channels"
+      "nextAction": "qualify-other-consumers-after-mitv-html-and-empty-refresh-preservation"
     },
     {
       "requirement": "ERR-01",
@@ -2036,10 +2043,11 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "complete-forbidden-diagnostics-and-other-request-boundaries-after-single-request-oppo-dash-pass"
+      "nextAction": "qualify-other-platforms-and-profiles-after-mitv-default-and-managed-denial-budgets"
     },
     {
       "requirement": "ERR-03",
@@ -2348,10 +2356,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-mitv-remaining-acceptance-20261122"
+        "android-mitv-remaining-acceptance-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "qualify-font-and-graphics-resource-failures-after-malformed-external-subtitle-isolation"
+      "nextAction": "qualify-remaining-font-and-graphics-failures-after-mitv-pgs-limit-and-ass-fallback"
     },
     {
       "requirement": "ERR-10",
@@ -2391,10 +2400,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-mitv-decoder-playback-retest-20261122"
+        "android-mitv-decoder-playback-retest-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-bounded-actual-source-attempt-summary"
+      "nextAction": "qualify-other-consumers-after-mitv-ten-source-ordered-failure-summary"
     },
     {
       "requirement": "ERR-11",
@@ -2439,10 +2449,11 @@
         "android-oppo-playback-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
         "android-mitv-remaining-acceptance-20261122",
-        "android-mitv-decoder-playback-retest-20261122"
+        "android-mitv-decoder-playback-retest-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "run-final-cross-module-cancel-and-stale-races"
+      "nextAction": "qualify-other-profiles-after-mitv-script-and-native-cancellation-races"
     },
     {
       "requirement": "ERR-12",
@@ -2589,10 +2600,11 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
         "android-mitv-remaining-acceptance-20261122",
-        "android-mitv-memory-lifecycle-and-focus-20261122"
+        "android-mitv-memory-lifecycle-and-focus-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "verify-candidate-overlap-reconnect-and-seek-budgets-after-mitv-memory-pressure-pass"
+      "nextAction": "qualify-other-device-budgets-after-mitv-overlap-resume-and-seek"
     },
     {
       "requirement": "REG-BUF",
@@ -2691,10 +2703,11 @@
         "p06",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "run-current-error-matrix-and-redaction-audit"
+      "nextAction": "complete-other-error-classes-after-mitv-denial-and-source-summary-redaction"
     },
     {
       "requirement": "REG-DIAG",
@@ -2745,7 +2758,8 @@
         "android-oppo-dash-network-and-resolver-20261121",
         "android-mitv-remaining-acceptance-20261122",
         "android-mitv-decoder-playback-retest-20261122",
-        "android-mitv-memory-lifecycle-and-focus-20261122"
+        "android-mitv-memory-lifecycle-and-focus-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
       "nextAction": "qualify-other-profiles-after-mitv-low-memory-peer-foreground-rebuild"
@@ -2802,10 +2816,11 @@
         "android-oppo-av-dns-script-followup-20261121",
         "android-mitv-remaining-acceptance-20261122",
         "android-mitv-decoder-playback-retest-20261122",
-        "android-mitv-dash-recovery-and-transitions-20261122"
+        "android-mitv-dash-recovery-and-transitions-20261122",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "run-final-request-redirect-and-budget-regressions"
+      "nextAction": "qualify-other-profiles-after-mitv-redirect-denial-and-range-resume"
     },
     {
       "requirement": "REG-NET",
@@ -2973,10 +2988,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "remaining-device-acceptance-20261105",
-        "ci-gates-20261111"
+        "ci-gates-20261111",
+        "android-mitv-request-budgets-consumer-20261122"
       ],
       "acceptance": null,
-      "nextAction": "review-complete-consumer-acceptance-with-current-run-raw-artifacts"
+      "nextAction": "review-remaining-consumer-and-platform-acceptance-after-mitv-live-client-pass"
     },
     {
       "requirement": "RELEASE-CI",

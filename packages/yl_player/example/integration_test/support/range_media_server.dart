@@ -11,32 +11,25 @@ enum RangeMediaResponseKind {
   redirect,
   status,
   disconnect,
+  truncated,
 }
 
 final class RangeMediaResponse {
+  const RangeMediaResponse._(this.kind, {this.statusCode, this.prefixBytes});
   const RangeMediaResponse.automatic()
-    : kind = RangeMediaResponseKind.automatic,
-      statusCode = null;
-
-  const RangeMediaResponse.range()
-    : kind = RangeMediaResponseKind.range,
-      statusCode = null;
-
+    : this._(RangeMediaResponseKind.automatic);
+  const RangeMediaResponse.range() : this._(RangeMediaResponseKind.range);
   const RangeMediaResponse.sequential()
-    : kind = RangeMediaResponseKind.sequential,
-      statusCode = null;
-
-  const RangeMediaResponse.redirect()
-    : kind = RangeMediaResponseKind.redirect,
-      statusCode = null;
-
-  const RangeMediaResponse.status(this.statusCode)
-    : kind = RangeMediaResponseKind.status;
-
+    : this._(RangeMediaResponseKind.sequential);
+  const RangeMediaResponse.redirect() : this._(RangeMediaResponseKind.redirect);
+  const RangeMediaResponse.status(int statusCode)
+    : this._(RangeMediaResponseKind.status, statusCode: statusCode);
   const RangeMediaResponse.disconnect()
-    : kind = RangeMediaResponseKind.disconnect,
-      statusCode = null;
+    : this._(RangeMediaResponseKind.disconnect);
+  const RangeMediaResponse.truncated(int prefixBytes)
+    : this._(RangeMediaResponseKind.truncated, prefixBytes: prefixBytes);
 
+  final int? prefixBytes;
   final RangeMediaResponseKind kind;
   final int? statusCode;
 }
@@ -52,6 +45,7 @@ final class RecordedMediaRequest {
   final Uri uri;
   final Map<String, List<String>> headers;
   int? statusCode;
+  int? truncatedAt;
 
   String? header(String name) => headers[name.toLowerCase()]?.join(',');
 }
@@ -63,6 +57,7 @@ final class RangeMediaServer {
     required this.supportsRanges,
     this.beforeResponse,
     this.redirectUri,
+    this.etag,
     required Iterable<RangeMediaResponse> scriptedResponses,
   }) : _scriptedResponses = Queue<RangeMediaResponse>.of(scriptedResponses);
 
@@ -71,6 +66,7 @@ final class RangeMediaServer {
     bool supportsRanges = true,
     Future<void> Function(RecordedMediaRequest)? beforeResponse,
     Uri? redirectUri,
+    String? etag,
     Iterable<RangeMediaResponse> scriptedResponses =
         const <RangeMediaResponse>[],
   }) async {
@@ -85,6 +81,7 @@ final class RangeMediaServer {
       supportsRanges: supportsRanges,
       beforeResponse: beforeResponse,
       redirectUri: redirectUri,
+      etag: etag,
       scriptedResponses: scriptedResponses,
     );
     server.listen((request) => unawaited(result._handle(request)));
@@ -97,7 +94,10 @@ final class RangeMediaServer {
   final bool supportsRanges;
   final Future<void> Function(RecordedMediaRequest)? beforeResponse;
   final Uri? redirectUri;
+  final String? etag;
   final List<RecordedMediaRequest> requests = <RecordedMediaRequest>[];
+
+  int get lengthInBytes => _bytes.length;
 
   Uri get mediaUri => Uri(
     scheme: 'http',
@@ -121,7 +121,16 @@ final class RangeMediaServer {
 
     try {
       await beforeResponse?.call(recorded);
+      if (etag != null) {
+        request.response.headers.set(HttpHeaders.etagHeader, etag!);
+      }
       switch (scripted.kind) {
+        case RangeMediaResponseKind.truncated:
+          await _serveRange(
+            request,
+            recorded,
+            prefixBytes: scripted.prefixBytes,
+          );
         case RangeMediaResponseKind.disconnect:
           final socket = await request.response.detachSocket();
           socket.destroy();
@@ -170,16 +179,11 @@ final class RangeMediaServer {
 
   Future<void> _serveRange(
     HttpRequest request,
-    RecordedMediaRequest recorded,
-  ) async {
-    // A normal GET is valid even when this origin supports byte ranges.
-    // Media3 starts with GET and only adds Range when seeking/reopening.
-    if (request.headers.value(HttpHeaders.rangeHeader) == null) {
-      request.response.headers.set(HttpHeaders.acceptRangesHeader, 'bytes');
-      await _serveSequential(request.response, recorded);
-      return;
-    }
-    final parsed = _parseRange(request.headers.value(HttpHeaders.rangeHeader));
+    RecordedMediaRequest recorded, {
+    int? prefixBytes,
+  }) async {
+    final range = request.headers.value(HttpHeaders.rangeHeader);
+    final parsed = range == null ? (0, _bytes.length - 1) : _parseRange(range);
     if (parsed == null) {
       recorded.statusCode = HttpStatus.requestedRangeNotSatisfiable;
       request.response.statusCode = HttpStatus.requestedRangeNotSatisfiable;
@@ -193,15 +197,30 @@ final class RangeMediaServer {
     }
 
     final (start, end) = parsed;
-    recorded.statusCode = HttpStatus.partialContent;
-    request.response.statusCode = HttpStatus.partialContent;
+    final status = range == null ? HttpStatus.ok : HttpStatus.partialContent;
+    recorded.statusCode = status;
+    request.response.statusCode = status;
     request.response.headers.contentType = ContentType.binary;
     request.response.headers.set(HttpHeaders.acceptRangesHeader, 'bytes');
-    request.response.headers.set(
-      HttpHeaders.contentRangeHeader,
-      'bytes $start-$end/${_bytes.length}',
-    );
+    if (range != null) {
+      request.response.headers.set(
+        HttpHeaders.contentRangeHeader,
+        'bytes $start-$end/${_bytes.length}',
+      );
+    }
     request.response.contentLength = end - start + 1;
+    if (prefixBytes != null) {
+      if (prefixBytes <= 0 || start + prefixBytes > end) {
+        throw RangeError.value(prefixBytes);
+      }
+      final cut = start + prefixBytes;
+      final socket = await request.response.detachSocket();
+      socket.add(Uint8List.sublistView(_bytes, start, cut));
+      await socket.flush();
+      recorded.truncatedAt = cut;
+      await socket.close();
+      return;
+    }
     request.response.add(Uint8List.sublistView(_bytes, start, end + 1));
     await request.response.close();
   }

@@ -1,0 +1,922 @@
+{
+  "playerHead": "74b0af77dc2e4dadc2fd6abadc825303f3e9965c",
+  "model": "MiTV-MTTP0",
+  "api": 28,
+  "deviceRuns": {
+    "android_request_and_session_regression_test": {
+      "apkSha256": "011946134b3a8caedc726e25f9161f5b2b86f5d4acf0bc47da36b4a0318100d4",
+      "passed": true,
+      "frameworkCounts": [
+        [
+          "20",
+          ""
+        ],
+        [
+          "21",
+          ""
+        ]
+      ]
+    },
+    "budgets": {
+      "apkSha256": "f83738bbe96e574ddd00e54d44bf2f23c1d746006fa0e607ac310dce9ca3ad95",
+      "passed": false,
+      "frameworkCounts": [
+        [
+          "3",
+          "1"
+        ]
+      ]
+    },
+    "verified": {
+      "apkSha256": "fe1a0fa3093e3b521a938d8d99e44422dce8c5ba1612ae9cd1b9399af659b296",
+      "passed": false,
+      "frameworkCounts": [
+        [
+          "4",
+          "1"
+        ]
+      ]
+    },
+    "budget-retest": {
+      "apkSha256": "70cbdd275e467b09c98cc99b4bf472b741067fedf5abc5bc8a440e4eb6bb324c",
+      "passed": false,
+      "frameworkCounts": [
+        [
+          "4",
+          "1"
+        ]
+      ]
+    },
+    "http-and-races-final": {
+      "apkSha256": "87f077688c47b40f14ca42bbdeea2d2193cc0aed2a1e7f3235623442997924d4",
+      "passed": true,
+      "frameworkCounts": [
+        [
+          "20",
+          ""
+        ],
+        [
+          "21",
+          ""
+        ]
+      ]
+    },
+    "speed-final": {
+      "apkSha256": "7229a5df6ea1fe199e8d467aa2dc1dff0e95d2aa704cae26b9c2210be510bb61",
+      "passed": false,
+      "frameworkCounts": [
+        [
+          "1",
+          "1"
+        ]
+      ]
+    },
+    "speed-http-confirm": {
+      "apkSha256": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+      "passed": false,
+      "frameworkCounts": [
+        [
+          "5",
+          ""
+        ],
+        [
+          "6",
+          ""
+        ]
+      ],
+      "excluded": "Executed budget entry from retained Flutter debug cache, not speed. See device case names."
+    },
+    "speed-http-verified": {
+      "apkSha256": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+      "passed": true,
+      "frameworkCounts": [
+        [
+          "1",
+          ""
+        ],
+        [
+          "2",
+          ""
+        ]
+      ]
+    },
+    "budget-final": {
+      "apkSha256": "ea14fe76427a68836775417b9ae83e9dd38e465d86a0844738598477fb5c733a",
+      "passed": true,
+      "frameworkCounts": [
+        [
+          "5",
+          ""
+        ],
+        [
+          "6",
+          ""
+        ]
+      ]
+    }
+  },
+  "consumer": {
+    "business-arm": {
+      "receipt": {
+        "model": "MiTV-MTTP0",
+        "api": "28",
+        "playerCommit": "74b0af77dc2e4dadc2fd6abadc825303f3e9965c",
+        "consumerCommit": "9e9d013b5e4f27444901a9722f0b110a0eff6c8b",
+        "apk": "6d6d5fd5bd30950ff7d5e5264ed6527f91b4ea7060643e60fab4e42ea094173c",
+        "installedApk": "6d6d5fd5bd30950ff7d5e5264ed6527f91b4ea7060643e60fab4e42ea094173c",
+        "pid": "28109",
+        "passed": false
+      },
+      "completed": false,
+      "asyncCleanup": true,
+      "stages": [
+        "play",
+        "mode",
+        "mode",
+        "play",
+        "mode",
+        "mode",
+        "play",
+        "reconnect",
+        "reconnect",
+        "reconnect",
+        "reconnectExhausted"
+      ],
+      "connections": [
+        11,
+        11,
+        0
+      ],
+      "fixture": {
+        "schemaVersion": 1,
+        "requests": {
+          "subscription": 1,
+          "script": 1,
+          "rejected": 0
+        },
+        "activeRequests": 0,
+        "cleanupCompleted": true,
+        "subscriptionSha256": "1ceebe3bca0498934d9b3bb5bc66f8a75ab000e136d95cf9ed12775567ef3acf",
+        "physicalAudioVideoVerified": false,
+        "commandOutcome": "nonzero_exit"
+      },
+      "frameworkCounts": [
+        [
+          "13",
+          "1"
+        ]
+      ]
+    },
+    "consumer-retest": {
+      "receipt": {
+        "model": "MiTV-MTTP0",
+        "api": "28",
+        "playerCommit": "74b0af77dc2e4dadc2fd6abadc825303f3e9965c",
+        "consumerCommit": "9e9d013b5e4f27444901a9722f0b110a0eff6c8b",
+        "apk": "473a7a71588fc3b34adf3d199f70622415cbc87002e830e145e055b16bed5919",
+        "installedApk": "473a7a71588fc3b34adf3d199f70622415cbc87002e830e145e055b16bed5919",
+        "pid": "30149",
+        "passed": false
+      },
+      "completed": true,
+      "asyncCleanup": true,
+      "stages": [
+        "play",
+        "mode",
+        "mode",
+        "play",
+        "mode",
+        "mode",
+        "play",
+        "reconnect",
+        "reconnect",
+        "reconnect",
+        "reconnectExhausted",
+        "play",
+        "manualRecovery",
+        "play",
+        "refreshRejected",
+        "refresh",
+        "play",
+        "switchChannel",
+        "stop"
+      ],
+      "connections": [
+        17,
+        17,
+        0
+      ],
+      "fixture": {
+        "schemaVersion": 1,
+        "requests": {
+          "subscription": 1,
+          "script": 2,
+          "rejected": 0
+        },
+        "activeRequests": 0,
+        "cleanupCompleted": true,
+        "subscriptionSha256": "1ceebe3bca0498934d9b3bb5bc66f8a75ab000e136d95cf9ed12775567ef3acf",
+        "physicalAudioVideoVerified": false,
+        "commandOutcome": "nonzero_exit"
+      },
+      "frameworkCounts": [
+        [
+          "14",
+          "1"
+        ]
+      ]
+    },
+    "consumer-space": {
+      "receipt": {
+        "model": "MiTV-MTTP0",
+        "api": "28",
+        "playerCommit": "74b0af77dc2e4dadc2fd6abadc825303f3e9965c",
+        "consumerCommit": "9e9d013b5e4f27444901a9722f0b110a0eff6c8b",
+        "apk": "5e536d03dfb1974368880f6d341db3fdb8f57bce4e5cf720d8aff1bdd8833398",
+        "installedApk": "5e536d03dfb1974368880f6d341db3fdb8f57bce4e5cf720d8aff1bdd8833398",
+        "pid": "2417",
+        "passed": true
+      },
+      "completed": true,
+      "asyncCleanup": true,
+      "stages": [
+        "play",
+        "mode",
+        "mode",
+        "play",
+        "mode",
+        "mode",
+        "play",
+        "reconnect",
+        "reconnect",
+        "reconnect",
+        "reconnectExhausted",
+        "play",
+        "manualRecovery",
+        "play",
+        "refreshRejected",
+        "refresh",
+        "play",
+        "switchChannel",
+        "stop"
+      ],
+      "connections": [
+        16,
+        16,
+        0
+      ],
+      "fixture": {
+        "schemaVersion": 1,
+        "requests": {
+          "subscription": 1,
+          "script": 2,
+          "rejected": 0
+        },
+        "activeRequests": 0,
+        "cleanupCompleted": true,
+        "subscriptionSha256": "1ceebe3bca0498934d9b3bb5bc66f8a75ab000e136d95cf9ed12775567ef3acf",
+        "physicalAudioVideoVerified": false,
+        "commandOutcome": "success"
+      },
+      "frameworkCounts": [
+        [
+          "15",
+          ""
+        ],
+        [
+          "16",
+          ""
+        ]
+      ]
+    }
+  },
+  "speed": {
+    "speed-final": [
+      {
+        "case": "speed-file",
+        "phase": "fast-3.0",
+        "elapsedMs": 98483,
+        "status": "playing",
+        "positionMs": 143755,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 67,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 647,
+          "dropped": 77
+        },
+        "wallMs": 12001,
+        "advancedMs": 33341,
+        "actualSpeed": 2.778185151237397
+      },
+      {
+        "case": "speed-file",
+        "phase": "fast-3.0-startup",
+        "elapsedMs": 98500,
+        "status": "playing",
+        "positionMs": 143755,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 67,
+        "underruns": 0,
+        "underrunsBefore": 0,
+        "underrunsAfter": 0,
+        "firstMediaSecondMs": 1175,
+        "firstFrameMs": 519
+      },
+      {
+        "case": "speed-file",
+        "phase": "steady-3.0",
+        "elapsedMs": 110509,
+        "status": "playing",
+        "positionMs": 179858,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 217,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1270,
+          "dropped": 239
+        },
+        "wallMs": 12000,
+        "advancedMs": 36103,
+        "actualSpeed": 3.008583333333333
+      },
+      {
+        "case": "speed-file",
+        "phase": "repeat-3.0",
+        "elapsedMs": 178918,
+        "status": "playing",
+        "positionMs": 309826,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 10,
+        "drops": 450,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 603,
+          "dropped": 100
+        },
+        "wallMs": 12001,
+        "advancedMs": 33990,
+        "actualSpeed": 2.832263978001833
+      },
+      {
+        "case": "speed-file",
+        "phase": "repeat-3.0-startup",
+        "elapsedMs": 178935,
+        "status": "playing",
+        "positionMs": 309826,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 10,
+        "drops": 450,
+        "underruns": 0,
+        "underrunsBefore": 0,
+        "underrunsAfter": 0,
+        "firstMediaSecondMs": 1101,
+        "firstFrameMs": 461
+      },
+      {
+        "case": "speed-file",
+        "phase": "remounted",
+        "elapsedMs": 199614,
+        "status": "playing",
+        "positionMs": 97206,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 14,
+        "drops": 450,
+        "underruns": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 175,
+          "dropped": 0
+        },
+        "wallMs": 8025,
+        "advancedMs": 7206,
+        "actualSpeed": 0.8979439252336449
+      },
+      {
+        "case": "speed-http",
+        "phase": "fast-3.0",
+        "elapsedMs": 94365,
+        "status": "playing",
+        "positionMs": 142651,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 110,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 564,
+          "dropped": 148
+        },
+        "wallMs": 12001,
+        "advancedMs": 32766,
+        "actualSpeed": 2.7302724772935587
+      },
+      {
+        "case": "speed-http",
+        "phase": "fast-3.0-startup",
+        "elapsedMs": 94380,
+        "status": "playing",
+        "positionMs": 142651,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 110,
+        "underruns": 0,
+        "underrunsBefore": 0,
+        "underrunsAfter": 0,
+        "firstMediaSecondMs": 1112,
+        "firstFrameMs": 705
+      },
+      {
+        "case": "speed-http",
+        "phase": "steady-3.0",
+        "elapsedMs": 106385,
+        "status": "playing",
+        "positionMs": 178706,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 310,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1153,
+          "dropped": 339
+        },
+        "wallMs": 12000,
+        "advancedMs": 36055,
+        "actualSpeed": 3.004583333333333
+      },
+      {
+        "case": "speed-http",
+        "phase": "repeat-3.0",
+        "elapsedMs": 174700,
+        "status": "playing",
+        "positionMs": 308449,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 10,
+        "drops": 550,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 600,
+          "dropped": 128
+        },
+        "wallMs": 12001,
+        "advancedMs": 33403,
+        "actualSpeed": 2.7833513873843847
+      },
+      {
+        "case": "speed-http",
+        "phase": "repeat-3.0-startup",
+        "elapsedMs": 174725,
+        "status": "playing",
+        "positionMs": 308449,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 10,
+        "drops": 550,
+        "underruns": 0,
+        "underrunsBefore": 0,
+        "underrunsAfter": 0,
+        "firstMediaSecondMs": 1219,
+        "firstFrameMs": 603
+      },
+      {
+        "case": "speed-http",
+        "phase": "remounted",
+        "elapsedMs": 195337,
+        "status": "playing",
+        "positionMs": 97173,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 14,
+        "drops": 578,
+        "underruns": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 176,
+          "dropped": 0
+        },
+        "wallMs": 8000,
+        "advancedMs": 7173,
+        "actualSpeed": 0.896625
+      }
+    ],
+    "speed-http-verified": [
+      {
+        "case": "speed-http",
+        "phase": "fast-3.0",
+        "elapsedMs": 99958,
+        "status": "playing",
+        "positionMs": 143650,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 113,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 607,
+          "dropped": 83
+        },
+        "wallMs": 12001,
+        "advancedMs": 33420,
+        "actualSpeed": 2.784767936005333
+      },
+      {
+        "case": "speed-http",
+        "phase": "fast-3.0-startup",
+        "elapsedMs": 99975,
+        "status": "playing",
+        "positionMs": 143650,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 113,
+        "underruns": 0,
+        "underrunsBefore": 0,
+        "underrunsAfter": 0,
+        "firstMediaSecondMs": 1190,
+        "firstFrameMs": 513
+      },
+      {
+        "case": "speed-http",
+        "phase": "steady-3.0",
+        "elapsedMs": 111985,
+        "status": "playing",
+        "positionMs": 179468,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 6,
+        "drops": 263,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1229,
+          "dropped": 204
+        },
+        "wallMs": 12002,
+        "advancedMs": 35818,
+        "actualSpeed": 2.9843359440093318
+      },
+      {
+        "case": "speed-http",
+        "phase": "repeat-3.0",
+        "elapsedMs": 180285,
+        "status": "playing",
+        "positionMs": 308951,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 10,
+        "drops": 441,
+        "underruns": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 612,
+          "dropped": 94
+        },
+        "wallMs": 12000,
+        "advancedMs": 33357,
+        "actualSpeed": 2.77975
+      },
+      {
+        "case": "speed-http",
+        "phase": "repeat-3.0-startup",
+        "elapsedMs": 180317,
+        "status": "playing",
+        "positionMs": 308951,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 10,
+        "drops": 441,
+        "underruns": 0,
+        "underrunsBefore": 0,
+        "underrunsAfter": 0,
+        "firstMediaSecondMs": 1089,
+        "firstFrameMs": 612
+      },
+      {
+        "case": "speed-http",
+        "phase": "remounted",
+        "elapsedMs": 201073,
+        "status": "playing",
+        "positionMs": 97292,
+        "engine": "media3",
+        "decoder": "OMX.MS.AVC.Decoder",
+        "mode": "unknown",
+        "presented": true,
+        "failure": null,
+        "rebuffers": 14,
+        "drops": 485,
+        "underruns": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 175,
+          "dropped": 0
+        },
+        "wallMs": 8001,
+        "advancedMs": 7292,
+        "actualSpeed": 0.9113860767404075
+      }
+    ]
+  },
+  "display": [
+    {
+      "afterPhase": "fast-3.0-startup",
+      "layers": [
+        {
+          "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+          "composition": "Device",
+          "bounds": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        }
+      ]
+    },
+    {
+      "afterPhase": "direct-3.0",
+      "layers": [
+        {
+          "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+          "composition": "Sideband",
+          "bounds": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        }
+      ]
+    }
+  ],
+  "budgets": [
+    {
+      "phase": "initial",
+      "session": "a1-s1",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 1835008
+    },
+    {
+      "phase": "currentDuringLoad",
+      "session": "a1-s1",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 0
+    },
+    {
+      "phase": "beforePrefix",
+      "session": "a1-s2",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 0
+    },
+    {
+      "phase": "candidatePrefix",
+      "session": "a1-s2",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 0
+    },
+    {
+      "phase": "candidatePrefix",
+      "session": "a1-s2",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 0
+    },
+    {
+      "phase": "candidatePrefix",
+      "session": "a1-s2",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 262144
+    },
+    {
+      "phase": "committed",
+      "session": "a1-s2",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 1048576
+    },
+    {
+      "phase": "reconnected",
+      "session": "a2-s1",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 1114112
+    },
+    {
+      "phase": "afterSeek",
+      "session": "a2-s1",
+      "normalBytes": 25165824,
+      "lastTrimLevel": 5,
+      "targetBytes": 25165824,
+      "allocatedBytes": 2162688
+    }
+  ],
+  "resume": "total=5 resumes=1 offset=263069 afterSeekMs=14622",
+  "ranges": "cut=263069 requests=[[null,200,null],[\"bytes=10690770-\",206,null],[\"bytes=925-\",206,263069],[\"bytes=263069-10691178\",206,null]]",
+  "glyphRedPixels": 309,
+  "attempts": "requests=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] codes=8",
+  "surfaceErrors": {
+    "before": {
+      "cannot change tunneled surface": 1,
+      "Exception configuring surface": 1,
+      "Disposing platform view threw an exception": 1
+    },
+    "after": {
+      "cannot change tunneled surface": 0,
+      "Exception configuring surface": 0,
+      "Disposing platform view threw an exception": 0
+    }
+  },
+  "jvm": {
+    "tests": 647,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0
+  },
+  "deviceCleanup": {
+    "originalListedBeforeAcceptance": true,
+    "originalMissingAfterFirstConsumerRuns": true,
+    "probableCause": "Flutter integration test default uninstall using pre-build Gradle namespace",
+    "userApprovedReleaseReinstall": true,
+    "priorVersionAndDataVerified": false,
+    "installedPackage": "com.example.tvs",
+    "version": "1.2.7",
+    "versionCode": "10012",
+    "releaseSha256": "86f6a60a3e0ae4b79f14a44bb1e0a056def7deeb8394d754e0b53d8a70f866f6",
+    "installedSha256": "86f6a60a3e0ae4b79f14a44bb1e0a056def7deeb8394d754e0b53d8a70f866f6",
+    "launcherStatus": "ok",
+    "alive": true,
+    "foregroundActivity": true,
+    "testPackageRemoved": true,
+    "remainingTestPorts": [],
+    "exampleRestoredWithDataKept": true,
+    "exampleSha256": "6e093637a3e4c6373a4b5140b39033958d24195e140c8831c1793ccbd3b0b7a3",
+    "exampleFixtureFilesRestored": 232
+  },
+  "sourceHashes": {
+    "packages/yl_player/example/integration_test/android_budget_and_diagnostics_test.dart": "a2895a2cc8c334cbfe0a288435c5f5c2571a021b56d902756923d98e2052e300",
+    "packages/yl_player/example/integration_test/android_request_and_session_regression_test.dart": "01ded05cd22ea1fbd40dce61362ff4e881ff103e064862123f915542be5e76c5",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDefaultLoadErrorPolicyTest.kt": "5c3c5580582f2e81b027205ae6a3fe34d84474f35210f0989e744cb487cb070c",
+    "packages/yl_player/example/integration_test/support/range_media_server.dart": "fc0feece467501ba39fe1c2a34e902469e56e6a476f0298104c32d5af6959be7",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt": "d2af0525d63e42787ee374a1b60210d0c45c8369ec0c611925557e2d7093e6dd",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeCodecs.kt": "f801269fb9d3f54dbdf53bf0d4f221e2c5cc2386936d9cb89b98676a493b2b1c",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "46848f0df4cd72d2115ce106d87da1ada4f120890477fae0abc13b0153335eb0",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashCodecHandoffTest.kt": "6ec2033e05aa50fb5f8360e77f040f9279de2fbcb13cb214c3b7fc96e7fce82e"
+  },
+  "sha256": {
+    "android_request_and_session_regression_test/receipt.json": "dca5b8ef38b8e892e8b25dab56320cc664cbbe49d741c0ec09e0630bb2c120cf",
+    "android_request_and_session_regression_test/observations.log": "d0ef161915f78535d410a426ed1b64ae60640b1ea6ff539bd5663fedfa622747",
+    "budgets/receipt.json": "6a2e2b0a7c161343e31b6fc1c46403fd5c0d4a40d5a28afdfe1a2dc6aa21074e",
+    "budgets/observations.log": "faefa13ea2ce89bb29bca5a53272012ad219b446d3be71a2b1413ec7cac8f191",
+    "verified/receipt.json": "f13dcf1d1f22559407e1e021733e300c420bf2d93cbdb10dc0a7f7e4445c8a9b",
+    "verified/observations.log": "8493f773823f421cf1d1c6f591b508f18edc49b6ad7f712f318aa9c6b4a6839b",
+    "budget-retest/receipt.json": "ccf43e4d354978bc145ad407f3761aef5c3151c471bac82fd00e4d4dd2c747dd",
+    "budget-retest/observations.log": "8916043b7d45143416d3e06b7377da8189824e2743e750d714ee28de2080b242",
+    "http-and-races-final/receipt.json": "415e4ca24efae0370660504c9075faa587c7e694220a18175aab0413e579946e",
+    "http-and-races-final/observations.log": "ffd3023a99969fb7b3b2b6bc65a003c0c9b52ebbaa3728eea927dc8e8b287287",
+    "speed-final/receipt.json": "9f6723063c59db2b6c7eca928b25b0afe51f8ff1397b30e81a02310d9db201be",
+    "speed-final/observations.log": "a5f56a3f583cfb2b95e4a5099eb2f3deaba36e2402c85466f7ea39ccb8b064e5",
+    "speed-http-confirm/receipt.json": "c8a33e46083b1de7790a1157eebe9b94e688171a2a60b828fabff5cb0436c32e",
+    "speed-http-confirm/observations.log": "8f0c6fde104032d8548fa11e7e2ee17d4f8f43d6a18ed3da0fc3198855ebe545",
+    "speed-http-verified/receipt.json": "50f7f469823f5b1f4d0538c97ecb5ed5d58601adc3efbd3099c34b084fbf57a5",
+    "speed-http-verified/observations.log": "00b7a53513bb2b4ab961031b5f21d38d60359af063b65693d155bf0b276a690f",
+    "speed-http-verified/display.json": "10c2fbb3fbb6c521a293efa541da5d06cabfd717cd8dcf12d9a38dce754fb1b8",
+    "speed-http-verified/kernel.json": "7eccc4c9ad497e0e16a57e2c41e8720120479e714ee361717605c81870228d70",
+    "budget-final/receipt.json": "acaee943d4148b4a1d985ee8daee3933ed37cd9f2f462ec50f28dab5c9d4c0d6",
+    "budget-final/observations.log": "7f29faa0c1771b004538736124dc676f29339f29fc8926b0d17f224ffa755e83",
+    "business/exit.json": "f06cdaf0b23e4a648693ec15f8c1c2a4820bf8a3c9f2cc251ad972b30484f9de",
+    "business/fixture.json": "a42a2d2456070604a8f3707092b24e0bb3e051251073be9f9ac253c687075816",
+    "business/proxy.json": "c60169cb22eaed0dfd7131fda1289a5c9c86688d8e7661afab7435eea54c8d00",
+    "business/launch-outcome.txt": "82668d865f361c6b64fa2ef3059dbf2ec2bf58c41b02edfd7daeeed7045723b6",
+    "business-arm/exit.json": "f06cdaf0b23e4a648693ec15f8c1c2a4820bf8a3c9f2cc251ad972b30484f9de",
+    "business-arm/fixture.json": "6357faf334f66b0bae643e5250554835676996e2b65650046eea7fc3cb9c653e",
+    "business-arm/proxy.json": "53532f9bc4d94bc2bb70112e669c2edffa71e564e3ad0353867635b8c7e7116e",
+    "business-arm/receipt.json": "a5cec37129e5ea64876c1ffd41e1d7bf23d1142ec1ccec7bb97d46bf00353fe2",
+    "business-arm/observations.log": "7bf6e5841508ef83fbf62c0153b974ef5475f6ca1bd708b96e9ae310ac75f7fc",
+    "consumer-retest/exit.json": "f06cdaf0b23e4a648693ec15f8c1c2a4820bf8a3c9f2cc251ad972b30484f9de",
+    "consumer-retest/fixture.json": "a37449e1827bdedf8b28fc6ee0870468674050c916abd3c2c93a0fc28e0fa4b6",
+    "consumer-retest/proxy.json": "aaa904ccf8ba222288b4aaeaf0dc74ef5ae8eb0889ddafef80ba3bb638a724e1",
+    "consumer-retest/receipt.json": "a3dcd2dc0612afa6b430c692711424bb5eb966009b1db7df9640bd3f5b843f46",
+    "consumer-retest/observations.log": "c1ebd3847f3241318fd130377cc1f4d385d23d8b43d4d584731d56b4672f9c4b",
+    "consumer-qualified/exit.json": "f06cdaf0b23e4a648693ec15f8c1c2a4820bf8a3c9f2cc251ad972b30484f9de",
+    "consumer-qualified/fixture.json": "a42a2d2456070604a8f3707092b24e0bb3e051251073be9f9ac253c687075816",
+    "consumer-qualified/proxy.json": "b647f182873facf9da6dedf3f9e535699cd9edae60f57876ede152e7ace91690",
+    "consumer-qualified/launch-outcome.txt": "82668d865f361c6b64fa2ef3059dbf2ec2bf58c41b02edfd7daeeed7045723b6",
+    "consumer-final/exit.json": "f06cdaf0b23e4a648693ec15f8c1c2a4820bf8a3c9f2cc251ad972b30484f9de",
+    "consumer-final/fixture.json": "a42a2d2456070604a8f3707092b24e0bb3e051251073be9f9ac253c687075816",
+    "consumer-final/proxy.json": "902774a410ffb9e8b01f32008cce6bbd658205255cc75563213c1b2358b58595",
+    "consumer-final/launch-outcome.txt": "82668d865f361c6b64fa2ef3059dbf2ec2bf58c41b02edfd7daeeed7045723b6",
+    "consumer-space/exit.json": "5b4e89557faf751e0a8b90d22598f110af9f9612e6de3e64f346bcf1eaecb579",
+    "consumer-space/fixture.json": "f4b7e2fb82163e035c63bcb96ef9c8a46d59e3259021b481fd57a8e08df2004a",
+    "consumer-space/proxy.json": "821fb0ce207a1bc17037700947342d8d4d7bbec52188bd3fdd4e015ce7898876",
+    "consumer-space/receipt.json": "7f70bb58361455870dafa6181e0e00d4aa4e7dd5bd3fa29395703e7e9e413cc2",
+    "consumer-space/observations.log": "229b231919c6f5238d21c73265119f0486953ce40b6828d9ddcf8a4e147271d4",
+    "consumer-harness/integration_test/mitv_attempts_test.dart": "d6ed3754ae516aa3be5bf595797d42506da6858d722816670664663490be86b1",
+    "consumer-harness/integration_test/mitv_live_subscription_playback_test.dart": "bcab9c86cec3ded217510946eae073d2fac0a321889ebc324efa127727253eba",
+    "consumer-harness/diagnostic.patch": "45a646e50e03013ce816ed44ac195c133f905c93cecd13b0a71a16854c2f2bb3",
+    "surface-before.log": "5ded4e0d81acd036fbea8ed15ab2ed61c5d0659fec4159221c40617f51031d29",
+    "surface-after.log": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "post-cleanup.json": "d4f2fa4f9d74305b235368c1cdb3cce069d8280378c1f8b0dea2299746d405f0",
+    "analyze.log": "bb2c89fe63a5441c184a6e241bd107a71d5ade58f9c2800c55766f9494c5f898",
+    "routes.log": "18abc214e9f842cdc3369f60c9dc42b6f29d8db59b2b82506d69e4b3ff523a1e",
+    "jvm-suite-counts.json": "2503709c50bd8c337b08d6419ee0682c5dba815d0b6da47fae8d05a48ccc52ec",
+    "jvm-focused.log": "95ea130f658051b8aea28e368c14e441c9effc642c7dc1dfcb6aa80fd467ae7d",
+    "budget-offload.json": "f6f5d6c94b1145d84f492ef54d8cc4a2c89d4efb6fd3ddc81b8fe591c62a738d",
+    "speed-offload.json": "7c12780190db18222684ab2f027e3401480aa7f8b05f4e9c2c5fd2f49badb20e",
+    "package-audit.json": "f527530275748aa93e57eddd0fd45a7e4ffed0993a50de840d2b5fc317af75e7"
+  },
+  "archiveSha256": "033fa96e6a3b1d26cfb58bf21569c56acf288cc5d2986d5d7f7b4a193e651fdb"
+}

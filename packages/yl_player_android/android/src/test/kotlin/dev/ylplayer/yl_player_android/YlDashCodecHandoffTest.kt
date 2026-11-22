@@ -10,6 +10,12 @@ import kotlin.test.*
 import org.mockito.Mockito.*
 
 class YlDashCodecHandoffTest {
+    @Test fun `only legacy tunneled MStar AVC needs the AVC surface restart`() {
+        assertTrue(needsLegacyTunneledAvcSurfaceRestart("OMX.MS.AVC.Decoder", true, 28))
+        assertFalse(needsLegacyTunneledAvcSurfaceRestart("OMX.MS.AVC.Decoder", false, 28))
+        assertFalse(needsLegacyTunneledAvcSurfaceRestart("OMX.MS.AVC.Decoder", true, 29))
+        assertFalse(needsLegacyTunneledAvcSurfaceRestart("OMX.other.AVC.Decoder", true, 28))
+    }
     private fun config(name: String, mime: String): MediaCodecAdapter.Configuration {
         val info = MediaCodecInfo.newInstance(name, mime, mime, null, true, false, true, false, false)
         return MediaCodecAdapter.Configuration.createForVideoDecoding(info, mock(MediaFormat::class.java),

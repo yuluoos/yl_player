@@ -107,6 +107,11 @@ internal object YlHardwareCodecProbe {
 internal fun needsLegacyHevcSurfaceRestart(codecName: String, apiLevel: Int = Build.VERSION.SDK_INT): Boolean =
     apiLevel < 29 && codecName == "OMX.MS.HEVC.Decoder"
 
+// This MStar AVC decoder rejects setOutputSurface on a tunneled codec retained
+// after a terminal playback error. Media3 must recreate it on the next Surface.
+internal fun needsLegacyTunneledAvcSurfaceRestart(codecName: String, tunneling: Boolean, apiLevel: Int = Build.VERSION.SDK_INT): Boolean =
+    tunneling && apiLevel < 29 && codecName == "OMX.MS.AVC.Decoder"
+
 internal class YlHardwareVideoDecoder(
     private val stream: YlNativeStreamInfo,
     surface: Surface,

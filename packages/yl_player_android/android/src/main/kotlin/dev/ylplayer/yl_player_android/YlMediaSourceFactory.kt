@@ -49,7 +49,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
         (source.format == AndroidMediaFormat.DASH || source.locator.toHttpUrl().encodedPath.lowercase().endsWith(".mpd"))) YlDashCandidateRegistry() else null
     private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry, networkBytes = networkBytes,
         dashCandidates = dashCandidates?.let { registry -> registry::candidatesFor }) }
-    private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
+    private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else YlDefaultLoadErrorPolicy()
     val mediaRetryCount get() = loaderPolicy.getMinimumLoadableRetryCount(C.DATA_TYPE_MEDIA)
     private val dashGapGroups = YlDashGapGroups()
     fun isDashGapGroup(group: androidx.media3.common.TrackGroup) = dashGapGroups.contains(group)
@@ -94,6 +94,14 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
     fun setPlaybackPaused(paused: Boolean) { rtmp?.setPlaybackPaused(paused) }
     fun cancelAll() { rtmp?.cancelAll(); http?.cancelAll() }
     fun close() { rtmp?.cancelAll(); http?.close() }
+}
+
+/** Keep platform-default recovery for transient failures, but do not replay a known HTTP denial. */
+@OptIn(UnstableApi::class)
+internal class YlDefaultLoadErrorPolicy : DefaultLoadErrorHandlingPolicy() {
+    override fun getRetryDelayMsFor(loadErrorInfo: LoadErrorHandlingPolicy.LoadErrorInfo): Long =
+        if (YlFailureDescriptions.describe(loadErrorInfo.exception).kind == YlFailureKind.NETWORK_HTTP_FORBIDDEN) C.TIME_UNSET
+        else super.getRetryDelayMsFor(loadErrorInfo)
 }
 
 /** Media3 must surface terminal managed errors, never replay them via loader or HLS fallback. */
