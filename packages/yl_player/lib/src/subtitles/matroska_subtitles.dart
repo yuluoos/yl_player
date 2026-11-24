@@ -4,13 +4,27 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'subtitle_document.dart';
 import 'subtitle_resource.dart';
 import 'subtitle_inflate.dart';
+import 'subtitle_window_loader.dart';
 
 part 'matroska_webvtt.dart';
+part 'matroska_cue_window.dart';
+
+typedef MatroskaWindowRead =
+    Future<List<int>> Function(int, int) Function(SubtitleCancellation);
 
 /// Bounded random-access demux; media payloads are skipped, never decoded here.
 /// Unknown-size Segment is accepted; unknown-size children are not supported.
 final class MatroskaSubtitles {
-  MatroskaSubtitles(this.length, this.read, this.token, {this.expectedDocType});
+  MatroskaSubtitles(
+    this.length,
+    this.read,
+    this.token, {
+    this.expectedDocType,
+    this.onIndexed,
+    this.openWindow,
+  });
+  final void Function(SubtitleWindowLoader)? onIndexed;
+  final MatroskaWindowRead? openWindow;
   final String? expectedDocType;
   var _webm = false;
   final int length;
@@ -149,10 +163,13 @@ final class MatroskaSubtitles {
       if (e.id != 0x18538067 || e.end != length) _unsupported();
       final clusters = <_Element>[];
       var infoSeen = false, tracksSeen = false;
+      int? cueOffset;
       for (var pos = e.start; pos < e.end;) {
         final child = await _element(pos, e.end);
         pos = child.end;
-        if (child.id == 0x1549a966) {
+        if (child.id == 0x114d9b74 && onIndexed != null) {
+          cueOffset ??= await _cueOffset(child, e);
+        } else if (child.id == 0x1549a966) {
           if (infoSeen) _bad();
           infoSeen = true;
           final f = await _fields(child);
@@ -166,6 +183,22 @@ final class MatroskaSubtitles {
             if (entry.id == 0xae) await _track(entry);
           }
         } else if (child.id == 0x1f43b675) {
+          if (_tracks.length > 32) {
+            final open = openWindow, publish = onIndexed;
+            if (!infoSeen ||
+                cueOffset == null ||
+                open == null ||
+                publish == null ||
+                _tracks.values.any(
+                  (t) =>
+                      t.track.format != YlSubtitleFormat.srt ||
+                      t.compression.isNotEmpty,
+                )) {
+              _limit();
+            }
+            publish(await _readCueIndex(cueOffset, e, open));
+            return [];
+          }
           if (clusters.length >= 50000) _limit();
           clusters.add(child);
         }
@@ -210,7 +243,7 @@ final class MatroskaSubtitles {
     }
     if (await _uint(f[0x83]!) != 17) return;
     if (f[0xb9] != null && await _uint(f[0xb9]!) == 0) return;
-    if (_tracks.length >= 32) _limit();
+    if (_tracks.length >= 32 && onIndexed == null) _limit();
     final codec = await _string(f[0x86]!, 128);
     if (_webm && !['D_WEBVTT/SUBTITLES', 'D_WEBVTT/CAPTIONS'].contains(codec)) {
       _unsupported();

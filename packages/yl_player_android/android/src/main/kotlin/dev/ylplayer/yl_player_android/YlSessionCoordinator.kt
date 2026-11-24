@@ -506,6 +506,21 @@ internal class YlSessionCoordinator(
                 reducer.pauseForLifecycle()
             }
         }
+        override suspend fun cancelActivation() {
+            if (!committedOnce || activeLease !== this || suspended == null || closed || stopping) {
+                disposeForLease().await()
+                return
+            }
+            // A foreground restore still belongs to the committed session. Release any
+            // partially acquired decoder while keeping the original resume point and worker.
+            try {
+                session.engine.quiesce()
+            } catch (error: Throwable) {
+                restorationFailed()
+                disposeForLease().await()
+                throw error
+            }
+        }
         override fun disposeForLease() = releaseEngine(session.engine)
         override fun restorationFailed() { releaseAudio(); resourcesFailed = true; transacting = false; reducer.fail(YlFailureKind.RESOURCE_EXHAUSTED) }
     }
@@ -819,7 +834,14 @@ internal class YlSessionCoordinator(
                     }
                     if (intent?.second == false) pause()
                     lease.deferredForeground = false
-                    if (lease.quiescing || lease.suspended != null) leases.acquire(lease) {}
+                    if (lease.quiescing || lease.suspended != null) {
+                        try {
+                            leases.acquire(lease) {}
+                        } catch (error: CancellationException) {
+                            if (generation != lifecycleGeneration) return@runEngine
+                            throw error
+                        }
+                    }
                     if (backgrounded || generation != lifecycleGeneration || activeLease !== lease) return@runEngine
                     onForeground()
                     if (!backgrounded && generation == lifecycleGeneration && activeLease === lease && backgroundPlayIntent == intent) {

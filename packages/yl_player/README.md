@@ -270,6 +270,8 @@ deadlines, retry/redirect budgets and credential origin restrictions apply to th
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
 
+Progressive HTTP MP4 movies with multiple media tracks load the track catalog first, except when at most 32 media tracks share a payload of 16 KiB or less. Standalone subtitle tracks with more than 10,000 samples also use this path. Up to 8 MiB of movie metadata can be cached. Selecting a subtitle loads samples for the current playback position with lookahead. Requests for later windows stay pinned to the same resource version.
+
 For clear static DASH, the same discovery API also reads MPD text tracks:
 WebVTT/TTML and fragmented MP4 `wvtt`/`stpp`, including separate initialization
 and media URLs. Selected current/next segments use the source network policy,

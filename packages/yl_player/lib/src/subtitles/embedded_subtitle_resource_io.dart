@@ -5,12 +5,16 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'matroska_subtitles.dart';
 import 'mp4_subtitles.dart';
 import 'subtitle_resource.dart';
+import 'subtitle_window_loader.dart';
 
 Future<List<EmbeddedSubtitleData>> readEmbedded(
   YlMediaSource source,
-  SubtitleCancellation token,
-) async {
-  if (source is YlNetworkSource) return _networkEmbedded(source, token);
+  SubtitleCancellation token, {
+  void Function(SubtitleWindowLoader)? onIndexed,
+}) async {
+  if (source is YlNetworkSource) {
+    return _networkEmbedded(source, token, onIndexed);
+  }
   if (source is! YlFileSource ||
       ![
         YlMediaFormat.automatic,
@@ -58,6 +62,7 @@ Future<List<EmbeddedSubtitleData>> readEmbedded(
 Future<List<EmbeddedSubtitleData>> _networkEmbedded(
   YlNetworkSource source,
   SubtitleCancellation token,
+  void Function(SubtitleWindowLoader)? onIndexed,
 ) async {
   if (!['http', 'https'].contains(source.uri.scheme) ||
       source.drm != null ||
@@ -74,7 +79,14 @@ Future<List<EmbeddedSubtitleData>> _networkEmbedded(
   try {
     reader = await SubtitleRangeReader.open(source, token);
     token.check();
-    return await _parse(source.format, reader.length, reader.read, token);
+    return await _parse(
+      source.format,
+      reader.length,
+      reader.read,
+      token,
+      onIndexed: onIndexed,
+      rangeReader: reader,
+    );
   } catch (error) {
     token.check();
     if (error is YlPlayerException || error is SubtitleParseException) rethrow;
@@ -88,8 +100,10 @@ Future<List<EmbeddedSubtitleData>> _parse(
   YlMediaFormat format,
   int length,
   Future<List<int>> Function(int, int) read,
-  SubtitleCancellation token,
-) async {
+  SubtitleCancellation token, {
+  void Function(SubtitleWindowLoader)? onIndexed,
+  SubtitleRangeReader? rangeReader,
+}) async {
   token.check();
   final expectedDocType = switch (format) {
     YlMediaFormat.matroska => 'matroska',
@@ -117,11 +131,20 @@ Future<List<EmbeddedSubtitleData>> _parse(
     }
   }
   return format == YlMediaFormat.mp4
-      ? Mp4Subtitles(length, read, token).parse()
+      ? Mp4Subtitles(
+          length,
+          read,
+          token,
+          openWindow: rangeReader?.windowRead,
+          readIndex: rangeReader?.readIndex,
+          onIndexed: onIndexed,
+        ).parse()
       : MatroskaSubtitles(
           length,
           read,
           token,
           expectedDocType: expectedDocType,
+          onIndexed: onIndexed,
+          openWindow: rangeReader?.windowRead,
         ).parse();
 }

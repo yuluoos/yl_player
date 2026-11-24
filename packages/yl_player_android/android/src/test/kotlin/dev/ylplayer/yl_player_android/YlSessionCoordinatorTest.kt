@@ -695,6 +695,31 @@ class YlSessionCoordinatorTest {
         assertEquals(1, engine.playCalls)
         f.finish()
     }
+    @Test fun `opening another document picker during decoder restore keeps the session usable`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val reply = f.coordinator.load(request("video"))
+        val engine = f.engines.single()
+        engine.position = 1500
+        f.coordinator.onBackground()
+        runCurrent()
+        engine.restoreAcknowledgement = CompletableDeferred()
+        f.coordinator.onForeground()
+        runCurrent()
+        assertEquals(1, engine.restores)
+        f.coordinator.onBackground()
+        runCurrent()
+        assertEquals(0, engine.disposals)
+        assertTrue(f.events.failures.isEmpty())
+        engine.restoreAcknowledgement?.complete(Unit)
+        f.coordinator.onForeground()
+        runCurrent()
+        assertEquals(2, engine.restores)
+        assertEquals(1500L, engine.position)
+        f.coordinator.play(AndroidSessionCommand(reply.sessionId))
+        assertTrue(engine.playing)
+        f.finish()
+    }
+
     @Test fun `background during held foreground restore retains unapplied explicit play`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         val reply = f.coordinator.load(request("paused"))

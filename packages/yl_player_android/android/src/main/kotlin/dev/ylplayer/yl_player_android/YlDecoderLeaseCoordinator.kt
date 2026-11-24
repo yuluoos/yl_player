@@ -36,6 +36,7 @@ internal interface YlDecoderLeaseParticipant {
     fun commitLease()
     fun rollbackLease(snapshot: YlLeaseSnapshot, attempt: YlLeaseAttempt, complete: (Result<Unit>) -> Unit): YlCancelHandle
     fun deactivateAfterLeaseTransfer()
+    suspend fun cancelActivation() { disposeForLease().await() }
     fun disposeForLease(): Deferred<Unit>
     fun restorationFailed()
 }
@@ -141,7 +142,10 @@ internal class YlDecoderLeaseCoordinator(
                         if (exclusive && owner === originalOwner) owner = originalOwner?.takeIf { it in restored }
                     }
                     if (!committed) withContext(NonCancellable) {
-                        runCatching { candidate.disposeForLease().await() }.exceptionOrNull()?.let { YlFailureMapper().record(it) }
+                        runCatching {
+                            if (error is CancellationException && error !is TimeoutCancellationException) candidate.cancelActivation()
+                            else candidate.disposeForLease().await()
+                        }.exceptionOrNull()?.let { YlFailureMapper().record(it) }
                         var restorationError: Throwable? = null
                         if (attached) for ((prior, snapshot) in snapshots.toList().asReversed()) if (prior !in restored) {
                             try { restore(prior, snapshot, attempts) } catch (failure: Throwable) { restorationError = failure }

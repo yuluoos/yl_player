@@ -31,6 +31,121 @@ void main() {
     networkPolicy: policy,
     request: YlHttpRequest(credentials: {'Authorization': 'owned'}),
   );
+  test(
+    'many timed-text tracks publish a catalog before loading the selected window',
+    () async {
+      final movie = mp4(
+        tracks: [
+          for (var id = 1; id <= 41; id++)
+            Mp4Track(
+              id: id,
+              samples: [textSample('first $id'), textSample('later $id')],
+              durations: [60000, 1000],
+            ),
+        ],
+        padding: 5000000,
+      );
+      final origin = await RangeServer.start(movie);
+      addTearDown(origin.close);
+      final runtime = TextSubtitleRuntime();
+      addTearDown(runtime.reset);
+      await runtime.discover(YlNetworkSource(origin.uri));
+      expect(runtime.state.tracks, hasLength(41));
+      final requests = origin.requests.length;
+      await runtime.selectAt('mp4:41', const Duration(seconds: 60));
+      expect(origin.requests.length, greaterThan(requests));
+      expect(
+        runtime.cuesAt(const Duration(seconds: 60)).single.text.toPlainText(),
+        'later 41',
+      );
+      await runtime.selectAt('mp4:3', Duration.zero);
+      expect(
+        runtime.cuesAt(Duration.zero).single.text.toPlainText(),
+        'first 3',
+      );
+      origin.handle = (q, _) => origin.reply(q, etag: '"another-version"');
+      await expectLater(
+        runtime.selectAt('mp4:25', Duration.zero),
+        throwsA(isA<YlPlayerException>()),
+      );
+      expect(runtime.state.selectedTrackId, 'mp4:3');
+      await runtime.selectAt(null, Duration.zero);
+      expect(runtime.cuesAt(Duration.zero), isEmpty);
+    },
+  );
+  test('12 languages with 850 cues each stay selectable', () async {
+    final origin = await RangeServer.start(
+      mp4(
+        tracks: [
+          for (var id = 1; id <= 12; id++)
+            Mp4Track(
+              id: id,
+              samples: List.filled(850, textSample('language $id')),
+              durations: List.filled(850, 1000),
+            ),
+        ],
+      ),
+    );
+    addTearDown(origin.close);
+    final runtime = TextSubtitleRuntime();
+    addTearDown(runtime.reset);
+    await runtime.discover(YlNetworkSource(origin.uri));
+    expect(runtime.state.tracks, hasLength(12));
+    const at = Duration(seconds: 600);
+    await runtime.selectAt('mp4:12', at);
+    expect(runtime.cuesAt(at).single.text.toPlainText(), 'language 12');
+  });
+
+  test(
+    'a slow embedded window publishes its lookahead before catching up',
+    () async {
+      final origin = await RangeServer.start(
+        mp4(
+          tracks: [
+            for (var id = 1; id <= 33; id++)
+              Mp4Track(
+                id: id,
+                samples: [for (var i = 0; i < 32; i++) textSample('cue $i')],
+                durations: List.filled(32, 1000),
+              ),
+          ],
+        ),
+      );
+      addTearDown(origin.close);
+      final runtime = TextSubtitleRuntime();
+      addTearDown(runtime.reset);
+      await runtime.discover(YlNetworkSource(origin.uri));
+      await runtime.selectAt('mp4:1', Duration.zero);
+      final firstRead = Completer<HttpRequest>();
+      origin.handle = (q, _) {
+        if (!firstRead.isCompleted) {
+          firstRead.complete(q);
+        } else {
+          origin.reply(q);
+        }
+      };
+      final publications = <bool>[];
+      final caughtUp = Completer<void>();
+      runtime.onChanged = () {
+        publications.add(runtime.cuesAt(const Duration(seconds: 8)).isNotEmpty);
+        if (runtime.cuesAt(const Duration(seconds: 25)).isNotEmpty &&
+            !caughtUp.isCompleted) {
+          caughtUp.complete();
+        }
+      };
+      runtime.updatePosition(const Duration(seconds: 8));
+      final held = await firstRead.future;
+      runtime.updatePosition(const Duration(seconds: 16));
+      origin.reply(held);
+      await caughtUp.future.timeout(const Duration(seconds: 5));
+      expect(publications, [true, false]);
+      expect(
+        runtime.cuesAt(const Duration(seconds: 16)).single.text.toPlainText(),
+        'cue 16',
+      );
+    },
+  );
+
   for (final format in [YlMediaFormat.automatic, YlMediaFormat.mp4]) {
     test(
       'network $format sniffs content, skips media, sends conditional range and renders',

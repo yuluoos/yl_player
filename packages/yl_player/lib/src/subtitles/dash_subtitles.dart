@@ -5,6 +5,7 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'dash_subtitle_resource.dart';
 import 'subtitle_resource.dart';
 import 'subtitle_document.dart';
+import 'subtitle_window_loader.dart';
 import 'mp4_subtitles.dart';
 
 part 'dash_subtitle_time.dart';

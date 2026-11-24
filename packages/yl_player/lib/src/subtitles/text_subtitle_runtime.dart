@@ -4,6 +4,7 @@ import 'dash_subtitles.dart';
 import 'dash_subtitle_resource.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'subtitle_document.dart';
+import 'subtitle_window_loader.dart';
 import 'subtitle_resource.dart';
 import 'embedded_subtitle_resource.dart';
 
@@ -43,7 +44,7 @@ final class TextSubtitleRuntime {
   SubtitleCancellation? _pending;
   Future<void> _scanTail = Future.value();
   Future<void> _windowTail = Future.value();
-  DashSubtitleWindowLoader? _dash;
+  SubtitleWindowLoader? _loader;
   _Document? _window;
   String? _windowKey;
   SubtitleCancellation? _windowToken;
@@ -70,7 +71,12 @@ final class TextSubtitleRuntime {
   void updatePosition(Duration position) {
     _position = position;
     _pruneFailedCues(position);
-    if (_selecting != null) return;
+    // Embedded windows include lookahead. Finish the active read, then
+    // fetch at the newest clock position. Explicit seeks cancel in suspendWindow.
+    if (_selecting != null ||
+        (_windowToken != null && _loader is! DashSubtitleWindowLoader)) {
+      return;
+    }
     final work = _loadWindow(position);
     unawaited(
       work.catchError((Object error) {
@@ -80,10 +86,8 @@ final class TextSubtitleRuntime {
   }
 
   Future<void> _loadWindow(Duration position, {bool command = false}) {
-    final loader = _dash, id = state.selectedTrackId;
-    if (loader == null ||
-        id == null ||
-        !loader.catalog.tracks.any((t) => t.id == id)) {
+    final loader = _loader, id = state.selectedTrackId;
+    if (loader == null || id == null || !loader.tracks.any((t) => t.id == id)) {
       return Future.value();
     }
     final at = position - state.offset;
@@ -93,7 +97,9 @@ final class TextSubtitleRuntime {
     final token = SubtitleCancellation();
     _windowToken = token;
     _windowKey = key;
-    _window = null;
+    // Keep valid lookahead visible while fetching the next sample window.
+    // Seek, offset and track changes already clear the previous document.
+    if (loader is DashSubtitleWindowLoader) _window = null;
     final prior = _windowTail;
     final work = () async {
       try {
@@ -140,8 +146,15 @@ final class TextSubtitleRuntime {
         if (!command) onFailure?.call(failure);
         throw failure;
       } finally {
-        if (identical(_windowToken, token)) _windowToken = null;
         token.cancel();
+        if (identical(_windowToken, token)) {
+          _windowToken = null;
+          if (!command &&
+              loader is! DashSubtitleWindowLoader &&
+              _position != position) {
+            updatePosition(_position);
+          }
+        }
       }
     }();
     _windowTail = work.then<void>((_) {}, onError: (Object _, StackTrace _) {});
@@ -177,15 +190,15 @@ final class TextSubtitleRuntime {
     _pending?.cancel();
     _pending = null;
     suspendWindow();
-    _dash?.clear();
+    _loader?.clear();
   }
 
   void reset() {
     cancel();
     state = YlSubtitleState();
     _documents = {};
-    _dash?.clear();
-    _dash = null;
+    _loader?.clear();
+    _loader = null;
   }
 
   Future<void> replace(List<YlExternalSubtitle> sources) async {
@@ -332,29 +345,20 @@ final class TextSubtitleRuntime {
           final root = await reader.root(token);
           token.check();
           final catalog = DashSubtitleCatalog.parse(root.bytes, root.location);
-          final retained = state.tracks.where((t) => t.isExternal).toList();
-          if (catalog.tracks.length + retained.length > 128) {
-            throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
-          }
-          if (catalog.tracks.any((t) => retained.any((r) => r.id == t.id))) {
-            throw subtitleFailure(YlFailureCodes.sourceInvalid);
-          }
-          final selected = state.selectedTrackId;
-          final tracks = [...catalog.tracks, ...retained];
-          suspendWindow();
-          _dash?.clear();
-          _dash = DashSubtitleWindowLoader(catalog, reader);
-          _documents = {for (final t in retained) t.id: _documents[t.id]!};
-          state = state.copyWith(
-            tracks: tracks,
-            selectedTrackId: tracks.any((t) => t.id == selected)
-                ? selected
-                : null,
-          );
+          _publishWindowLoader(DashSubtitleWindowLoader(catalog, reader));
           return;
         }
-        final data = await readEmbeddedSubtitles(source, token);
+        SubtitleWindowLoader? indexed;
+        final data = await readEmbeddedSubtitles(
+          source,
+          token,
+          onIndexed: (loader) => indexed = loader,
+        );
         token.check();
+        if (indexed case final loader?) {
+          _publishWindowLoader(loader);
+          return;
+        }
         final retained = state.tracks.where((t) => t.isExternal).toList();
         if (data.length + retained.length > 128) {
           throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
@@ -425,8 +429,8 @@ final class TextSubtitleRuntime {
         }
         token.check();
         suspendWindow();
-        _dash?.clear();
-        _dash = null;
+        _loader?.clear();
+        _loader = null;
         _documents = documents;
         state = state.copyWith(
           tracks: [...data.map((d) => d.track), ...retained],
@@ -447,6 +451,26 @@ final class TextSubtitleRuntime {
     }();
     _scanTail = work.then<void>((_) {}, onError: (Object _, StackTrace _) {});
     return work;
+  }
+
+  void _publishWindowLoader(SubtitleWindowLoader loader) {
+    final retained = state.tracks.where((t) => t.isExternal).toList();
+    if (loader.tracks.length + retained.length > 128) {
+      throw subtitleFailure(YlFailureCodes.subtitleTooLarge);
+    }
+    if (loader.tracks.any((t) => retained.any((r) => r.id == t.id))) {
+      throw subtitleFailure(YlFailureCodes.sourceInvalid);
+    }
+    final selected = state.selectedTrackId;
+    final tracks = [...loader.tracks, ...retained];
+    suspendWindow();
+    _loader?.clear();
+    _loader = loader;
+    _documents = {for (final t in retained) t.id: _documents[t.id]!};
+    state = state.copyWith(
+      tracks: tracks,
+      selectedTrackId: tracks.any((t) => t.id == selected) ? selected : null,
+    );
   }
 
   void select(String? id) {

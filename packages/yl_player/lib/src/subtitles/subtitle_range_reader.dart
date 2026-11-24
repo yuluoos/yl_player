@@ -95,6 +95,40 @@ final class SubtitleRangeReader {
     return result.takeBytes();
   }
 
+  Future<List<int>> readIndex(int offset, int count) async {
+    if (count <= 0 ||
+        count > 256 * 1024 ||
+        offset < 0 ||
+        offset > length - count) {
+      throw subtitleFailure(YlFailureCodes.subtitleMalformed);
+    }
+    final reply = await _network(
+      source,
+      token,
+      count,
+      shared: _ledger,
+      range: _RangeRequest(
+        offset,
+        offset + count - 1,
+        expectedTag: _tag,
+        expectedTotal: length,
+      ),
+    );
+    token.check();
+    return reply.bytes!;
+  }
+
+  // Resume the exact representation that supplied the track index. The resolved
+  // origin and credential stripping remain authoritative across playback seeks.
+  Future<List<int>> Function(int, int) windowRead(SubtitleCancellation token) {
+    final window = SubtitleRangeReader._(source, token)
+      .._length = length
+      .._tag = _tag;
+    window._ledger.uri = _ledger.uri;
+    window._ledger.stripped = _ledger.stripped;
+    return window.read;
+  }
+
   void clear() => _cache.clear();
 }
 

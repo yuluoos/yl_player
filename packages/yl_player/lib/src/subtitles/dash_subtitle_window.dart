@@ -13,7 +13,9 @@ final class _DashCell {
 /// Bounded selected-track window: two parsed segments and one initialization
 /// resource. Repeated position ticks perform a binary search and no redundant
 /// I/O. Seeking never resets the reader's logical-resource request histories.
-final class DashSubtitleWindowLoader {
+final class DashSubtitleWindowLoader implements SubtitleWindowLoader {
+  @override
+  List<YlSubtitleTrack> get tracks => catalog.tracks;
   DashSubtitleWindowLoader(this.catalog, this.reader) {
     for (final period in catalog.periods) {
       for (final track in period.tracks) {
@@ -57,14 +59,17 @@ final class DashSubtitleWindowLoader {
     return low;
   }
 
+  @override
   String windowKey(String id, Duration position) =>
       '$id:${_index(id, position)}';
+  @override
   void clear() {
     _cache.clear();
     _initKey = null;
     _initialization = null;
   }
 
+  @override
   Future<SubtitleDocument> load(
     String id,
     Duration position,

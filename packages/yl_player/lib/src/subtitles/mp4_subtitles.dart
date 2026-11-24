@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import 'subtitle_window_loader.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'matroska_subtitles.dart' show EmbeddedSubtitleData;
 import 'subtitle_document.dart';
@@ -7,6 +9,7 @@ import 'subtitle_resource.dart';
 part 'mp4_webvtt.dart';
 part 'mp4_ttml.dart';
 part 'mp4_fragments.dart';
+part 'mp4_subtitle_window.dart';
 part 'mp4_language.dart';
 
 Never _bad() =>
@@ -54,7 +57,22 @@ final class _Box {
 /// Bounded ISO BMFF subtitle demux, including fragmented tx3g/wvtt/stpp.
 /// Skips audio/video payloads; no external drefs or segment URL fetching.
 final class Mp4Subtitles {
-  Mp4Subtitles(this.length, this.read, this.token);
+  Mp4Subtitles(
+    this.length,
+    this.read,
+    this.token, {
+    this.openWindow,
+    this.readIndex,
+    this.onIndexed,
+  });
+  final Future<List<int>> Function(int, int) Function(SubtitleCancellation)?
+  openWindow;
+  final Future<List<int>> Function(int, int)? readIndex;
+  final void Function(SubtitleWindowLoader)? onIndexed;
+  Uint8List? _movieMetadata;
+  int _metadataStart = 0;
+  ({int start, int end})? _window;
+
   final int length;
   final Future<List<int>> Function(int, int) read;
   final SubtitleCancellation token;
@@ -75,6 +93,10 @@ final class Mp4Subtitles {
     if (p < 0 || n < 0 || p > length || n > length - p) _bad();
     _readBytes += n;
     if (n > 256 * 1024 || _readBytes > 64 * 1024 * 1024) _limit();
+    final metadata = _movieMetadata, offset = p - _metadataStart;
+    if (metadata != null && offset >= 0 && offset <= metadata.length - n) {
+      return Uint8List.sublistView(metadata, offset, offset + n);
+    }
     final b = await read(p, n);
     token.check();
     if (b.length != n) _bad();
@@ -166,6 +188,13 @@ final class Mp4Subtitles {
     }
     _mdats.addAll(root.where((b) => b.type == 'mdat'));
     final moov = _one(root, 'moov', required: true)!;
+    final fetch = readIndex;
+    if (onIndexed != null &&
+        fetch != null &&
+        moov.size >= 256 * 1024 &&
+        moov.size <= 8 * 1024 * 1024) {
+      await _fetchMetadata(moov, fetch);
+    }
     final children = await _children(moov.start, moov.end);
     if (children.any((b) => b.type == 'cmov')) _unsupported();
     final mvex = _one(children, 'mvex');
@@ -179,13 +208,54 @@ final class Mp4Subtitles {
     if (movieScale == 0) _bad();
     final tracks = children.where((b) => b.type == 'trak').toList();
     if (tracks.length > 128) _limit();
+    final open = openWindow, publish = onIndexed;
+    // Tiny media payloads fit in one HTTP range block. Keep those eager to
+    // avoid a new request on every selection or offset change.
+    final indexMovie =
+        tracks.length > 32 ||
+        (tracks.length > 1 &&
+            _mdats.fold<int>(0, (sum, box) => sum + box.size) > 16 * 1024);
+    final choices = <String, ({YlSubtitleTrack track, _Box box})>{};
     final out = <EmbeddedSubtitleData>[];
-    for (final t in tracks) {
-      final data = await _track(t, movieScale);
+    for (final box in tracks) {
+      final data = await _track(
+        box,
+        movieScale,
+        indexTrack: !_fragmented && open != null && publish != null
+            ? (track, sampleCount) {
+                if (!indexMovie &&
+                    (tracks.length != 1 || sampleCount <= 10000)) {
+                  return false;
+                }
+                choices[track.id] = (track: track, box: box);
+                return true;
+              }
+            : null,
+      );
       if (data != null) {
         if (out.length >= 32) _limit();
         out.add(data);
       }
+    }
+    if (choices.isNotEmpty && publish != null && open != null) {
+      // Large video sample tables need not fit in the subtitle metadata cache.
+      final metadata =
+          _movieMetadata ??
+          (fetch != null && moov.size <= 8 * 1024 * 1024
+              ? await _fetchMetadata(moov, fetch)
+              : null);
+      publish(
+        _Mp4SubtitleWindow(
+          length,
+          movieScale,
+          choices,
+          _mdats,
+          metadata,
+          moov.start,
+          open,
+        ),
+      );
+      return [];
     }
     if (mvex != null) {
       await _readFragments(mvex, fragments);
@@ -194,7 +264,27 @@ final class Mp4Subtitles {
     return out;
   }
 
-  Future<EmbeddedSubtitleData?> _track(_Box t, int movieScale) async {
+  Future<Uint8List> _fetchMetadata(
+    _Box moov,
+    Future<List<int>> Function(int, int) fetch,
+  ) async {
+    final bytes = Uint8List(moov.size);
+    for (var at = 0; at < bytes.length;) {
+      final size = (bytes.length - at).clamp(0, 256 * 1024);
+      bytes.setRange(at, at + size, await fetch(moov.start + at, size));
+      token.check();
+      at += size;
+    }
+    _movieMetadata = bytes;
+    _metadataStart = moov.start;
+    return bytes;
+  }
+
+  Future<EmbeddedSubtitleData?> _track(
+    _Box t,
+    int movieScale, {
+    bool Function(YlSubtitleTrack, int sampleCount)? indexTrack,
+  }) async {
     final children = await _children(t.start, t.end);
     final tkhd = await _body(_one(children, 'tkhd', required: true)!, min: 24);
     if (![0, 1].contains(tkhd[0])) _unsupported();
@@ -294,8 +384,24 @@ final class Mp4Subtitles {
     if (descriptions.any((d) => d.format != descriptions.first.format)) {
       _unsupported();
     }
+    final metadata = YlSubtitleTrack(
+      id: 'mp4:$id',
+      format: descriptions.first.format,
+      isExternal: false,
+      label: label,
+      language: language,
+      role: descriptions.every((d) => d.forced) ? 'forced' : null,
+      contentId: '$id',
+    );
     final sz = _one(tables, 'stsz'), z2 = _one(tables, 'stz2');
     if ((sz == null) == (z2 == null)) _bad();
+    if (indexTrack != null) {
+      final table = (sz ?? z2)!;
+      if (table.size < 12) _bad();
+      final header = await _bytes(table.start, 12);
+      _full(header);
+      if (indexTrack(metadata, _u(header, 8))) return null;
+    }
     final sizes = <int>[];
     final b = await _body((sz ?? z2)!, min: 12);
     _full(b);
@@ -376,15 +482,7 @@ final class Mp4Subtitles {
     }
     final edit = await _edit(_one(children, 'edts'), movieScale, scale);
     final track = _Mp4TrackSamples(
-      YlSubtitleTrack(
-        id: 'mp4:$id',
-        format: descriptions.first.format,
-        isExternal: false,
-        label: label,
-        language: language,
-        role: descriptions.every((d) => d.forced) ? 'forced' : null,
-        contentId: '$id',
-      ),
+      metadata,
       descriptions,
       scale,
       movieScale,
@@ -443,10 +541,6 @@ final class Mp4Subtitles {
       _bad();
     }
     if (_fragmented) _fragmentExtents.add((pos, pos + size));
-    _payloadBytes += size;
-    if (_payloadBytes > 4 * 1024 * 1024) _limit();
-    final decoded = desc.decode(await _bytes(pos, size));
-    if (desc.format == YlSubtitleFormat.ttml) track.sourceBytes += size;
     final endTicks = startTicks + duration;
     if (startTicks.abs() > scale * 604800 || endTicks.abs() > scale * 604800) {
       _limit();
@@ -460,6 +554,12 @@ final class Mp4Subtitles {
     final startUs = mapped(startTicks), endUs = mapped(endTicks);
     final start = startUs.clamp(edit.delay, edit.end),
         end = endUs.clamp(edit.delay, edit.end);
+    final window = _window;
+    if (window != null && (end <= window.start || start >= window.end)) return;
+    _payloadBytes += size;
+    if (_payloadBytes > 4 * 1024 * 1024) _limit();
+    final decoded = desc.decode(await _bytes(pos, size));
+    if (desc.format == YlSubtitleFormat.ttml) track.sourceBytes += size;
     if (decoded.isNotEmpty) {
       if (duration == 0) _bad();
       if (end > start) {
