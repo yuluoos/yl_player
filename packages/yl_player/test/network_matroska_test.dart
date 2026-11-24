@@ -104,6 +104,39 @@ void main() {
         expect(runtime.cuesAt(const Duration(seconds: 1)), hasLength(1));
       },
     );
+    test(
+      'default policy completes a progressing scan beyond 30 seconds',
+      () async {
+        final server = await serve();
+        server.handle = (q, index) async {
+          if (index <= 2) {
+            await Future<void>.delayed(const Duration(seconds: 16));
+          }
+          server.reply(q);
+        };
+        await runtime.discover(
+          source(server, policy: const YlNetworkPolicy.platformDefault()),
+        );
+        expect(server.requests.length, greaterThanOrEqualTo(2));
+        expect(runtime.state.tracks.single.id, 'mkv:101');
+      },
+      timeout: const Timeout(Duration(minutes: 1)),
+    );
+    test(
+      'default policy still terminates a stalled range without retrying',
+      () async {
+        final server = await serve();
+        server.handle = (_, _) {};
+        await expectLater(
+          runtime.discover(
+            source(server, policy: const YlNetworkPolicy.platformDefault()),
+          ),
+          failure(YlFailureCodes.networkFailed),
+        );
+        expect(server.requests, hasLength(1));
+      },
+      timeout: const Timeout(Duration(minutes: 1)),
+    );
     for (final ssa in [false, true]) {
       test(
         'network ${ssa ? 'SSA' : 'ASS'} retains styles, text and exact clock',

@@ -122,6 +122,9 @@ Future<_Reply> _network(
   final policy = source.networkPolicy;
   final managed = policy.kind == YlNetworkPolicyKind.managed;
   final ledger = shared ?? _NetworkLedger(source.uri);
+  // A progressive container scan can span many independent range requests.
+  // Bound stalled headers and body reads even under the default policy.
+  final rangeTimeout = ledger.rangeScan ? const Duration(seconds: 30) : null;
   while (true) {
     token.check();
     ledger.attempt();
@@ -137,8 +140,8 @@ Future<_Reply> _network(
             ledger.uri,
             source.request,
             ledger.stripped,
-            managed ? policy.connectTimeout : null,
-            managed ? policy.readTimeout : null,
+            policy.connectTimeout ?? rangeTimeout,
+            policy.readTimeout ?? rangeTimeout,
           );
     } catch (error) {
       token.check();

@@ -70,33 +70,16 @@ Future<List<EmbeddedSubtitleData>> _networkEmbedded(
       ].contains(source.format)) {
     throw subtitleFailure(YlFailureCodes.subtitleUnsupported);
   }
-  final owned = SubtitleCancellation();
-  final remove = token.listen(owned.cancel);
   SubtitleRangeReader? reader;
-  Future<List<EmbeddedSubtitleData>> scan() async {
-    reader = await SubtitleRangeReader.open(source, owned);
-    owned.check();
-    return _parse(source.format, reader!.length, reader!.read, owned);
-  }
-
   try {
-    final operation = scan();
-    return await (source.networkPolicy.kind == YlNetworkPolicyKind.managed
-        ? operation
-        : operation.timeout(
-            const Duration(seconds: 30),
-            onTimeout: () {
-              owned.cancel();
-              throw subtitleFailure(YlFailureCodes.networkFailed);
-            },
-          ));
+    reader = await SubtitleRangeReader.open(source, token);
+    token.check();
+    return await _parse(source.format, reader.length, reader.read, token);
   } catch (error) {
     token.check();
     if (error is YlPlayerException || error is SubtitleParseException) rethrow;
     throw subtitleFailure(YlFailureCodes.networkFailed);
   } finally {
-    remove();
-    owned.cancel();
     reader?.clear();
   }
 }

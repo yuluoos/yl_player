@@ -37,8 +37,9 @@ retries and Retry-After, TLS certificate validation, HTTPS downgrade rejection,
 and origin-scoped credentials. One resource ledger spans all windows, redirects
 and retries in a discovery. Counts never reset per window. Credentials stripped
 after an origin change stay stripped for retries and subsequent windows.
-Managed scans have no total wall-clock deadline. platformDefault uses the
-existing 30-second total timeout, five redirects and no retries.
+For platformDefault, each hop allows 30 seconds through headers and 30 seconds
+of body inactivity, with five redirects and no retries. Both policies permit
+longer scans while requests continue making progress.
 
 Each attempt owns its client/socket/partial body and cancellation listener;
 no connection pooling can replay requests outside the ledger. Keep <=128

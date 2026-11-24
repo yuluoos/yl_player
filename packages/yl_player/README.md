@@ -263,7 +263,9 @@ session starts with subtitles off. Unsupported codecs/effects fail atomically.
 
 For a network MKV or MP4, load a `YlNetworkSource` with its request metadata and network
 policy, then call the same discovery method. HTTP(S) servers must return single
-206 byte ranges with a stable strong ETag and total length. Managed connect/read
+206 byte ranges with a stable strong ETag and total length. Under the default policy
+each request allows 30 seconds for response headers and 30 seconds of body inactivity.
+A scan can take longer while data continues to arrive. Managed connect/read
 deadlines, retry/redirect budgets and credential origin restrictions apply to the
 whole discovery. Later ranges use If-Match; changed versions fail atomically.
 The scan uses a bounded cache and request/byte budgets, with no full-body fallback.
