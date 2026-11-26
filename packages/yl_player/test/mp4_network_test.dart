@@ -269,7 +269,7 @@ void main() {
         source(
           policy: const YlNetworkPolicy.managed(
             maxRetries: 0,
-            connectTimeout: Duration(milliseconds: 50),
+            connectTimeout: RangeServer.withheldHeaderTimeout,
           ),
         ),
       ),

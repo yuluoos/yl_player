@@ -8,24 +8,80 @@ int _u32(Uint8List b, int i) => ByteData.sublistView(b).getUint32(i);
 typedef _Item = ({String clip, int start, int end, int stc});
 typedef _Point = ({int time, int packet});
 
-final class DiscSegment implements IsoSegment, IsoPayload {
-  @override
-  Future<IsoPayload> openPayload() async => this;
-  DiscSegment(
-    this.file,
-    this.first,
-    this.end,
-    this.ticks,
-    this.tables,
-    this.discontinuity,
-  );
+// All segments of a clip share the small PAT/PMT prefix and any in-flight read.
+final class _Clip {
+  _Clip(this.file);
   final DiscFile file;
+  Future<Uint8List>? _tables;
+  Future<Uint8List> tables({Uint8List? prefix}) =>
+      _tables ??= _loadTables(prefix);
+
+  Future<Uint8List> _loadTables(Uint8List? prefix) async {
+    try {
+      return await _programTables(file, prefix);
+    } catch (_) {
+      _tables = null;
+      rethrow;
+    }
+  }
+}
+
+const _packetsPerRead = 2048;
+// After delivering the first block, amortize origin latency on large segments.
+const _networkPacketsPerRead = 4096;
+
+final class _DiscSegment implements IsoSegment {
+  _DiscSegment(this.clip, this.first, this.end, this.ticks, this.discontinuity);
+  final _Clip clip;
   final int first, end;
   @override
   final int ticks;
-  final Uint8List tables;
   @override
   final bool discontinuity;
+  @override
+  Future<IsoPayload> openPayload({bool fullNetworkRead = false}) async {
+    if (fullNetworkRead && first != 0 && clip._tables == null) {
+      // The segment offset is known before the clip's PAT/PMT is available.
+      // Observe both futures even if the origin rejects one of the reads.
+      final count = (end - first).clamp(1, _packetsPerRead);
+      final blocks = await Future.wait([
+        clip.tables(),
+        clip.file.read(first * 192, count * 192),
+      ]);
+      return _ClipPayload(
+        clip,
+        first,
+        end,
+        blocks[0],
+        fullNetworkRead: true,
+        firstBlock: blocks[1],
+      );
+    }
+    final tables = first == 0 ? Uint8List(0) : await clip.tables();
+    return _ClipPayload(
+      clip,
+      first,
+      end,
+      tables,
+      fullNetworkRead: fullNetworkRead,
+    );
+  }
+}
+
+final class _ClipPayload implements IsoPayload {
+  _ClipPayload(
+    this.clip,
+    this.first,
+    this.end,
+    this.tables, {
+    required this.fullNetworkRead,
+    this.firstBlock,
+  });
+  final _Clip clip;
+  final int first, end;
+  final Uint8List tables;
+  final Uint8List? firstBlock;
+  final bool fullNetworkRead;
   @override
   int get length => tables.length + (end - first) * 188;
 
@@ -43,10 +99,22 @@ final class DiscSegment implements IsoSegment, IsoPayload {
     if (stop <= start) return;
     var at = start - tables.length;
     final limit = stop - tables.length;
+    var validateClip = first == 0;
     while (at < limit) {
       final packet = at ~/ 188;
-      final n = ((limit + 187) ~/ 188 - packet).clamp(1, 1024);
-      final raw = await file.read((first + packet) * 192, n * 192);
+      final blockPackets = fullNetworkRead && first != 0 && packet > 0
+          ? _networkPacketsPerRead
+          : _packetsPerRead;
+      final n = ((limit + 187) ~/ 188 - packet).clamp(1, blockPackets);
+      final raw = packet == 0 && firstBlock != null
+          ? firstBlock!
+          : await clip.file.read((first + packet) * 192, n * 192);
+      if (validateClip) {
+        // Packet zero already carries the tables. Use the bytes from this
+        // GET when jumping to a new clip instead of a separate HTTP round trip.
+        await clip.tables(prefix: packet == 0 ? raw : null);
+        validateClip = false;
+      }
       final data = Uint8List(n * 188);
       for (var p = 0; p < n; p++) {
         final sync = p * 192 + 4;
@@ -131,8 +199,23 @@ List<_Point> _accessPoints(Uint8List b, int packets) {
 
 // A fresh HLS segment must announce its program before its first video PES.
 // Blu-ray uses a single program. Keep its original PAT and PMT packets.
-Future<Uint8List> _programTables(DiscFile file) async {
-  final bytes = await file.read(0, (file.length ~/ 192).clamp(0, 512) * 192);
+Future<Uint8List> _programTables(DiscFile file, Uint8List? initial) async {
+  final limit = (file.length ~/ 192).clamp(0, 512) * 192;
+  final prefix = initial == null
+      ? await file.read(0, limit.clamp(0, 16 * 192), readAhead: false)
+      : Uint8List.sublistView(initial, 0, initial.length.clamp(0, limit));
+  final tables = _findProgramTables(prefix);
+  if (tables != null) return tables;
+  if (prefix.length == limit) invalidDisc();
+  final bytes = Uint8List(limit)..setAll(0, prefix);
+  bytes.setAll(
+    prefix.length,
+    await file.read(prefix.length, limit - prefix.length),
+  );
+  return _findProgramTables(bytes) ?? invalidDisc();
+}
+
+Uint8List? _findProgramTables(Uint8List bytes) {
   Uint8List? pat;
   int? pmt;
   for (var i = 4; i + 188 <= bytes.length; i += 192) {
@@ -165,14 +248,14 @@ Future<Uint8List> _programTables(DiscFile file) async {
         result.add(Uint8List.sublistView(bytes, j, j + 188));
         missing -= 184 - (bytes[j + 3] & 32 != 0 ? 1 + bytes[j + 4] : 0);
       }
-      if (missing > 0) invalidDisc();
+      if (missing > 0) return null;
       return result.takeBytes();
     }
   }
-  return invalidDisc();
+  return null;
 }
 
-Future<List<DiscSegment>> openMainTitle(
+Future<List<IsoSegment>> openMainTitle(
   UdfVolume volume, {
   int? playlist,
 }) async {
@@ -210,7 +293,8 @@ Future<List<DiscSegment>> openMainTitle(
       best = items;
     }
   }
-  final segments = <DiscSegment>[];
+  final segments = <IsoSegment>[];
+  final byClip = <String, _Clip>{};
   for (final item in best) {
     final file = await volume.child(streams, '${item.clip}.M2TS');
     final clipInfo = await volume.child(clips, '${item.clip}.CLPI');
@@ -240,19 +324,13 @@ Future<List<DiscSegment>> openMainTitle(
         ? packets
         : boundary(item.end);
     if (first >= last) invalidDisc();
-    final tables = await _programTables(file);
+    final clip = byClip.putIfAbsent(item.clip, () => _Clip(file));
+    if (segments.isEmpty) await clip.tables();
     var start = first, time = item.start, discontinuous = segments.isNotEmpty;
     void emit(int packet, int until) {
       if (segments.length >= 100000) invalidDisc();
       segments.add(
-        DiscSegment(
-          file,
-          start,
-          packet,
-          until - time,
-          start == 0 ? Uint8List(0) : tables,
-          discontinuous,
-        ),
+        _DiscSegment(clip, start, packet, until - time, discontinuous),
       );
       start = packet;
       time = until;

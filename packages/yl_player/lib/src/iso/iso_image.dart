@@ -18,14 +18,18 @@ final class IsoImage {
   Uri? _uri;
   Map<String, String> _headers = const {}, _credentials = const {};
   final _pages = <int, Uint8List>{};
+  final _pendingPages = <int, Future<Uint8List>>{};
   RandomAccessFile? _handle;
   Future<void> _fileQueue = Future.value();
   HttpClient? _client;
   int length = 0;
+  bool get isNetwork => _file == null;
   bool _closed = false;
   String? _validator;
   bool _usesEtag = false;
-  static const _page = 32768;
+  // A network metadata window covers adjacent UDF descriptors and small IFO
+  // files. Keep the original half-MiB resident budget for both sources.
+  int get _pageSize => _file == null ? 65536 : 32768;
   Future<void> open() async {
     if (_closed) throw const HttpException('Closed image');
     if (_file != null) {
@@ -45,21 +49,51 @@ final class IsoImage {
     }
   }
 
-  Future<Uint8List> read(int offset, int count) async {
+  Future<Uint8List> read(int offset, int count, {bool readAhead = true}) async {
     if (_closed || offset < 0 || count < 0 || offset > length - count) {
       invalidDisc();
     }
     if (count == 0) return Uint8List(0);
-    final page = offset ~/ _page;
-    if (count <= 4096 && (offset + count - 1) ~/ _page == page) {
-      final at = page * _page;
-      final bytes =
-          _pages.remove(page) ?? await _read(at, (length - at).clamp(0, _page));
-      if (_pages.length >= 16) _pages.remove(_pages.keys.first);
-      _pages[page] = bytes;
-      return Uint8List.sublistView(bytes, offset - at, offset - at + count);
+    final size = _pageSize;
+    final start = offset - offset % size;
+    if (offset + count <= start + size) {
+      final hit = _pages.remove(start);
+      if (hit != null) {
+        _pages[start] = hit;
+        return Uint8List.sublistView(
+          hit,
+          offset - start,
+          offset - start + count,
+        );
+      }
+      var pending = _pendingPages[start];
+      if (pending == null &&
+          readAhead &&
+          count <= (_file == null ? 16384 : 4096)) {
+        pending = _pendingPages[start] = _loadPage(start, size);
+      }
+      if (pending != null) {
+        return Uint8List.sublistView(
+          await pending,
+          offset - start,
+          offset - start + count,
+        );
+      }
     }
     return _read(offset, count);
+  }
+
+  Future<Uint8List> _loadPage(int start, int size) async {
+    try {
+      final bytes = await _read(start, (length - start).clamp(0, size));
+      if (!_closed) {
+        if (_pages.length >= 524288 ~/ size) _pages.remove(_pages.keys.first);
+        _pages[start] = bytes;
+      }
+      return bytes;
+    } finally {
+      _pendingPages.remove(start);
+    }
   }
 
   Future<Uint8List> _read(int offset, int count) {

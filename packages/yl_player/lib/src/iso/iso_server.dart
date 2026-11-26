@@ -15,6 +15,7 @@ final class IsoServer {
   IsoServer(this.image);
   final IsoImage image;
   HttpServer? _server;
+  DvdSegmentCache? _dvdCache;
   bool _closed = false;
   int _active = 0;
   late final Uri uri;
@@ -33,27 +34,12 @@ final class IsoServer {
     } else {
       segments = await openMainTitle(volume, playlist: playlist);
     }
-    int? cachedIndex;
-    Future<IsoPayload>? cachedPayload;
-    // Reuse a remuxed DVD segment for a HEAD followed by one or more ranges.
-    Future<IsoPayload> payload(int index) {
-      if (cachedIndex != index) {
-        cachedIndex = index;
-        late final Future<IsoPayload> pending;
-        pending = segments[index].openPayload().catchError((
-          Object error,
-          StackTrace stack,
-        ) {
-          if (identical(cachedPayload, pending)) cachedIndex = null;
-          Error.throwWithStackTrace(error, stack);
-        });
-        cachedPayload = pending;
-      }
-      return cachedPayload!;
-    }
+    final cache = _dvdCache = isDvd ? DvdSegmentCache() : null;
+    Future<IsoPayload> payload(int index, {bool fullNetworkRead = false}) =>
+        cache?.get(index, segments[index]) ??
+        segments[index].openPayload(fullNetworkRead: fullNetworkRead);
 
-    // Admit the first playable DVD segment before handing the URL to native.
-    // This also retains the prefix the player is about to request.
+    // Validate the first playable DVD segment and reuse it on the first GET.
     if (isDvd) await payload(0);
     final maxTicks = segments.map((s) => s.ticks).reduce(max);
     final manifest = StringBuffer()
@@ -105,11 +91,19 @@ final class IsoServer {
           response.statusCode = 404;
           return;
         }
-        final media = isManifest ? null : await payload(index);
+        final range = request.headers.value('range');
+        final media = isManifest
+            ? null
+            : await payload(
+                index,
+                fullNetworkRead:
+                    image.isNetwork &&
+                    request.method == 'GET' &&
+                    (range == null || range == 'bytes=0-'),
+              );
         final length = media?.length ?? bytes.length;
         var start = 0, stop = length;
         response.headers.set('accept-ranges', 'bytes');
-        final range = request.headers.value('range');
         if (range != null) {
           final bounds = RegExp(
             r'^bytes=(\d{1,16})-(\d{0,16})$',
@@ -157,6 +151,7 @@ final class IsoServer {
   Future<void> close() => _closing ??= _close();
   Future<void> _close() async {
     _closed = true;
+    _dvdCache?.close();
     await Future.wait([
       if (_server != null) _server!.close(force: true),
       image.close(),

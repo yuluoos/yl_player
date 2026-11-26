@@ -142,8 +142,8 @@ _Title? _title(Uint8List b, int set, int title, int chapters) {
 final class _Vobs {
   _Vobs(this.files);
   final List<DiscFile> files;
-  Future<Uint8List> read(int first, int sectors) async {
-    var off = first * _sector, remaining = sectors * _sector;
+  Future<Uint8List> read(int first, int count, {bool readAhead = true}) async {
+    var off = first * _sector, remaining = count;
     final builder = BytesBuilder(copy: false);
     for (final file in files) {
       if (off >= file.length) {
@@ -151,7 +151,7 @@ final class _Vobs {
         continue;
       }
       final n = remaining.clamp(0, file.length - off);
-      builder.add(await file.read(off, n));
+      builder.add(await file.read(off, n, readAhead: readAhead));
       remaining -= n;
       if (remaining == 0) return builder.takeBytes();
       off = 0;
@@ -160,7 +160,9 @@ final class _Vobs {
   }
 
   Future<({int start, int end})> clock(int sector) async {
-    final nav = await read(sector, 1);
+    // Only the PCI prefix contains the clock. Sparse NAV packs in a feature
+    // can be megabytes apart, so fetching a metadata page per pack wastes I/O.
+    final nav = await read(sector, 65, readAhead: false);
     // PCI follows the 14-byte pack and system header. Its presentation
     // interval is expressed in the DVD 90 kHz clock.
     if (_u32(nav, 38) != 0x1bf ||
@@ -205,10 +207,10 @@ final class _Segment implements IsoSegment {
   final bool mpeg1;
   final int clockOffset;
   @override
-  Future<IsoPayload> openPayload() async {
+  Future<IsoPayload> openPayload({bool fullNetworkRead = false}) async {
     final mux = DvdTransport(audio, clockOffset, mpeg1: mpeg1);
-    for (var i = first; i < stop; i += 64) {
-      mux.addSectors(await vobs.read(i, (stop - i).clamp(1, 64)));
+    for (var i = first; i < stop; i += 256) {
+      mux.addSectors(await vobs.read(i, (stop - i).clamp(1, 256) * _sector));
     }
     return _Payload(mux.finish());
   }
@@ -294,10 +296,13 @@ Future<List<IsoSegment>> openDvdTitle(
       final first = units[index];
       starts.add(first);
       if (segments.length + starts.length > 100000) invalidDisc();
+      // Keep the first segment of each cell short. Later segments can cover
+      // more VOBUs within the same sector budget, reducing sparse NAV reads.
+      final maxUnits = starts.length == 1 ? 8 : 16;
       var next = index + 1;
       while (next < units.length &&
           units[next] <= cell.lastNav &&
-          next - index < 8 &&
+          next - index < maxUnits &&
           units[next] - first < 2048) {
         next++;
       }

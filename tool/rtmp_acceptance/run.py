@@ -275,8 +275,19 @@ async def main(command):
         config = logs / 'peer.yml'
         config.write_text('logLevel: info\nrtsp: false\nrtmp: true\nrtmpAddress: 127.0.0.1:19350\nhls: false\nwebrtc: false\nsrt: false\nmoq: false\napi: false\nmetrics: false\npprof: false\nplayback: false\npaths:\n  all_others:\n')
         peer = await spawn([str(PEER / 'mediamtx'), str(config)], 'peer.log')
-        await asyncio.sleep(1)
-        assert peer.returncode is None, 'peer start failed; no process will be killed by port'
+        # Wait for this pinned peer's own listener receipt. A process can be
+        # alive before bind completes, especially on its first macOS launch.
+        deadline = loop.time() + 15
+        with (logs / 'peer.log').open('rb') as startup:
+            while True:
+                if peer.returncode is not None:
+                    raise RuntimeError('owned RTMP peer exited during startup')
+                startup.seek(0)
+                if b'[RTMP] started with listener on 127.0.0.1:19350' in startup.read(65536):
+                    break
+                if loop.time() >= deadline:
+                    raise TimeoutError('owned RTMP peer listener did not start')
+                await asyncio.sleep(.05)
         for path, extra in [('owned', []), ('video', ['-an'])]:
             pub = await spawn(['/opt/homebrew/bin/ffmpeg', '-nostdin', '-hide_banner', '-loglevel', 'warning', '-re', '-stream_loop', '-1', '-i', str(fixture), '-c', 'copy', *extra, '-f', 'flv', 'rtmp://127.0.0.1:19350/live/' + path], path + '.log')
             await asyncio.sleep(1)

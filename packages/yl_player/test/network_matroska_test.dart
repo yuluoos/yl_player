@@ -618,6 +618,9 @@ void main() {
         expect(server.requests, hasLength(4096));
         reader.clear();
       },
+      // Exercise the request budget even on hosts that need more than the
+      // test runner's default 30 seconds for 4096 loopback round trips.
+      timeout: const Timeout(Duration(minutes: 2)),
     );
     test(
       'cancelling held later range keeps published catalog and disposes candidate',
