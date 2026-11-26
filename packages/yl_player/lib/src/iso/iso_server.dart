@@ -35,8 +35,9 @@ final class IsoServer {
       segments = await openMainTitle(volume, playlist: playlist);
     }
     final cache = _dvdCache = isDvd ? DvdSegmentCache() : null;
-    Future<IsoPayload> payload(int index) =>
-        cache?.get(index, segments[index]) ?? segments[index].openPayload();
+    Future<IsoPayload> payload(int index, {bool fullNetworkRead = false}) =>
+        cache?.get(index, segments[index]) ??
+        segments[index].openPayload(fullNetworkRead: fullNetworkRead);
 
     // Validate the first playable DVD segment and reuse it on the first GET.
     if (isDvd) await payload(0);
@@ -90,11 +91,19 @@ final class IsoServer {
           response.statusCode = 404;
           return;
         }
-        final media = isManifest ? null : await payload(index);
+        final range = request.headers.value('range');
+        final media = isManifest
+            ? null
+            : await payload(
+                index,
+                fullNetworkRead:
+                    image.isNetwork &&
+                    request.method == 'GET' &&
+                    (range == null || range == 'bytes=0-'),
+              );
         final length = media?.length ?? bytes.length;
         var start = 0, stop = length;
         response.headers.set('accept-ranges', 'bytes');
-        final range = request.headers.value('range');
         if (range != null) {
           final bounds = RegExp(
             r'^bytes=(\d{1,16})-(\d{0,16})$',

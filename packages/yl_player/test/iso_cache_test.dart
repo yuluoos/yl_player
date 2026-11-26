@@ -17,7 +17,7 @@ final class _Segment implements IsoSegment, IsoPayload {
   @override
   int get ticks => 45000;
   @override
-  Future<IsoPayload> openPayload() async {
+  Future<IsoPayload> openPayload({bool fullNetworkRead = false}) async {
     loads++;
     await pending?.future;
     return this;

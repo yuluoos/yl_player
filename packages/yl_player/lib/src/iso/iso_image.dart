@@ -23,6 +23,7 @@ final class IsoImage {
   Future<void> _fileQueue = Future.value();
   HttpClient? _client;
   int length = 0;
+  bool get isNetwork => _file == null;
   bool _closed = false;
   String? _validator;
   bool _usesEtag = false;

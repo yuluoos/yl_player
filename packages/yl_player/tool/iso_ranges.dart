@@ -9,10 +9,12 @@ import 'package:yl_player/src/iso/iso_server.dart';
 // source's request count, body bytes and elapsed wall time for each phase.
 Future<void> main(List<String> args) async {
   final secure = !args.contains('--http');
-  final inputs = args.where((a) => a != '--http');
+  final probe = args.where((a) => a.startsWith('--frame-probe=')).firstOrNull;
+  final probePath = probe?.substring('--frame-probe='.length);
+  final inputs = args.where((a) => a != '--http' && a != probe);
   if (inputs.isEmpty) {
     stderr.writeln(
-      'Usage: dart packages/yl_player/tool/iso_ranges.dart [--http] <movie.iso|fixture.gz.bin> ...',
+      'Usage: dart packages/yl_player/tool/iso_ranges.dart [--http] [--frame-probe=<executable>] <movie.iso|fixture.gz.bin> ...',
     );
     exitCode = 64;
     return;
@@ -27,7 +29,7 @@ Future<void> main(List<String> args) async {
         file = image;
       }
       for (var trial = 1; trial <= 3; trial++) {
-        await measure(file, path, trial, secure);
+        await measure(file, path, trial, secure, probePath);
       }
     }
   } finally {
@@ -35,7 +37,13 @@ Future<void> main(List<String> args) async {
   }
 }
 
-Future<void> measure(File file, String label, int trial, bool secure) async {
+Future<void> measure(
+  File file,
+  String label,
+  int trial,
+  bool secure,
+  String? probePath,
+) async {
   const certs = 'packages/yl_player/test/fixtures/drm_tls';
   final origin = secure
       ? await HttpServer.bindSecure(
@@ -99,6 +107,34 @@ Future<void> measure(File file, String label, int trial, bool secure) async {
   try {
     await HttpOverrides.runZoned(iso.open, createHttpClient: (_) => upstream);
     final open = sample();
+    if (probePath != null) {
+      final probe = await Process.start(probePath, [iso.uri.toString()]);
+      final errors = probe.stderr.transform(utf8.decoder).join();
+      final phases = <Map<String, num>>[];
+      await for (final line
+          in probe.stdout
+              .transform(utf8.decoder)
+              .transform(const LineSplitter())) {
+        phases.add({...sample(), 'frameMs': int.parse(line)});
+      }
+      if (await probe.exitCode != 0 || phases.length != 5) {
+        throw StateError('Frame probe failed: ${await errors}');
+      }
+      stdout.writeln(
+        jsonEncode({
+          'image': label,
+          'scheme': uri.scheme,
+          'trial': trial,
+          'open': open,
+          'firstFrame': phases[0],
+          'coldSeek': phases[1],
+          'returnSeek': phases[2],
+          'repeatSeek': phases[3],
+          'finalReturn': phases[4],
+        }),
+      );
+      return;
+    }
     final manifest = utf8.decode(await fetch(iso.uri));
     final segments = const LineSplitter()
         .convert(manifest)
@@ -108,7 +144,11 @@ Future<void> measure(File file, String label, int trial, bool secure) async {
         b = iso.uri.resolve(segments.last);
     await fetch(a);
     final firstSegment = sample();
+    requests = 0;
+    bytes = 0;
+    watch.reset();
     await fetch(b);
+    final coldSegment = sample();
     requests = 0;
     bytes = 0;
     watch.reset();
@@ -123,13 +163,21 @@ Future<void> measure(File file, String label, int trial, bool secure) async {
         'segments': segments.length,
         'open': open,
         'firstSegment': firstSegment,
+        'coldSegment': coldSegment,
         'revisits': sample(),
       }),
     );
   } finally {
     local.close(force: true);
+    // AVPlayer can exit while its final HLS segment is being served. Let
+    // outstanding origin responses drain before disposing the ISO session.
+    upstream.close();
+    final drain = Stopwatch()..start();
+    while (origin.connectionsInfo().total != 0 &&
+        drain.elapsed < const Duration(seconds: 20)) {
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+    }
     await iso.close();
-    upstream.close(force: true);
     await origin.close(force: true);
   }
 }

@@ -5,7 +5,10 @@ import 'dart:typed_data';
 abstract interface class IsoSegment {
   int get ticks;
   bool get discontinuity;
-  Future<IsoPayload> openPayload();
+
+  /// A full network GET can start reading its body while preparing headers.
+  /// Leave the hint off for HEAD and partial requests.
+  Future<IsoPayload> openPayload({bool fullNetworkRead = false});
 }
 
 abstract interface class IsoPayload {

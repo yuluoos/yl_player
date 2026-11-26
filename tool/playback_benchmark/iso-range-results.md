@@ -33,3 +33,34 @@ dart packages/yl_player/tool/iso_ranges.dart \
   packages/yl_player/example/assets/test_media/dvd_titles.iso.gz.bin \
   packages/yl_player/example/assets/test_media/bluray_colors.iso.gz.bin
 ```
+
+## First seek into an unread Blu-ray clip
+
+We compared against `9a244f83` on arm64 macOS 27.2. Each trial opened a fresh ISO session and AVPlayer, waited for the initial video frame, then sought with zero tolerance to three seconds before the end. The timer stopped when AVPlayerItemVideoOutput returned a pixel buffer with a display timestamp at the target (within 50 ms before to 2 s after). The loopback origin added 50 ms per Range and did not throttle bandwidth. We alternated the order of the two AOT builds.
+
+The long image is the same 30-minute, 30-clip title used above. The higher-bitrate image contains 96 seconds of synthetic 1280×720 H.264 motion at 24 fps, a 12 Mbps target with a one-second GOP, and 192 kbps AC-3. It was authored with tsMuxer using a 24-second clip split. The first far seek lands inside the last M2TS clip on both images.
+
+Values are medians. Range counts and bytes cover the interval from the first video frame to the first far-seek frame. The startup column includes opening the ISO and launching the native process.
+
+| Image / origin | Fresh sessions per build | Cold seek to frame (ms) | Origin requests during cold seek | Open to first frame (ms) |
+| --- | ---: | ---: | ---: | ---: |
+| 30 min, HTTP | 6 | 459.5 → 402.5 | 5 → 5 | 1,239 → 1,303 |
+| 30 min, HTTPS | 6 | 498.5 → 457 | 5 → 5 | 1,612 → 1,462 |
+| 12 Mbps, HTTP | 5 | 4,849 → 3,205 | 69 → 58 | 1,089 → 1,211 |
+| 12 Mbps, HTTPS | 5 | 5,451 → 3,792 | 69 → 58 | 1,590 → 1,703 |
+
+The short-segment rows were collected after the other verification jobs finished. Those seeks requested exactly 520,704 origin bytes in both versions. A separate eight-pair run during concurrent verification was noisy. HTTP cold-seek medians were 518 → 1,073 ms and HTTPS medians were 573.5 → 445 ms. The smaller gain is sensitive to scheduling on this host.
+
+For a fixed full GET of the last segment on the 12 Mbps image, three fresh HTTPS sessions consistently requested 1,666,368 origin bytes. The request count fell from 6 to 4, and median time to receive the complete segment fell from 488 to 202 ms. During the native seek, the high-bitrate HTTP median requested body bytes increased from 26,286,336 to 34,603,008 and HTTPS from 26,589,120 to 34,603,008. These counters include extra HLS buffering around the seek by the native client.
+
+Across both builds the HLS manifest required exactly 12 origin requests / 658,433 bytes for the long image and 8 requests / 396,289 bytes for the 12 Mbps image. On the latter, AVPlayer sometimes buffered a different number of segments before displaying the target frame. The measurements include this variability. The cold last segment and both complete FFmpeg elementary stream SHA-256 hashes matched for each image.
+
+The virtual HLS server can read an unseen clip's PAT/PMT and the target segment's first media block concurrently on a complete network GET. The first media read is capped at 384 KiB. For a segment starting inside a clip, subsequent reads of its body can cover up to 768 KiB each, bounded by the requested segment. A short segment needs only the overlap. A large segment saves additional round trips. HEAD and bounded byte-range requests retain their on-demand reads.
+
+To repeat the native measurement, compile the probe and pass its path to the existing Range benchmark. Run once with the default HTTPS origin and once with `--http`. The driver emits three fresh sessions per invocation. `frameMs` is measured inside AVPlayer. The outer `ms`, request count, and requested body bytes are cumulative from ISO open. Subtract the `firstFrame` counters from the `coldSeek` counters for the cold-seek interval, which can include outstanding AVPlayer buffering.
+
+```sh
+xcrun swiftc tool/playback_benchmark/iso_seek_frames.swift -o /tmp/yl-iso-seek-frames
+dart packages/yl_player/tool/iso_ranges.dart \
+  --frame-probe=/tmp/yl-iso-seek-frames /path/to/multi-clip.iso
+```

@@ -207,7 +207,7 @@ final class _Segment implements IsoSegment {
   final bool mpeg1;
   final int clockOffset;
   @override
-  Future<IsoPayload> openPayload() async {
+  Future<IsoPayload> openPayload({bool fullNetworkRead = false}) async {
     final mux = DvdTransport(audio, clockOffset, mpeg1: mpeg1);
     for (var i = first; i < stop; i += 256) {
       mux.addSectors(await vobs.read(i, (stop - i).clamp(1, 256) * _sector));

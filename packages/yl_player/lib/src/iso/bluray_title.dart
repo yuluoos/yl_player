@@ -26,6 +26,10 @@ final class _Clip {
   }
 }
 
+const _packetsPerRead = 2048;
+// After delivering the first block, amortize origin latency on large segments.
+const _networkPacketsPerRead = 4096;
+
 final class _DiscSegment implements IsoSegment {
   _DiscSegment(this.clip, this.first, this.end, this.ticks, this.discontinuity);
   final _Clip clip;
@@ -35,17 +39,49 @@ final class _DiscSegment implements IsoSegment {
   @override
   final bool discontinuity;
   @override
-  Future<IsoPayload> openPayload() async {
+  Future<IsoPayload> openPayload({bool fullNetworkRead = false}) async {
+    if (fullNetworkRead && first != 0 && clip._tables == null) {
+      // The segment offset is known before the clip's PAT/PMT is available.
+      // Observe both futures even if the origin rejects one of the reads.
+      final count = (end - first).clamp(1, _packetsPerRead);
+      final blocks = await Future.wait([
+        clip.tables(),
+        clip.file.read(first * 192, count * 192),
+      ]);
+      return _ClipPayload(
+        clip,
+        first,
+        end,
+        blocks[0],
+        fullNetworkRead: true,
+        firstBlock: blocks[1],
+      );
+    }
     final tables = first == 0 ? Uint8List(0) : await clip.tables();
-    return _ClipPayload(clip, first, end, tables);
+    return _ClipPayload(
+      clip,
+      first,
+      end,
+      tables,
+      fullNetworkRead: fullNetworkRead,
+    );
   }
 }
 
 final class _ClipPayload implements IsoPayload {
-  _ClipPayload(this.clip, this.first, this.end, this.tables);
+  _ClipPayload(
+    this.clip,
+    this.first,
+    this.end,
+    this.tables, {
+    required this.fullNetworkRead,
+    this.firstBlock,
+  });
   final _Clip clip;
   final int first, end;
   final Uint8List tables;
+  final Uint8List? firstBlock;
+  final bool fullNetworkRead;
   @override
   int get length => tables.length + (end - first) * 188;
 
@@ -66,8 +102,13 @@ final class _ClipPayload implements IsoPayload {
     var validateClip = first == 0;
     while (at < limit) {
       final packet = at ~/ 188;
-      final n = ((limit + 187) ~/ 188 - packet).clamp(1, 2048);
-      final raw = await clip.file.read((first + packet) * 192, n * 192);
+      final blockPackets = fullNetworkRead && first != 0 && packet > 0
+          ? _networkPacketsPerRead
+          : _packetsPerRead;
+      final n = ((limit + 187) ~/ 188 - packet).clamp(1, blockPackets);
+      final raw = packet == 0 && firstBlock != null
+          ? firstBlock!
+          : await clip.file.read((first + packet) * 192, n * 192);
       if (validateClip) {
         // Packet zero already carries the tables. Use the bytes from this
         // GET when jumping to a new clip instead of a separate HTTP round trip.
