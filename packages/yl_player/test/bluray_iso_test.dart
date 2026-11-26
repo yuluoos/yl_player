@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/src/iso/iso_image.dart';
 import 'package:yl_player/src/iso/iso_input.dart';
 import 'package:yl_player/src/iso/iso_server.dart';
+import 'package:yl_player/src/iso/udf.dart';
 import 'package:yl_player/yl_player.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
@@ -177,6 +178,8 @@ void main() {
           () => dvd ? remote.open(dvdTitle: 2) : remote.open(playlist: 0),
           createHttpClient: (_) => upstream,
         );
+        // The cold path used to issue 14 DVD or 11 Blu-ray requests here.
+        expect(ranges.length, lessThanOrEqualTo(dvd ? 10 : 8));
         final manifest = utf8.decode(await fetch(direct, local.uri));
         expect(utf8.decode(await fetch(direct, remote.uri)), manifest);
         expect('#EXT-X-DISCONTINUITY'.allMatches(manifest).length, dvd ? 1 : 2);
@@ -201,6 +204,18 @@ void main() {
           );
         }
         if (dvd) {
+          final before = ranges.length;
+          for (final index in [0, segments.length - 1, 0]) {
+            final uri = remote.uri.resolve(segments[index]);
+            final head = await (await direct.headUrl(uri)).close();
+            expect(head.contentLength, dvdBytes[index].length);
+            await head.drain<void>();
+            expect(
+              await fetch(direct, uri, range: 'bytes=187-377'),
+              dvdBytes[index].sublist(187, 378),
+            );
+          }
+          expect(ranges.length, before);
           // FFmpeg stream-copy of the authored VOB cells in title order.
           expect(_elementarySignature(dvdBytes, 256), (88536, 0x617c977a));
           expect(_elementarySignature(dvdBytes, 257), (336384, 0xf9b89104));
@@ -210,6 +225,49 @@ void main() {
       },
     );
   }
+  test(
+    'Blu-ray accepts program tables beyond the short startup probe',
+    () async {
+      final bytes = Uint8List.fromList(
+        gzip.decode(
+          await File(
+            fixture('example/assets/test_media/bluray_colors.iso.gz.bin'),
+          ).readAsBytes(),
+        ),
+      );
+      var offset = 0;
+      final volume = await UdfVolume.open((
+        int at,
+        int length, {
+        bool readAhead = true,
+      }) async {
+        offset = at;
+        return Uint8List.sublistView(bytes, at, at + length);
+      }, bytes.length);
+      final root = await volume.directory(volume.root);
+      final bd = await volume.directory(await volume.child(root, 'BDMV'));
+      final streams = await volume.directory(await volume.child(bd, 'STREAM'));
+      final clip = await volume.child(streams, '00000.M2TS');
+      const prefixSize = 16 * 192;
+      final prefix = Uint8List.fromList(await clip.read(0, prefixSize));
+      // Move the original PAT/PMT and replace their first packets with null TS.
+      bytes.setRange(offset + prefixSize, offset + 2 * prefixSize, prefix);
+      for (var i = offset + 4; i < offset + prefixSize; i += 192) {
+        bytes.setAll(i, [0x47, 0x1f, 0xff, 0x10]);
+      }
+      final tmp = await Directory.systemTemp.createTemp('bd-program-tables-');
+      addTearDown(() => tmp.delete(recursive: true));
+      final file = await File('${tmp.path}/movie.iso').writeAsBytes(bytes);
+      final server = IsoServer(IsoImage.file(file.path));
+      addTearDown(server.close);
+      await server.open();
+      final client = HttpClient();
+      addTearDown(() => client.close(force: true));
+      final segment = await fetch(client, server.uri.resolve('1.ts'));
+      // A segment starting mid-clip has the recovered PAT as its first packet.
+      expect(segment.sublist(0, 3), [0x47, 0x40, 0]);
+    },
+  );
   test(
     'DVD title 1 selects only the short title and missing titles fail',
     () async {

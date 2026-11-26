@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
-typedef ReadBytes = Future<Uint8List> Function(int offset, int count);
+typedef ReadBytes =
+    Future<Uint8List> Function(int offset, int count, {bool readAhead});
 typedef _Extent = ({int offset, int length});
 typedef UdfAddress = ({int partition, int block});
 
@@ -36,10 +37,10 @@ final class DiscFile {
     if (count != 0) invalidDisc();
   }
 
-  Future<Uint8List> read(int offset, int count) async {
+  Future<Uint8List> read(int offset, int count, {bool readAhead = true}) async {
     final bytes = BytesBuilder(copy: false);
     for (final span in _ranges(offset, count)) {
-      bytes.add(await _read(span.offset, span.length));
+      bytes.add(await _read(span.offset, span.length, readAhead: readAhead));
     }
     return bytes.takeBytes();
   }
@@ -141,7 +142,8 @@ final class UdfVolume {
       if (size > end - at) invalidDisc();
       final data = Uint8List.sublistView(b, at, at + size);
       return DiscFile._(
-        (i, n) async => Uint8List.sublistView(data, i, i + n),
+        (i, n, {bool readAhead = true}) async =>
+            Uint8List.sublistView(data, i, i + n),
         size,
         [(offset: 0, length: size)],
       );
@@ -172,7 +174,20 @@ final class UdfVolume {
       }
       if (encoded >> 30 != 0) invalidDisc();
       final partition = _maps[target.partition] ?? invalidDisc();
-      spans.addAll(partition._ranges(target.block * _block, len));
+      // UDF can describe adjacent physical bytes with separate allocation
+      // descriptors. Keep a contiguous media read to one upstream Range.
+      for (final span in partition._ranges(target.block * _block, len)) {
+        if (spans.isNotEmpty &&
+            spans.last.offset + spans.last.length == span.offset) {
+          final previous = spans.removeLast();
+          spans.add((
+            offset: previous.offset,
+            length: previous.length + span.length,
+          ));
+        } else {
+          spans.add(span);
+        }
+      }
       allocated += len;
     }
     if (allocated < size) invalidDisc();
