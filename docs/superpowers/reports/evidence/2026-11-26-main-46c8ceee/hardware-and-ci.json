@@ -1,0 +1,101 @@
+{
+  "candidateCommit": "46c8ceeee3ae77290da6c3576681a646d9048496",
+  "productSourceSHA256": "c3525355c3d7c359e7ef24225c9069183dd34a8fdc9bcd903b3b4a6aa2942213",
+  "remoteCI": {
+    "url": "https://github.com/yuluoos/yl_player/actions/runs/45769937010",
+    "event": "push",
+    "conclusion": "success",
+    "jobs": {
+      "changes": "success",
+      "ios-integration": "success",
+      "foundation": "success",
+      "android-unit": "success",
+      "android-consumer": "success",
+      "apple-unit (ios)": "success",
+      "apple-consumers": "success",
+      "ffmpeg-reproducibility": "success",
+      "apple-unit (macos)": "success",
+      "android-integration (36)": "success",
+      "android-integration (24)": "success",
+      "android-api24-physical": "skipped",
+      "macos-integration": "success",
+      "ios-physical": "skipped",
+      "quick-aggregate": "success",
+      "release-gates": "skipped"
+    }
+  },
+  "localIOS": {
+    "device": "iPhone 16",
+    "osVersion": "27.2",
+    "flutterVersion": "3.44.0",
+    "strictHardwareCommitted": true,
+    "native": {
+      "status": "runner_launch_failed",
+      "required": 34,
+      "passed": 0,
+      "xctestRunnerExitCode": 74,
+      "failureStage": "before establishing the XCTest connection"
+    },
+    "flutter": {
+      "apple_default_positive_test": {
+        "passed": 7,
+        "cases": [
+          "local H264 AAC MKV uses native fallback and renders a frame",
+          "local MKV exposes and switches both AAC tracks",
+          "HTTP range MKV uses the native fallback",
+          "HTTP range MKV restores real-time playback after sustained 3x",
+          "HTTP range MKV completes a long video tail after audio ends",
+          "HTTP 200 sequential MKV rejects seek without losing playback",
+          "HTTP-FLV plays live and reconnects after a dropped socket"
+        ]
+      },
+      "apple_strict_policy_test": {
+        "passed": 15,
+        "cases": [
+          "managed mkv retries exactly once then positively plays",
+          "managed flv retries exactly once then positively plays",
+          "managed cross-origin redirect strips credentials and preserves ordinary headers",
+          "owned mp4 enforces strict policies during playback",
+          "owned mov enforces strict policies during playback",
+          "owned avi enforces strict policies during playback",
+          "owned mpegTs enforces strict policies during playback",
+          "owned mpegPs enforces strict policies during playback",
+          "unsupported HLS policies and bounded DASH reject before I/O or replacement",
+          "bounded mkv positively plays and never exceeds assigned ledger limits",
+          "bounded flv positively plays and never exceeds assigned ledger limits",
+          "old playback stays authoritative while candidate fails",
+          "old playback stays authoritative while candidate is cancelled",
+          "public controller retains ready while actual native callback acknowledgement is held",
+          "hardwareRequired commits proven hardware or rejects decoder unavailable"
+        ]
+      },
+      "state_update_cadence_test": {
+        "passed": 1,
+        "cases": [
+          "250 ms updates keep their measured cadence and replacement session fence"
+        ]
+      }
+    },
+    "additionalDVDISORegression": {
+      "fixture": "dvd_titles.iso.gz.bin",
+      "cases": [
+        "DVD ISO local file plays across clips and seeks",
+        "DVD ISO HTTP ranges plays across clips and seeks"
+      ],
+      "passed": 0,
+      "failed": 2,
+      "errorCode": "avplayer.-11833",
+      "avFoundationCode": "AVErrorDecoderNotFound"
+    },
+    "priorBuildControl": {
+      "baseline": "1459a89054e6db225f656df8d74a2eba0b46e769",
+      "passed": 0,
+      "xctestRunnerExitCode": 74
+    }
+  },
+  "androidApi24Physical": {
+    "requiredCases": 9,
+    "status": "not_run"
+  },
+  "repositoryRunnerCount": 0
+}

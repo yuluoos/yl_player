@@ -1,0 +1,54 @@
+{
+  "candidateMain": "46c8ceeee3ae77290da6c3576681a646d9048496",
+  "scope": "Local trial merge of two ISO performance changes with the candidate main commit.",
+  "conflictCount": 0,
+  "tests": {
+    "targeted": {
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0
+    },
+    "playerPackageFromRoot": {
+      "passed": 1724,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "targetedAnalysis": "No issues found!",
+  "trialIntegration": {
+    "macos-dvd_iso_test": {
+      "cases": {
+        "DVD ISO local file plays across clips and seeks": "success",
+        "DVD ISO HTTP ranges plays across clips and seeks": "success"
+      }
+    },
+    "macos-bluray_iso_test": {
+      "cases": {
+        "Blu-ray ISO local file plays across clips and seeks": "success",
+        "Blu-ray ISO HTTP ranges plays across clips and seeks": "success"
+      }
+    },
+    "iphone-dvd_iso_test": {
+      "cases": {
+        "DVD ISO local file plays across clips and seeks": "error",
+        "DVD ISO HTTP ranges plays across clips and seeks": "error"
+      },
+      "errorCode": "avplayer.-11833"
+    },
+    "iphone-bluray_iso_test": {
+      "cases": {
+        "Blu-ray ISO local file plays across clips and seeks": "success",
+        "Blu-ray ISO HTTP ranges plays across clips and seeks": "success"
+      }
+    }
+  },
+  "mainComparison": {
+    "iphone-dvd": {
+      "cases": {
+        "DVD ISO local file plays across clips and seeks": "error",
+        "DVD ISO HTTP ranges plays across clips and seeks": "error"
+      },
+      "errorCode": "avplayer.-11833"
+    }
+  }
+}
