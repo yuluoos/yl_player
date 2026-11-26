@@ -81,6 +81,7 @@ def main():
     parser.add_argument('--simulator', required=True)
     parser.add_argument('--test', required=True)
     parser.add_argument('--evidence', type=Path, required=True)
+    parser.add_argument('--ci-partition', action='store_true')
     args = parser.parse_args()
     example = Path(__file__).resolve().parents[1] / 'packages/yl_player/example'
     target = (example / args.test).resolve(strict=True)
@@ -101,12 +102,23 @@ def main():
     # Preserve the executed test names, including failures, in the driver data.
     with tempfile.TemporaryDirectory(prefix='yl-ios-ci-', dir=example / '.dart_tool') as directory:
         entry = Path(directory) / 'entry.dart'
+        registration_import = ''
+        registration_setup = ''
+        if args.ci_partition:
+            from ci_playback_shards import MANIFEST, flutter_cases, verify_cases
+            physical = json.loads(MANIFEST.read_text())['ios'][target.stem]['physical']
+            registration = target.parent / 'support/ci_playback_registration.dart'
+            registration_import = f"import '{registration.as_uri()}' as registration;"
+            case_literals = ', '.join(json.dumps(name, ensure_ascii=False).replace('$', r'\$')
+                                      for name in physical)
+            registration_setup = f'registration.physicalOnlyCases = <String>{{{case_literals}}};'
         entry.write_text("""import 'dart:async';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart' show setUp, tearDown;
 import 'package:test_api/scaffolding.dart' show Timeout;
 import 'package:integration_test/integration_test.dart';
 import '__YL_TEST_URI__' as suite;
+__YL_REGISTRATION_IMPORT__
 
 // iOS can enable platform semantics after a test records its leak baseline.
 // SemanticsBinding owns exactly one handle while platform semantics is enabled.
@@ -152,14 +164,30 @@ void main() {
       'ciSemantics': binding.semanticsObservations,
       'ciCases': binding.results.map((name, result) => MapEntry(name, result.toString()))};
   }));
+  __YL_REGISTRATION_SETUP__
   suite.main();
 }
-""".replace('__YL_TEST_URI__', target.as_uri()))
+""".replace('__YL_TEST_URI__', target.as_uri()).replace('__YL_REGISTRATION_IMPORT__', registration_import)
+           .replace('__YL_REGISTRATION_SETUP__', registration_setup))
         driver = Path(directory) / 'driver.dart'
         driver.write_text("import 'package:integration_test/integration_test_driver.dart';\n"
                           "Future<void> main() => integrationDriver(writeResponseOnFailure: true);\n")
-        run(['flutter', 'build', 'ios', '--no-pub', '--simulator', '--debug', '--target', str(entry)], timeout=600)
-        run(['xcrun', 'simctl', 'install', args.simulator, 'build/ios/iphonesimulator/Runner.app'])
+        build = ['flutter', 'build', 'ios', '--no-pub', '--simulator', '--debug', '--target', str(entry)]
+        if args.ci_partition:
+            build.append('--config-only')
+        run(build, timeout=600)
+        app = example / 'build/ios/iphonesimulator/Runner.app'
+        if args.ci_partition:
+            # Compile for the verified Simulator destination. A generic build
+            # can request both arm64 and x86_64 even on an arm64-only runner.
+            derived = example / 'build/native-ios-simulator'
+            run(['xcodebuild', 'build', '-quiet', '-workspace', 'ios/Runner.xcworkspace',
+                 '-scheme', 'Runner', '-configuration', 'Debug', '-sdk', 'iphonesimulator',
+                 '-destination', 'platform=iOS Simulator,id=' + args.simulator,
+                 '-derivedDataPath', str(derived), 'CODE_SIGNING_ALLOWED=NO',
+                 'ONLY_ACTIVE_ARCH=YES'], timeout=600)
+            app = derived / 'Build/Products/Debug-iphonesimulator/Runner.app'
+        run(['xcrun', 'simctl', 'install', args.simulator, str(app)])
         try:
             pid = launch_test_app(run, args.simulator, bundle, evidence / 'launch.log')
             deadline = time.monotonic() + 60
@@ -186,6 +214,9 @@ void main() {
             if driven.returncode:
                 raise SystemExit(driven.returncode)
             validate_results(receipt)
+            if args.ci_partition:
+                verify_cases(flutter_cases('ios', target.stem, 'simulator'),
+                             json.loads(receipt.read_text())['ciCases'])
         finally:
             terminate_after_test(run, args.simulator, bundle)
 

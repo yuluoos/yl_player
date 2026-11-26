@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
+import 'support/ci_playback_registration.dart';
 import 'support/apple_strict_support.dart';
 import 'support/apple_callback_probe.dart';
 import 'support/range_media_server.dart';

@@ -275,11 +275,32 @@ def run_suites(suites):
     report_dir = Path(tempfile.mkdtemp(prefix='yl-android-suites.', dir=os.environ.get('YL_ANDROID_REPORT_ROOT')))
     print(f'Android suite reports: {report_dir}', flush=True)
     result = 0
+    partition = os.environ.get('YL_ANDROID_TEST_TARGET')
+    if partition:
+        from ci_playback_shards import MANIFEST, flutter_cases, name_filter, verify_cases, verify_flutter_report
+        if partition not in ('simulator', 'physical'):
+            raise ValueError('Unknown Android test target')
+        verify_cases(json.loads(MANIFEST.read_text())['android24'], [Path(s).stem for s in suites])
     for suite in suites:
         report = report_dir / (Path(suite).stem + '.jsonl')
-        runner = Runner(suite, ['--file-reporter', 'json:' + str(report)])
+        extra = ['--file-reporter', 'json:' + str(report)]
+        if partition:
+            cases = flutter_cases('android24', Path(suite).stem, partition)
+            if not cases:
+                continue
+            if partition == 'simulator':
+                extra.extend(['--name', name_filter(cases)])
+            else:
+                # Run the complement. Newly added API 24 tests then appear in
+                # the actual receipt and require classification in the manifest.
+                simulator_only = json.loads(MANIFEST.read_text())['android24'][Path(suite).stem]['simulator']
+                if simulator_only:
+                    extra.extend(['--name', name_filter(simulator_only, exclude=True)])
+        runner = Runner(suite, extra)
         status = runner.run()
         print(f'Android suite {suite}: exit {status}', flush=True)
+        if partition and not status:
+            verify_flutter_report(report, cases)
         if status:
             diagnostics = runner.log.with_name(runner.log.name + '.failure-logcat')
             if diagnostics.is_file():

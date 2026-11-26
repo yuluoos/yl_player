@@ -1,0 +1,137 @@
+{
+  "iosNativePhysical": [
+    "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+    "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+    "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+    "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+    "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+    "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+    "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+    "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+    "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+    "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+    "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+    "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+    "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+    "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+    "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+    "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+    "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+    "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+    "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+    "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+    "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+    "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+    "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+    "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+    "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+    "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+    "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+    "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+    "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+    "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+    "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+    "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+    "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+    "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()"
+  ],
+  "ios": {
+    "apple_default_positive_test": {
+      "simulator": [
+        "failed network MKV candidate preserves current HLS"
+      ],
+      "physical": [
+        "local H264 AAC MKV uses native fallback and renders a frame",
+        "local MKV exposes and switches both AAC tracks",
+        "HTTP range MKV uses the native fallback",
+        "HTTP range MKV restores real-time playback after sustained 3x",
+        "HTTP range MKV completes a long video tail after audio ends",
+        "HTTP 200 sequential MKV rejects seek without losing playback",
+        "HTTP-FLV plays live and reconnects after a dropped socket"
+      ]
+    },
+    "apple_strict_policy_test": {
+      "simulator": [
+        "HLS credentials reach same-origin children",
+        "HLS credentials stay stripped after crossing origins",
+        "HLS credentials stay stripped on returned-primary segment",
+        "managed header deadline rejects with exact zero retry request count",
+        "iOS public two-player audio lifecycle appManaged",
+        "iOS public two-player audio lifecycle pluginManagedMediaPlayback"
+      ],
+      "physical": [
+        "managed mkv retries exactly once then positively plays",
+        "managed flv retries exactly once then positively plays",
+        "managed cross-origin redirect strips credentials and preserves ordinary headers",
+        "owned mp4 enforces strict policies during playback",
+        "owned mov enforces strict policies during playback",
+        "owned avi enforces strict policies during playback",
+        "owned mpegTs enforces strict policies during playback",
+        "owned mpegPs enforces strict policies during playback",
+        "unsupported HLS policies and bounded DASH reject before I/O or replacement",
+        "bounded mkv positively plays and never exceeds assigned ledger limits",
+        "bounded flv positively plays and never exceeds assigned ledger limits",
+        "old playback stays authoritative while candidate fails",
+        "old playback stays authoritative while candidate is cancelled",
+        "public controller retains ready while actual native callback acknowledgement is held"
+      ],
+      "both": [
+        "hardwareRequired commits proven hardware or rejects decoder unavailable"
+      ]
+    },
+    "hls_playback_test": {
+      "simulator": [
+        "opens HLS and produces a native texture first frame",
+        "rejecting a fallback source does not tear down current HLS"
+      ],
+      "physical": []
+    },
+    "state_update_cadence_test": {
+      "simulator": [
+        "iOS HLS: 250 ms updates keep their measured cadence and replacement session fence"
+      ],
+      "physical": [
+        "250 ms updates keep their measured cadence and replacement session fence"
+      ]
+    }
+  },
+  "android24": {
+    "android_hls_playback_test": {
+      "simulator": [],
+      "physical": [
+        "HLS credentials reach same-origin children",
+        "HLS credentials stay stripped after crossing origins",
+        "HLS credentials stay stripped on returned-primary segment"
+      ]
+    },
+    "android_multi_player_rollback_test": {
+      "simulator": [],
+      "physical": [
+        "A failed candidate on a second Player restores previous playback"
+      ]
+    },
+    "android_progressive_playback_test": {
+      "simulator": [
+        "Audio-only strict Ready is independent of First Frame and native background suspends",
+        "API24 strict video rejects name-only hardware evidence before public commit"
+      ],
+      "physical": [
+        "Android progressive Ready, immediate Play, frame, seek and reload"
+      ]
+    },
+    "android_session_replacement_test": {
+      "simulator": [],
+      "physical": [
+        "Newer Load cancels strict inspection before decoder evidence; stale sessions reject",
+        "Decoded private candidate frame is suppressed until authoritative public output",
+        "Actual native callbacks wait for delayed acknowledgement across methods"
+      ]
+    },
+    "state_update_cadence_test": {
+      "simulator": [],
+      "physical": [
+        "250 ms updates keep their measured cadence and replacement session fence"
+      ]
+    }
+  }
+}

@@ -185,6 +185,18 @@ class PlayerV2GateTest(unittest.TestCase):
         self.assertIn("Required ffmpeg-reproducibility result was skipped", result.stdout)
         self.assertNotIn("AGGREGATE_PASS", result.stdout)
 
+    def test_full_release_requires_both_physical_shards(self):
+        jobs = ('FOUNDATION', 'ANDROID_UNIT', 'ANDROID_INTEGRATION', 'IOS', 'MACOS',
+                'ANDROID_CONSUMER', 'APPLE_CONSUMERS', 'REPRODUCIBILITY',
+                'ANDROID_HARDWARE', 'IOS_HARDWARE')
+        env = {'YL_RESULT_' + name: 'success' for name in jobs}
+        self.assertEqual(run_gate('--aggregate-full', **env).returncode, 0)
+        for name in ('ANDROID_HARDWARE', 'IOS_HARDWARE'):
+            for outcome in ('', 'skipped', 'failure', 'cancelled'):
+                with self.subTest(name=name, outcome=outcome):
+                    self.assertNotEqual(run_gate('--aggregate-full', **{
+                        **env, 'YL_RESULT_' + name: outcome}).returncode, 0)
+
     def test_quick_aggregation_requires_every_selected_apple_stage(self) -> None:
         result = run_gate(
             "--aggregate-quick",
