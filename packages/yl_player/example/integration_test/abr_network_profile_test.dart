@@ -24,7 +24,9 @@ void main() {
         'profileHash': const String.fromEnvironment('YL_ABR_PROFILE_SHA256'),
         'mediaHash': const String.fromEnvironment('YL_ABR_MEDIA_SHA256'),
       });
-      const readTimeoutMs = int.fromEnvironment('YL_ABR_MANAGED_READ_TIMEOUT_MS');
+      const readTimeoutMs = int.fromEnvironment(
+        'YL_ABR_MANAGED_READ_TIMEOUT_MS',
+      );
       const expectSustainedStall = bool.fromEnvironment(
         'YL_ABR_EXPECT_SUSTAINED_STALL',
       );

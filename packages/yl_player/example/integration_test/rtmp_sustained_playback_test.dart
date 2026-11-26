@@ -10,35 +10,37 @@ import 'support/apple_strict_support.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('owned RTMP advances for ten minutes on one connection', (
-    tester,
-  ) async {
-    final player = await appleController(tester);
-    final before = await rtmp.control('normal');
-    expect(before['active'], 0);
-    final session = await rtmp.render(player);
-    var lastPosition = player.state.timeline.position;
-    final clock = Stopwatch()..start();
-    while (clock.elapsed < const Duration(minutes: 10)) {
-      await Future<void>.delayed(const Duration(seconds: 5));
-      final state = player.state;
-      expect(state.sessionId, session.id);
-      expect(state.failure, isNull);
-      expect(state.timeline.position, greaterThan(lastPosition));
-      lastPosition = state.timeline.position;
-      debugPrint(
-        'YL_FOLLOWUP_SOAK=${jsonEncode({'elapsedMs': clock.elapsedMilliseconds, 'positionMs': lastPosition.inMilliseconds, 'status': state.status.name, 'rebufferCount': state.metrics.rebufferCount, 'sessionId': session.id.value})}',
-      );
-    }
-    debugPrint('YL_FOLLOWUP_STOP=issued');
-    await player.stop();
-    await stateWhere(player, (s) => s.status == YlPlaybackStatus.idle);
-    expect(player.state.sessionId, isNull);
-    debugPrint('YL_FOLLOWUP_STOP=idle');
-    final peer = await _closedPeer();
-    expect(peer['accepted'], (before['accepted'] as int) + 1);
-    expect(peer['closed'], (before['closed'] as int) + 1);
-  }, timeout: const Timeout(Duration(minutes: 13)));
+  testWidgets(
+    'owned RTMP advances for ten minutes on one connection',
+    (tester) async {
+      final player = await appleController(tester);
+      final before = await rtmp.control('normal');
+      expect(before['active'], 0);
+      final session = await rtmp.render(player);
+      var lastPosition = player.state.timeline.position;
+      final clock = Stopwatch()..start();
+      while (clock.elapsed < const Duration(minutes: 10)) {
+        await Future<void>.delayed(const Duration(seconds: 5));
+        final state = player.state;
+        expect(state.sessionId, session.id);
+        expect(state.failure, isNull);
+        expect(state.timeline.position, greaterThan(lastPosition));
+        lastPosition = state.timeline.position;
+        debugPrint(
+          'YL_FOLLOWUP_SOAK=${jsonEncode({'elapsedMs': clock.elapsedMilliseconds, 'positionMs': lastPosition.inMilliseconds, 'status': state.status.name, 'rebufferCount': state.metrics.rebufferCount, 'sessionId': session.id.value})}',
+        );
+      }
+      debugPrint('YL_FOLLOWUP_STOP=issued');
+      await player.stop();
+      await stateWhere(player, (s) => s.status == YlPlaybackStatus.idle);
+      expect(player.state.sessionId, isNull);
+      debugPrint('YL_FOLLOWUP_STOP=idle');
+      final peer = await _closedPeer();
+      expect(peer['accepted'], (before['accepted'] as int) + 1);
+      expect(peer['closed'], (before['closed'] as int) + 1);
+    },
+    timeout: const Timeout(Duration(minutes: 13)),
+  );
 }
 
 // The control connection can time out independently of the media connection.
