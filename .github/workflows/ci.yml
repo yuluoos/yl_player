@@ -254,8 +254,9 @@ jobs:
   ios-integration:
     env:
       YL_IOS_TEST_TARGET: simulator
-    needs: [changes, foundation]
-    if: ${{ !cancelled() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success' }}
+    # The simulator builds its own checkout. Both aggregates still require foundation.
+    needs: changes
+    if: needs.changes.outputs.apple == 'true'
     runs-on: macos-15
     timeout-minutes: 75
     permissions:
