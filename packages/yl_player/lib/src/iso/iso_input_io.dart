@@ -25,9 +25,9 @@ final class _Input implements IsoInput {
   _Input(this.server);
   final IsoServer server;
   @override
-  Future<YlNetworkSource> open(int? playlist) async {
+  Future<YlNetworkSource> open(int? playlist, {int? dvdTitle}) async {
     try {
-      await server.open(playlist: playlist);
+      await server.open(playlist: playlist, dvdTitle: dvdTitle);
       return YlNetworkSource(
         server.uri,
         format: YlMediaFormat.hls,
@@ -56,12 +56,12 @@ final class _Input implements IsoInput {
     } on FormatException {
       throw isoError(
         YlFailureCodes.containerUnsupported,
-        'Expected an unencrypted UDF Blu-ray image with a supported playlist.',
+        'Expected an unencrypted UDF disc with a supported DVD title or Blu-ray playlist.',
       );
     } on RangeError {
       throw isoError(
         YlFailureCodes.containerUnsupported,
-        'Invalid Blu-ray navigation data.',
+        'Invalid disc navigation data.',
       );
     }
   }

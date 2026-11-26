@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'iso_segment.dart';
 import 'udf.dart';
 
 int _u16(Uint8List b, int i) => ByteData.sublistView(b).getUint16(i);
@@ -7,7 +8,9 @@ int _u32(Uint8List b, int i) => ByteData.sublistView(b).getUint32(i);
 typedef _Item = ({String clip, int start, int end, int stc});
 typedef _Point = ({int time, int packet});
 
-final class DiscSegment {
+final class DiscSegment implements IsoSegment, IsoPayload {
+  @override
+  Future<IsoPayload> openPayload() async => this;
   DiscSegment(
     this.file,
     this.first,
@@ -17,12 +20,17 @@ final class DiscSegment {
     this.discontinuity,
   );
   final DiscFile file;
-  final int first, end, ticks;
+  final int first, end;
+  @override
+  final int ticks;
   final Uint8List tables;
+  @override
   final bool discontinuity;
+  @override
   int get length => tables.length + (end - first) * 188;
 
   /// Strip the four-byte Blu-ray arrival timestamp from each TS packet.
+  @override
   Stream<Uint8List> read(int start, int stop) async* {
     if (start < tables.length) {
       yield Uint8List.sublistView(

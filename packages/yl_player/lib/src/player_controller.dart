@@ -431,13 +431,16 @@ final class YlPlayerController implements Listenable {
     }
   }
 
-  /// Opens local and HTTP(S) Blu-ray images with a .iso path automatically.
+  /// Opens local and HTTP(S) DVD-Video and Blu-ray images with a .iso path.
+  /// [dvdTitle] selects a one-based DVD title, including on extensionless URLs.
+  /// By default, the longest supported sequential DVD title is selected.
   /// [bluRayPlaylist] selects a numeric MPLS title, including on extensionless
   /// URLs. The default is the longest playlist, with ties resolved by filename.
   Future<YlPlaybackSession> load(
     YlMediaSource source, {
     YlLoadOptions options = const YlLoadOptions(),
     int? bluRayPlaylist,
+    int? dvdTitle,
   }) {
     try {
       _check();
@@ -449,7 +452,14 @@ final class YlPlayerController implements Listenable {
           (bluRayPlaylist < 0 || bluRayPlaylist > 99999)) {
         throw ArgumentError('Blu-ray playlist must be between 0 and 99999.');
       }
-      final iso = isDiscImage(source) || bluRayPlaylist != null
+      if (dvdTitle != null &&
+          (dvdTitle < 1 || dvdTitle > 99 || bluRayPlaylist != null)) {
+        throw ArgumentError(
+          'Select either a DVD title (1–99) or a Blu-ray playlist.',
+        );
+      }
+      final iso =
+          isDiscImage(source) || bluRayPlaylist != null || dvdTitle != null
           ? createIsoInput(source, options)
           : null;
       _cancelLoad();
@@ -459,7 +469,15 @@ final class YlPlayerController implements Listenable {
       final completer = Completer<YlPlaybackSession>();
       _pendingLoad = completer;
       unawaited(
-        _performLoad(serial, completer, source, options, iso, bluRayPlaylist),
+        _performLoad(
+          serial,
+          completer,
+          source,
+          options,
+          iso,
+          bluRayPlaylist,
+          dvdTitle,
+        ),
       );
       return completer.future;
     } catch (e, stack) {
@@ -474,9 +492,12 @@ final class YlPlayerController implements Listenable {
     YlLoadOptions options,
     IsoInput? iso,
     int? playlist,
+    int? dvdTitle,
   ) async {
     try {
-      final media = iso == null ? source : await iso.open(playlist);
+      final media = iso == null
+          ? source
+          : await iso.open(playlist, dvdTitle: dvdTitle);
       if (_disposed || serial != _loadSerial || result.isCompleted) return;
       // Once the backend owns the candidate, keep its URL alive until its
       // native load commits or fails, even if a newer ISO is still opening.

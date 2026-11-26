@@ -5,7 +5,7 @@ typedef _Extent = ({int offset, int length});
 typedef UdfAddress = ({int partition, int block});
 
 Never invalidDisc() =>
-    throw const FormatException('Invalid or unsupported Blu-ray image');
+    throw const FormatException('Invalid or unsupported disc image');
 int _le16(Uint8List b, int i) =>
     ByteData.sublistView(b).getUint16(i, Endian.little);
 int _le32(Uint8List b, int i) =>

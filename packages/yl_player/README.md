@@ -135,15 +135,19 @@ decoder override live in `YlLoadOptions`. See the repository
 [policy semantics](../../docs/policies.md), [support matrix](../../docs/platform-support.md),
 and [diagnostics guide](../../docs/diagnostics.md).
 
-### Blu-ray ISO playback
+### DVD and Blu-ray ISO playback
 
 Pass a local path or HTTP(S) URL ending in `.iso` to the usual controller. The
-player reads the UDF file system, selects the longest MPLS playlist (lowest
-number on a tie), and uses the clip indexes to serve a seekable HLS title to
-the native playback engine. File extensions are case-insensitive and a URL may
-include a query string. To open a specific title, pass its five-digit filename
-as a number, e.g. `bluRayPlaylist: 42` for `00042.mpls`. This also works with
-extensionless download URLs.
+player detects DVD-Video or Blu-ray from the UDF file system and serves the
+selected title as seekable HLS. Extensions are case-insensitive and URLs may
+include a query string.
+
+- **DVD-Video** selects the longest supported title, with the lowest title
+  number breaking ties. Use `dvdTitle: 2` to select DVD title 2 (numbered from 1).
+- **Blu-ray** selects the longest MPLS playlist, with the lowest playlist
+  number breaking ties. Use `bluRayPlaylist: 42` for `00042.mpls`.
+
+Either selector also works with extensionless file paths and download URLs.
 
 ```dart
 final local = await player.load(YlFileSource('/media/Movie.iso'));
@@ -163,11 +167,20 @@ Download that image and open the local file. Request headers and same-origin
 credentials apply to the image server. The native player receives a temporary,
 session-scoped URL on 127.0.0.1.
 
-This path supports unencrypted Blu-ray BDMV images with 2048-byte UDF blocks,
+DVD playback supports unencrypted UDF DVD-Video images with a sequential,
+single-angle title in `VIDEO_TS`. The player follows IFO program and cell
+order across title VOB files, remuxing MPEG-1/2 video and the first enabled
+AC-3 or MPEG audio track supported by the remuxer. Playback requires a native
+HLS decoder for both tracks. The macOS AVPlayer test decoded MPEG-2/AC-3 and
+sought across cells. The iOS simulator rejected this fixture at decoder initialization. Android
+requires a video decoder admitted by the player’s hardware policy. The Android
+phone and TV emulators tested had no eligible MPEG-2 decoder. DVD menus, subpictures, LPCM, DTS, CSS and
+VM-driven navigation are outside this path.
+
+Blu-ray playback supports unencrypted BDMV images with 2048-byte UDF blocks,
 physical or metadata partitions, and indexed M2TS video clips. It supports
 whole clips and cuts at indexed access points within a single STC sequence.
-The native HLS engine determines codec and track support. DVD-Video, disc
-menus, encrypted titles, managed HTTP policies, bounded buffering and AirPlay
+The native HLS engine determines codec and track support. Disc menus, encrypted titles, managed HTTP policies, bounded buffering and AirPlay
 are outside this playback path. Sandboxed macOS hosts need client and server
 network entitlements. Android hosts that restrict cleartext must allow loopback
 HTTP to 127.0.0.1 in their network security configuration. For an upstream

@@ -24,6 +24,32 @@ Future<Uint8List> fetch(HttpClient client, Uri uri, {String? range}) async {
   return body.takeBytes();
 }
 
+// Each authored PES header fits in its first TS packet. Hash the elementary
+// streams independently of the ISO parser and TS writer.
+(int, int) _elementarySignature(List<Uint8List> segments, int pid) {
+  var length = 0, a = 1, b = 0;
+  for (final bytes in segments) {
+    for (var off = 0; off < bytes.length; off += 188) {
+      expect(bytes[off], 0x47);
+      final packetId = ((bytes[off + 1] & 31) << 8) | bytes[off + 2];
+      final flags = bytes[off + 3];
+      if (packetId != pid || flags & 0x10 == 0) continue;
+      var at = off + 4;
+      if (flags & 0x20 != 0) at += bytes[at] + 1;
+      if (bytes[off + 1] & 0x40 != 0) {
+        expect(bytes.sublist(at, at + 3), [0, 0, 1]);
+        at += 9 + bytes[at + 8];
+      }
+      for (; at < off + 188; at++) {
+        a = (a + bytes[at]) % 65521;
+        b = (b + a) % 65521;
+        length++;
+      }
+    }
+  }
+  return (length, (b << 16) | a);
+}
+
 class _CapturePlayer extends FakePlatformPlayer {
   final nativeSource = Completer<YlNetworkSource>();
   @override
@@ -37,6 +63,9 @@ class _CapturePlayer extends FakePlatformPlayer {
 }
 
 void main() {
+  final packageDir = Directory('packages/yl_player');
+  final root = packageDir.existsSync() ? packageDir : Directory.current;
+  String fixture(String relative) => root.uri.resolve(relative).toFilePath();
   test(
     'A failed replacement preserves an ISO already admitted by native playback',
     () async {
@@ -46,7 +75,7 @@ void main() {
       await file.writeAsBytes(
         gzip.decode(
           await File(
-            'example/assets/test_media/bluray_colors.iso.gz.bin',
+            fixture('example/assets/test_media/bluray_colors.iso.gz.bin'),
           ).readAsBytes(),
         ),
       );
@@ -90,80 +119,174 @@ void main() {
       await expectLater(fetch(client, native.uri), throwsA(isA<IOException>()));
     },
   );
+  for (final dvd in [false, true]) {
+    test(
+      '${dvd ? 'DVD' : 'Blu-ray'} ISO yields identical local and authenticated HTTPS titles',
+      () async {
+        final raw = gzip.decode(
+          await File(
+            fixture(
+              'example/assets/test_media/${dvd ? 'dvd_titles' : 'bluray_colors'}.iso.gz.bin',
+            ),
+          ).readAsBytes(),
+        );
+        final tmp = await Directory.systemTemp.createTemp('disc-test');
+        addTearDown(() => tmp.delete(recursive: true));
+        final file = await File('${tmp.path}/movie.iso').writeAsBytes(raw);
+        final tls = SecurityContext()
+          ..useCertificateChain(fixture('test/fixtures/drm_tls/server.pem'))
+          ..usePrivateKey(fixture('test/fixtures/drm_tls/server.key'));
+        final trust = SecurityContext()
+          ..setTrustedCertificates(fixture('test/fixtures/drm_tls/ca.pem'));
+        final server = await HttpServer.bindSecure(
+          InternetAddress.loopbackIPv4,
+          0,
+          tls,
+        );
+        addTearDown(() => server.close(force: true));
+        final ranges = <String>[];
+        server.listen((r) async {
+          expect(r.headers.value('authorization'), 'Bearer iso-test');
+          final range = r.headers.value('range')!;
+          ranges.add(range);
+          final span = RegExp(r'^bytes=(\d+)-(\d+)$').firstMatch(range)!;
+          final start = int.parse(span[1]!), end = int.parse(span[2]!);
+          r.response
+            ..statusCode = 206
+            ..headers.set('content-range', 'bytes $start-$end/${raw.length}')
+            ..headers.set('etag', '"v1"')
+            ..add(raw.sublist(start, end + 1));
+          await r.response.close();
+        });
+        // Construct clients outside the override to avoid recursive creation.
+        final direct = HttpClient();
+        addTearDown(() => direct.close(force: true));
+        final upstream = HttpClient(context: trust);
+        final local = IsoServer(IsoImage.file(file.path));
+        final remote = IsoServer(
+          IsoImage.network(
+            Uri.parse('https://127.0.0.1:${server.port}/movie.iso'),
+            {},
+            {'Authorization': 'Bearer iso-test'},
+          ),
+        );
+        addTearDown(local.close);
+        addTearDown(remote.close);
+        await local.open();
+        await HttpOverrides.runZoned(
+          () => dvd ? remote.open(dvdTitle: 2) : remote.open(playlist: 0),
+          createHttpClient: (_) => upstream,
+        );
+        final manifest = utf8.decode(await fetch(direct, local.uri));
+        expect(utf8.decode(await fetch(direct, remote.uri)), manifest);
+        expect('#EXT-X-DISCONTINUITY'.allMatches(manifest).length, dvd ? 1 : 2);
+        final segments = manifest
+            .split('\n')
+            .where((s) => s.endsWith('.ts'))
+            .toList();
+        expect(segments.length, greaterThan(3));
+        final dvdBytes = <Uint8List>[];
+        for (final name in segments) {
+          final bytes = await fetch(direct, local.uri.resolve(name));
+          expect(await fetch(direct, remote.uri.resolve(name)), bytes);
+          expect(bytes.length % 188, 0);
+          if (dvd) dvdBytes.add(bytes);
+          expect(
+            await fetch(
+              direct,
+              remote.uri.resolve(name),
+              range: 'bytes=187-377',
+            ),
+            bytes.sublist(187, 378),
+          );
+        }
+        if (dvd) {
+          // FFmpeg stream-copy of the authored VOB cells in title order.
+          expect(_elementarySignature(dvdBytes, 256), (88536, 0x617c977a));
+          expect(_elementarySignature(dvdBytes, 257), (336384, 0xf9b89104));
+        }
+        expect(ranges.first, 'bytes=0-0');
+        expect(ranges, isNot(contains('bytes=0-${raw.length - 1}')));
+      },
+    );
+  }
   test(
-    'A real UDF 2.50 image yields identical local and authenticated HTTPS titles',
+    'DVD title 1 selects only the short title and missing titles fail',
     () async {
+      final temp = await Directory.systemTemp.createTemp('dvd-selection-');
+      addTearDown(() => temp.delete(recursive: true));
       final raw = gzip.decode(
         await File(
-          'example/assets/test_media/bluray_colors.iso.gz.bin',
+          fixture('example/assets/test_media/dvd_titles.iso.gz.bin'),
         ).readAsBytes(),
       );
-      final tmp = await Directory.systemTemp.createTemp('disc-test');
-      addTearDown(() => tmp.delete(recursive: true));
-      final file = await File('${tmp.path}/movie.iso').writeAsBytes(raw);
-      final tls = SecurityContext()
-        ..useCertificateChain('test/fixtures/drm_tls/server.pem')
-        ..usePrivateKey('test/fixtures/drm_tls/server.key');
-      final trust = SecurityContext()
-        ..setTrustedCertificates('test/fixtures/drm_tls/ca.pem');
-      final server = await HttpServer.bindSecure(
-        InternetAddress.loopbackIPv4,
-        0,
-        tls,
+      final f = await File('${temp.path}/movie.iso').writeAsBytes(raw);
+      final local = IsoServer(IsoImage.file(f.path));
+      addTearDown(local.close);
+      await local.open(dvdTitle: 1);
+      final client = HttpClient();
+      addTearDown(() => client.close(force: true));
+      final manifest = utf8.decode(await fetch(client, local.uri));
+      final ticks = RegExp(r'#EXTINF:([0-9.]+),')
+          .allMatches(manifest)
+          .fold(0.0, (total, match) => total + double.parse(match[1]!));
+      expect(ticks, closeTo(7.007, 0.001));
+      expect(manifest, isNot(contains('#EXT-X-DISCONTINUITY')));
+      final missing = createIsoInput(
+        YlFileSource(f.path),
+        const YlLoadOptions(),
       );
-      addTearDown(() => server.close(force: true));
-      final ranges = <String>[];
-      server.listen((r) async {
-        expect(r.headers.value('authorization'), 'Bearer iso-test');
-        final range = r.headers.value('range')!;
-        ranges.add(range);
-        final span = RegExp(r'^bytes=(\d+)-(\d+)$').firstMatch(range)!;
-        final start = int.parse(span[1]!), end = int.parse(span[2]!);
-        r.response
-          ..statusCode = 206
-          ..headers.set('content-range', 'bytes $start-$end/${raw.length}')
-          ..headers.set('etag', '"v1"')
-          ..add(raw.sublist(start, end + 1));
-        await r.response.close();
-      });
-      // Construct clients outside the override to avoid recursive creation.
-      final direct = HttpClient();
-      addTearDown(() => direct.close(force: true));
-      final upstream = HttpClient(context: trust);
-      final local = IsoServer(IsoImage.file(file.path));
-      final remote = IsoServer(
-        IsoImage.network(
-          Uri.parse('https://127.0.0.1:${server.port}/movie.iso'),
-          {},
-          {'Authorization': 'Bearer iso-test'},
+      addTearDown(missing.close);
+      await expectLater(
+        missing.open(null, dvdTitle: 3),
+        throwsA(
+          isA<YlPlayerException>().having(
+            (e) => e.failure.code,
+            'code',
+            YlFailureCodes.containerUnsupported,
+          ),
         ),
       );
-      addTearDown(local.close);
-      addTearDown(remote.close);
-      await local.open();
-      await HttpOverrides.runZoned(
-        () => remote.open(playlist: 0),
-        createHttpClient: (_) => upstream,
+    },
+  );
+  test(
+    'A scrambled DVD video PES is rejected before creating a playback URL',
+    () async {
+      final tmp = await Directory.systemTemp.createTemp('disc-scrambling-');
+      addTearDown(() => tmp.delete(recursive: true));
+      final raw = gzip.decode(
+        await File(
+          fixture('example/assets/test_media/dvd_titles.iso.gz.bin'),
+        ).readAsBytes(),
       );
-      final manifest = utf8.decode(await fetch(direct, local.uri));
-      expect(utf8.decode(await fetch(direct, remote.uri)), manifest);
-      expect('#EXT-X-DISCONTINUITY'.allMatches(manifest).length, 2);
-      final segments = manifest
-          .split('\n')
-          .where((s) => s.endsWith('.ts'))
-          .toList();
-      expect(segments.length, greaterThan(3));
-      for (final name in segments) {
-        final bytes = await fetch(direct, local.uri.resolve(name));
-        expect(await fetch(direct, remote.uri.resolve(name)), bytes);
-        expect(bytes.length % 188, 0);
-        expect(
-          await fetch(direct, remote.uri.resolve(name), range: 'bytes=187-377'),
-          bytes.sublist(187, 378),
-        );
+      var changed = 0;
+      for (var i = 0; i + 7 < raw.length; i++) {
+        if (raw[i] == 0 &&
+            raw[i + 1] == 0 &&
+            raw[i + 2] == 1 &&
+            raw[i + 3] == 0xe0 &&
+            raw[i + 6] & 0xc0 == 0x80) {
+          raw[i + 6] |= 0x10;
+          changed++;
+        }
       }
-      expect(ranges.first, 'bytes=0-0');
-      expect(ranges, isNot(contains('bytes=0-${raw.length - 1}')));
+      expect(changed, greaterThan(0));
+      final image = await File('${tmp.path}/scrambled.iso').writeAsBytes(raw);
+      final input = createIsoInput(
+        YlFileSource(image.path),
+        const YlLoadOptions(),
+      );
+      addTearDown(input.close);
+      await expectLater(
+        input.open(null),
+        throwsA(
+          isA<YlPlayerException>().having(
+            (e) => e.failure.code,
+            'code',
+            YlFailureCodes.containerUnsupported,
+          ),
+        ),
+      );
     },
   );
   test(

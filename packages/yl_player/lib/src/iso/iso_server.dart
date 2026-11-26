@@ -5,7 +5,9 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'bluray_title.dart';
+import 'dvd_title.dart';
 import 'iso_image.dart';
+import 'iso_segment.dart';
 import 'udf.dart';
 
 /// Owns the virtual VOD title and its image for exactly one playback session.
@@ -16,10 +18,43 @@ final class IsoServer {
   bool _closed = false;
   int _active = 0;
   late final Uri uri;
-  Future<void> open({int? playlist}) async {
+  Future<void> open({int? playlist, int? dvdTitle}) async {
     await image.open();
     final volume = await UdfVolume.open(image.read, image.length);
-    final segments = await openMainTitle(volume, playlist: playlist);
+    final root = await volume.directory(volume.root);
+    final dvd = root['VIDEO_TS'];
+    final List<IsoSegment> segments;
+    final isDvd =
+        dvdTitle != null ||
+        (playlist == null && dvd != null && !root.containsKey('BDMV'));
+    if (isDvd) {
+      if (dvd == null || playlist != null) invalidDisc();
+      segments = await openDvdTitle(volume, dvd, number: dvdTitle);
+    } else {
+      segments = await openMainTitle(volume, playlist: playlist);
+    }
+    int? cachedIndex;
+    Future<IsoPayload>? cachedPayload;
+    // Reuse a remuxed DVD segment for a HEAD followed by one or more ranges.
+    Future<IsoPayload> payload(int index) {
+      if (cachedIndex != index) {
+        cachedIndex = index;
+        late final Future<IsoPayload> pending;
+        pending = segments[index].openPayload().catchError((
+          Object error,
+          StackTrace stack,
+        ) {
+          if (identical(cachedPayload, pending)) cachedIndex = null;
+          Error.throwWithStackTrace(error, stack);
+        });
+        cachedPayload = pending;
+      }
+      return cachedPayload!;
+    }
+
+    // Admit the first playable DVD segment before handing the URL to native.
+    // This also retains the prefix the player is about to request.
+    if (isDvd) await payload(0);
     final maxTicks = segments.map((s) => s.ticks).reduce(max);
     final manifest = StringBuffer()
       ..writeln('#EXTM3U')
@@ -70,7 +105,8 @@ final class IsoServer {
           response.statusCode = 404;
           return;
         }
-        final length = isManifest ? bytes.length : segments[index].length;
+        final media = isManifest ? null : await payload(index);
+        final length = media?.length ?? bytes.length;
         var start = 0, stop = length;
         response.headers.set('accept-ranges', 'bytes');
         final range = request.headers.value('range');
@@ -101,7 +137,7 @@ final class IsoServer {
         if (isManifest) {
           response.add(Uint8List.sublistView(bytes, start, stop));
         } else {
-          await response.addStream(segments[index].read(start, stop));
+          await response.addStream(media!.read(start, stop));
         }
       } catch (_) {
         // Partial media responses must terminate early, never pad a failed read.

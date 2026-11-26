@@ -5,7 +5,7 @@ import 'iso_input_stub.dart'
     as platform;
 
 abstract interface class IsoInput {
-  Future<YlNetworkSource> open(int? playlist);
+  Future<YlNetworkSource> open(int? playlist, {int? dvdTitle});
   Future<void> close();
 }
 
@@ -43,7 +43,7 @@ IsoInput createIsoInput(YlMediaSource source, YlLoadOptions options) {
       source is YlAndroidContentSource) {
     throw isoError(
       YlFailureCodes.policyUnsupported,
-      'Unsupported Blu-ray image source or playback policy.',
+      'Unsupported disc image source or playback policy.',
     );
   }
   return platform.create(source);
@@ -62,6 +62,6 @@ YlPlayerException isoError(String code, String message) => YlPlayerException(
     message: message,
     retryable: false,
     scope: YlFailureScope.command,
-    diagnosticId: 'bluray-iso',
+    diagnosticId: 'disc-iso',
   ),
 );
