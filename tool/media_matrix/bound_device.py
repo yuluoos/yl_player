@@ -9,6 +9,10 @@ import subprocess
 import uuid
 from pathlib import Path
 
+class ExpiredProvisioningProfile(Exception):
+    """The device rejected this frozen app's embedded development profile."""
+    exit_code = 78
+
 class DeviceTransport:
     LIMITS={'status.json':65536,'rows.json':128*1024*1024,'unfinished.json':128*1024*1024}
     def __init__(self, device, bundle, run, output):
@@ -59,8 +63,13 @@ class DeviceTransport:
                    '--domain-type','appDataContainer','--domain-identifier',self.bundle,
                    '--source',str(plan_file),'--destination','tmp/p03-bound-plan.txt','--timeout','15']]
         for index,command in enumerate(commands):
-            with (self.output/f'prepare-{index}.log').open('wb') as log:
-                subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=100,check=True)
+            path = self.output/f'prepare-{index}.log'
+            with path.open('wb') as log:
+                result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, timeout=100)
+            if result.returncode != 0:
+                if index == 0 and b'0xe8008011' in path.read_bytes().lower():
+                    raise ExpiredProvisioningProfile('device rejected expired provisioning profile')
+                result.check_returncode()
 
     def verify_target(self):
         """Reject simulators and aliases resolving to a different physical UDID."""

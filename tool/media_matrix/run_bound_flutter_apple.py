@@ -18,7 +18,7 @@ from pathlib import Path
 from bound_artifacts import canonical, freeze, verify, sha_file
 from acoustic_capture import microphone
 from acoustic_evidence import PROTOCOL
-from bound_device import DeviceTransport
+from bound_device import DeviceTransport, ExpiredProvisioningProfile
 from bound_av import validate_format_playback
 from bound_matrix import planned_case
 from run_bound_apple import CASES, PHASES, write
@@ -95,7 +95,11 @@ def main():
     device=None;cleanup=True;collector_error=None
     if args.device:
         device=DeviceTransport(args.device,plist['CFBundleIdentifier'],plan['runId'],out)
-        device.prepare(app,encoded)
+        try:
+            device.prepare(app,encoded)
+        except ExpiredProvisioningProfile as error:
+            print(error)
+            return error.exit_code
         command=device.launch_command(args.flutter,app)
     elif args.platform=='macos':
         command=[str(app/'Contents/MacOS'/plist['CFBundleExecutable'])]

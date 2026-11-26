@@ -13,6 +13,7 @@ import sys
 import uuid
 from pathlib import Path
 from bound_artifacts import freeze, sha_file, verify
+from bound_device import ExpiredProvisioningProfile
 from bound_matrix import catalog, cells, summarize
 from run_bound_apple import write
 
@@ -57,12 +58,16 @@ def main():
             with (out/(folder.name+'.log')).open('w') as log:
                 completed=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=600 if args.device else 240)
             record['exitCode']=completed.returncode
-            for key in ('plan','status'):record[key]=json.loads((folder/(key+'.json')).read_text())
-            record['rows']=json.loads(gzip.decompress((folder/'rows.json.gz').read_bytes()))
-            if android:
-                record['extractedJsonlBase64']=base64.b64encode(gzip.decompress((folder/'extracted.jsonl.gz').read_bytes())).decode()
-                record['extractExit']=json.loads((folder/'extraction.json').read_text())['exitCode']
-            record['artifactsUnchanged']=stable()
+            record['plan']=json.loads((folder/'plan.json').read_text())
+            if args.device and completed.returncode == ExpiredProvisioningProfile.exit_code:
+                record['collectorError'] = matrix['stopReason'] = 'expired_provisioning_profile'
+            else:
+                record['status']=json.loads((folder/'status.json').read_text())
+                record['rows']=json.loads(gzip.decompress((folder/'rows.json.gz').read_bytes()))
+                if android:
+                    record['extractedJsonlBase64']=base64.b64encode(gzip.decompress((folder/'extracted.jsonl.gz').read_bytes())).decode()
+                    record['extractExit']=json.loads((folder/'extraction.json').read_text())['exitCode']
+                record['artifactsUnchanged']=stable()
         except Exception as error:record['collectorError']=str(error)
         records.append(record)
         # Progress is explicitly provisional. Validate this child once here;
@@ -73,6 +78,9 @@ def main():
         print(f"{index+1}/44 {folder.name}: {progress_supported}/40 required supported",flush=True)
         # A changed bundle invalidates the matrix; never run more cells under a
         # different product while claiming the frozen build identity.
+        if 'stopReason' in matrix:
+            print(f"Stopped: {matrix['stopReason']}", flush=True)
+            break
         if not stable():break
     matrix['artifactFinalVerified']=stable();write(out/'matrix-plan.json',matrix)
     summary=summarize(matrix,records);write(out/'matrix-result.json',summary)

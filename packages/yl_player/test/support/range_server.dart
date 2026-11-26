@@ -4,6 +4,10 @@ import 'dart:io';
 /// Owned byte-range origin; no external network or media fixture dependency.
 final class RangeServer {
   RangeServer(this.server, this.bytes);
+  // The header deadline includes connecting to the loopback server. Give the
+  // server time to receive and record the request when suites run in parallel.
+  static const withheldHeaderTimeout = Duration(seconds: 2);
+
   final HttpServer server;
   final List<int> bytes;
   final requests = <HttpRequest>[];

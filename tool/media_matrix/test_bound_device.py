@@ -7,7 +7,7 @@ import time
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from bound_device import DeviceTransport
+from bound_device import DeviceTransport, ExpiredProvisioningProfile
 
 RUN='12345678-1234-1234-1234-123456789abc'
 
@@ -38,6 +38,26 @@ class DeviceTransportTest(unittest.TestCase):
             class Failed: returncode=1
             run.side_effect=None;run.return_value=Failed()
             self.assertIsNone(self.transport.read_json('status.json'))
+
+    def test_only_profile_expiry_at_install_is_terminal_for_the_matrix(self):
+        for operation, message, exception in (
+            ('install', b'0xe8008011 (This provisioning profile has expired.)', ExpiredProvisioningProfile),
+            ('install', b'device temporarily disconnected', subprocess.CalledProcessError),
+            ('copy', b'0xe8008011', subprocess.CalledProcessError),
+        ):
+            with self.subTest(operation=operation, message=message):
+                def prepare(command, stdout, **kwargs):
+                    failed = operation in command
+                    if failed:
+                        stdout.write(message)
+                    return subprocess.CompletedProcess(command, int(failed))
+
+                with patch.object(self.transport, 'verify_target'), patch(
+                    'bound_device.subprocess.run', side_effect=prepare
+                ) as run:
+                    with self.assertRaises(exception):
+                        self.transport.prepare(self.root/'app', 'plan')
+                    self.assertEqual(run.call_count, 1 if operation == 'install' else 2)
 
     def test_wrong_run_malformed_and_oversized_status_are_rejected(self):
         for raw in [json.dumps({'runId':'another','passed':True}),'[]','{broken','x'*65537]:

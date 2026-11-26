@@ -5,11 +5,16 @@ import hashlib
 import math
 import struct
 import json
+import tempfile
+from contextlib import redirect_stdout
+from io import StringIO
 from subprocess import CompletedProcess
 from pathlib import Path
 import unittest
 from unittest.mock import patch
 import bound_matrix
+import run_bound_flutter_matrix
+from bound_device import ExpiredProvisioningProfile
 from run_bound_flutter_android import installed_apk_matches
 import test_bound_av as fixtures
 
@@ -26,6 +31,32 @@ class MatrixTest(unittest.TestCase):
         self.assertEqual(2,sum(c['requirement']=='corrupt' for c in cells))
         for bad in (self.catalog[:-1],self.catalog+[self.catalog[0]]):
             with self.assertRaises(ValueError):bound_matrix.cells(bad)
+
+    def test_expired_frozen_profile_preserves_partial_matrix_and_stops(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            app, out = root/'Runner.app', root/'results'
+            app.mkdir()
+            (app/'Runner').write_bytes(b'frozen product')
+
+            def install_rejected(command, **kwargs):
+                cell = Path(command[command.index('--out') + 1])
+                cell.mkdir()
+                (cell/'plan.json').write_text('{"runId":"failed-install"}')
+                return CompletedProcess(command, ExpiredProvisioningProfile.exit_code)
+
+            argv = ['matrix', '--platform', 'ios', '--device', 'phone',
+                    '--app', str(app), '--out', str(out)]
+            with patch('sys.argv', argv), patch('subprocess.run', side_effect=install_rejected) as child:
+                with redirect_stdout(StringIO()):
+                    self.assertEqual(1, run_bound_flutter_matrix.main())
+            child.assert_called_once()
+            result = json.loads((out/'matrix-result.json').read_text())
+            self.assertEqual(40, result['requiredRows'])
+            self.assertEqual(43, len(result['missing']))
+            self.assertFalse(result['formatScopeAcceptance'])
+            self.assertEqual('failed-install', result['rows'][0]['runId'])
+            self.assertEqual('expired_provisioning_profile', result['rows'][0]['collectorError'])
 
     def test_reuse_requires_one_installed_apk_with_matching_device_digest(self):
         adb = ['adb', '-s', 'tv']
