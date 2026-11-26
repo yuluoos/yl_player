@@ -43,6 +43,12 @@ if [ "${YL_ANDROID_API:-}" = 24 ]; then
     mkdir -p "$YL_REPO_ROOT/android-failure"
     export YL_ANDROID_REPORT_ROOT="$YL_REPO_ROOT/android-failure"
   fi
+  if [ -n "${YL_ANDROID_TEST_TARGET:-}" ]; then
+    # Keep the device receipt alongside this run's Flutter reports.
+    YL_ANDROID_REPORT_ROOT=${YL_ANDROID_REPORT_ROOT:-$(mktemp -d)}
+    export YL_ANDROID_REPORT_ROOT
+    python3 -B "$YL_SCRIPT_DIR/ci_playback_shards.py" verify-android "$YL_ANDROID_TEST_TARGET" "$YL_ANDROID_DEVICE_ID" --evidence "$YL_ANDROID_REPORT_ROOT"
+  fi
   exec sh "$YL_SCRIPT_DIR/run_android_integration.sh" --all-suites "$@"
 fi
 for suite do

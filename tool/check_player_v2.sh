@@ -118,7 +118,7 @@ apple_unit() {
     echo 'Set YL_IOS_SIMULATOR_ID to a verified booted Simulator.' >&2
     exit 1
   fi
-  run sh tool/check_native_ios.sh --unit-only
+  YL_IOS_TEST_TARGET=simulator run sh tool/check_native_ios.sh --unit-only
   step 'apple-macos-native-unit'
   run sh tool/check_native_macos.sh --unit-only
 }
@@ -256,10 +256,13 @@ run_full() {
         echo 'UNVERIFIED_REQUIRED Android API 24 integration skipped by --no-device'
         echo 'UNVERIFIED_REQUIRED Android API 36 integration skipped by --no-device'
         echo 'UNVERIFIED_REQUIRED iOS Simulator integration skipped by --no-device'
+        echo 'UNVERIFIED_REQUIRED Android API 24 and iOS physical hardware integration skipped by --no-device'
       else
-        android_device 24 "${YL_ANDROID_API24_DEVICE_ID:-}"
+        YL_ANDROID_TEST_TARGET=simulator android_device 24 "${YL_ANDROID_API24_DEVICE_ID:-}"
+        YL_ANDROID_TEST_TARGET=physical android_device 24 "${YL_ANDROID_API24_PHYSICAL_ID:-}"
         android_device 36 "${YL_ANDROID_API36_DEVICE_ID:-}"
-        full_ios
+        YL_IOS_TEST_TARGET=simulator full_ios
+        YL_IOS_TEST_TARGET=physical full_ios
       fi
       full_macos
       full_consumers
@@ -317,6 +320,8 @@ aggregate_full() {
   require_success android-consumer "${YL_RESULT_ANDROID_CONSUMER:-}"
   require_success apple-consumers "${YL_RESULT_APPLE_CONSUMERS:-}"
   require_success ffmpeg-reproducibility "${YL_RESULT_REPRODUCIBILITY:-}"
+  require_success android-api24-physical "${YL_RESULT_ANDROID_HARDWARE:-}"
+  require_success ios-physical "${YL_RESULT_IOS_HARDWARE:-}"
   if [ "$test_mode" = 1 ]; then
     echo 'PLAYER_V2_TEST_MODE_COMPLETE aggregate=full release_evidence=false'
   else

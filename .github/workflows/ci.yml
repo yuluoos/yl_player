@@ -163,6 +163,8 @@ jobs:
         if: matrix.platform == 'ios'
         run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
       - name: Affected Apple unit suite
+        env:
+          YL_IOS_TEST_TARGET: simulator
         run: sh tool/check_native_${{ matrix.platform }}.sh --unit-only
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -213,10 +215,17 @@ jobs:
         run: |
           YL_ANDROID_DEVICE_ID=$(sh tool/boot_ci_android_emulator.sh)
           echo "YL_ANDROID_DEVICE_ID=$YL_ANDROID_DEVICE_ID" >> "$GITHUB_ENV"
-      - name: Required Android API integration shard
+      - name: Required Android emulator integration shard
         env:
+          YL_ANDROID_TEST_TARGET: ${{ matrix.api == 24 && 'simulator' || '' }}
           YL_ANDROID_API: ${{ matrix.api }}
         run: sh tool/check_player_v2.sh --full --stage android-device
+      - uses: actions/upload-artifact@v4
+        if: success() && matrix.api == 24
+        with:
+          name: android-api24-simulator
+          path: android-failure
+          if-no-files-found: error
       - name: Capture failure diagnostics
         if: failure()
         run: |
@@ -243,6 +252,8 @@ jobs:
           path: android-failure
 
   ios-integration:
+    env:
+      YL_IOS_TEST_TARGET: simulator
     needs: [changes, foundation]
     if: ${{ !cancelled() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success' }}
     runs-on: macos-15
@@ -458,8 +469,71 @@ jobs:
           download "$DAV1D_URL" "$YL_DAV1D_ARCHIVE"
           sh packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh --rebuild-check
 
+  android-api24-physical:
+    needs: [changes, android-unit]
+    if: >-
+      ${{ needs.changes.outputs.full == 'true' &&
+          github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+          vars.YL_ANDROID_API24_DEVICE_ID != '' }}
+    runs-on: [self-hosted, yl-android-api24]
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      YL_ANDROID_API: '24'
+      YL_ANDROID_TEST_TARGET: physical
+      YL_ANDROID_DEVICE_ID: ${{ vars.YL_ANDROID_API24_DEVICE_ID }}
+      YL_ANDROID_REPORT_ROOT: ${{ github.workspace }}/build/android-physical-evidence
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+      - run: flutter pub get
+      - run: mkdir -p "$YL_ANDROID_REPORT_ROOT" && sh tool/check_player_v2.sh --full --stage android-device
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: android-api24-physical
+          path: build/android-physical-evidence
+          if-no-files-found: error
+
+  ios-physical:
+    needs: [changes, foundation]
+    if: >-
+      ${{ needs.changes.outputs.full == 'true' &&
+          github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+          vars.YL_IOS_DEVICE_ID != '' }}
+    runs-on: [self-hosted, macOS, yl-ios-device]
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      YL_IOS_TEST_TARGET: physical
+      YL_IOS_DEVICE_ID: ${{ vars.YL_IOS_DEVICE_ID }}
+      YL_IOS_DEVELOPMENT_TEAM: ${{ vars.YL_IOS_DEVELOPMENT_TEAM }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+      - run: flutter pub get
+      - run: sh tool/check_player_v2.sh --full --stage ios
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: ios-hardware-evidence
+          path: packages/yl_player/example/build/apple-evidence
+          if-no-files-found: error
+
   release-gates:
-    needs: [changes, foundation, android-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]
+    needs: [changes, android-api24-physical, ios-physical, foundation, android-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]
     if: ${{ !cancelled() && needs.changes.outputs.full == 'true' }}
     runs-on: macos-15
     timeout-minutes: 60
@@ -471,6 +545,8 @@ jobs:
           fetch-depth: 0
       - name: Require every automated full-matrix result
         env:
+          YL_RESULT_ANDROID_HARDWARE: ${{ needs.android-api24-physical.result }}
+          YL_RESULT_IOS_HARDWARE: ${{ needs.ios-physical.result }}
           YL_RESULT_FOUNDATION: ${{ needs.foundation.result }}
           YL_RESULT_ANDROID_UNIT: ${{ needs.android-unit.result }}
           YL_RESULT_ANDROID_INTEGRATION: ${{ needs.android-integration.result }}

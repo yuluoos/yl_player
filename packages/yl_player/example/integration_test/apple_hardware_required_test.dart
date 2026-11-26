@@ -30,6 +30,7 @@ void main() {
           ),
         );
       } on YlPlayerException catch (error) {
+        if (const bool.fromEnvironment('YL_CI_REQUIRE_HARDWARE')) rethrow;
         expect(error.failure.code, YlFailureCodes.decoderUnavailable);
         expect(controller.state.sessionId, isNull);
         expect(states.where((s) => s.sessionId != null), isEmpty);
