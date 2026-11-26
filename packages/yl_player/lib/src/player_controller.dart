@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'iso/iso_input.dart';
 import 'network_traffic.dart';
 import 'drm/license_client.dart';
 import 'subtitles/text_subtitle_runtime.dart';
@@ -199,6 +200,9 @@ final class YlPlayerController implements Listenable {
   YlPlaybackSessionId? _stoppedSession;
   Completer<YlPlaybackSession>? _pendingLoad;
   int _loadSerial = 0;
+  IsoInput? _openingIso;
+  IsoInput? _playingIso;
+  final _assessingIsos = <IsoInput>{};
   bool _disposed = false;
   Future<void>? _disposeFuture;
   String get implementationName => _backend.implementation.name;
@@ -399,17 +403,41 @@ final class YlPlayerController implements Listenable {
     _checkDrmAdmission(source);
     validateYlLoadOptions(options);
     _checkAirPlayAdmission(options);
-    final result = options.airPlay
-        ? await _airPlayBackend!.assessForAirPlay(source, options: options)
-        : await _backend.assess(source, options: options);
-    _check();
-    validateYlSourceAssessment(result);
-    return result;
+    IsoInput? iso;
+    final disc = isDiscImage(source);
+    try {
+      if (disc) {
+        iso = createIsoInput(source, options);
+        _assessingIsos.add(iso);
+        source = await iso.open(null);
+        _check();
+      }
+      final result = options.airPlay
+          ? await _airPlayBackend!.assessForAirPlay(source, options: options)
+          : await _backend.assess(source, options: options);
+      _check();
+      validateYlSourceAssessment(result);
+      return result;
+    } on YlPlayerException catch (error) {
+      _check();
+      if (!disc) rethrow;
+      return YlSourceAssessment(
+        outcome: YlSourceAssessmentOutcome.incompatible,
+        rejection: error.failure,
+      );
+    } finally {
+      _assessingIsos.remove(iso);
+      await iso?.close();
+    }
   }
 
+  /// Opens local and HTTP(S) Blu-ray images with a .iso path automatically.
+  /// [bluRayPlaylist] selects a numeric MPLS title, including on extensionless
+  /// URLs. The default is the longest playlist, with ties resolved by filename.
   Future<YlPlaybackSession> load(
     YlMediaSource source, {
     YlLoadOptions options = const YlLoadOptions(),
+    int? bluRayPlaylist,
   }) {
     try {
       _check();
@@ -417,12 +445,22 @@ final class YlPlayerController implements Listenable {
       _checkDrmAdmission(source);
       validateYlLoadOptions(options);
       _checkAirPlayAdmission(options);
+      if (bluRayPlaylist != null &&
+          (bluRayPlaylist < 0 || bluRayPlaylist > 99999)) {
+        throw ArgumentError('Blu-ray playlist must be between 0 and 99999.');
+      }
+      final iso = isDiscImage(source) || bluRayPlaylist != null
+          ? createIsoInput(source, options)
+          : null;
       _cancelLoad();
+      _openingIso = iso;
       _textSubtitles?.cancel();
       final serial = ++_loadSerial;
       final completer = Completer<YlPlaybackSession>();
       _pendingLoad = completer;
-      unawaited(_performLoad(serial, completer, source, options));
+      unawaited(
+        _performLoad(serial, completer, source, options, iso, bluRayPlaylist),
+      );
       return completer.future;
     } catch (e, stack) {
       return Future.error(e, stack);
@@ -434,11 +472,26 @@ final class YlPlayerController implements Listenable {
     Completer<YlPlaybackSession> result,
     YlMediaSource source,
     YlLoadOptions options,
+    IsoInput? iso,
+    int? playlist,
   ) async {
     try {
+      final media = iso == null ? source : await iso.open(playlist);
+      if (_disposed || serial != _loadSerial || result.isCompleted) return;
+      // Once the backend owns the candidate, keep its URL alive until its
+      // native load commits or fails, even if a newer ISO is still opening.
+      _openingIso = null;
       final committed = options.airPlay
-          ? await _airPlayBackend!.loadForAirPlay(source, options: options)
-          : await _backend.load(source, options: options);
+          ? await _airPlayBackend!.loadForAirPlay(media, options: options)
+          : await _backend.load(media, options: options);
+      if (!_disposed &&
+          _backend.state.sessionId == committed.sessionId &&
+          _backend.state.status != YlPlaybackStatus.idle &&
+          _stoppedSession != committed.sessionId) {
+        final previous = _playingIso;
+        _playingIso = iso;
+        if (previous != null) unawaited(previous.close());
+      }
       if (_disposed || serial != _loadSerial || result.isCompleted) return;
       _acceptState(_backend.state);
       if (state.sessionId != committed.sessionId) {
@@ -460,12 +513,17 @@ final class YlPlayerController implements Listenable {
     } catch (error, stack) {
       if (!result.isCompleted) result.completeError(error, stack);
     } finally {
+      if (identical(_openingIso, iso)) _openingIso = null;
+      if (iso != null && !identical(_playingIso, iso)) await iso.close();
       if (identical(_pendingLoad, result)) _pendingLoad = null;
     }
   }
 
   void _cancelLoad([String code = YlFailureCodes.loadCancelled]) {
     _loadSerial++;
+    final iso = _openingIso;
+    _openingIso = null;
+    if (iso != null) unawaited(iso.close());
     final pending = _pendingLoad;
     _pendingLoad = null;
     if (pending != null && !pending.isCompleted) {
@@ -602,7 +660,12 @@ final class YlPlayerController implements Listenable {
     _cancelLoad();
     _textSubtitles?.cancel();
     final sessionId = state.sessionId;
+    final stoppedIso = _playingIso;
     await _backend.stop();
+    if (identical(stoppedIso, _playingIso)) {
+      _playingIso = null;
+      await stoppedIso?.close();
+    }
     if (state.sessionId == sessionId) {
       final presentationChanged = isCurrentFramePresented;
       _stoppedSession = sessionId;
@@ -649,6 +712,11 @@ final class YlPlayerController implements Listenable {
     } catch (_) {
       /* Native cleanup is best effort. */
     }
+    await Future.wait([
+      for (final iso in _assessingIsos) iso.close(),
+      if (_playingIso != null) _playingIso!.close(),
+    ]);
+    _playingIso = null;
     _texture.value = null;
     // Closing still delivers Done when external observers resume.
     unawaited(_states.close());

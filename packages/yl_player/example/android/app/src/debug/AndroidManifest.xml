@@ -4,7 +4,7 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <application android:networkSecurityConfig="@xml/yl_loopback_network_security">
+    <application>
         <provider
             android:name=".FrameObservationProvider"
             android:authorities="${applicationId}.debug.frame_observation"

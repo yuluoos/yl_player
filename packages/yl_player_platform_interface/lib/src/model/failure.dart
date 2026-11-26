@@ -64,6 +64,7 @@ abstract final class YlFailureCodes {
   static const sourceInvalid = 'source.invalid';
   static const sourceMissing = 'source.missing';
   static const networkFailed = 'network.failed';
+  static const networkIsoRangeUnavailable = 'network.iso_range_unavailable';
   static const networkProtocolUnsupported = 'network.protocol_unsupported';
 
   /// The source host could not be resolved from structured platform DNS evidence.

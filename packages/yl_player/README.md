@@ -135,6 +135,45 @@ decoder override live in `YlLoadOptions`. See the repository
 [policy semantics](../../docs/policies.md), [support matrix](../../docs/platform-support.md),
 and [diagnostics guide](../../docs/diagnostics.md).
 
+### Blu-ray ISO playback
+
+Pass a local path or HTTP(S) URL ending in `.iso` to the usual controller. The
+player reads the UDF file system, selects the longest MPLS playlist (lowest
+number on a tie), and uses the clip indexes to serve a seekable HLS title to
+the native playback engine. File extensions are case-insensitive and a URL may
+include a query string. To open a specific title, pass its five-digit filename
+as a number, e.g. `bluRayPlaylist: 42` for `00042.mpls`. This also works with
+extensionless download URLs.
+
+```dart
+final local = await player.load(YlFileSource('/media/Movie.iso'));
+await local.play();
+
+final remote = await player.load(
+  YlNetworkSource(Uri.parse('https://media.example/Movie.iso')),
+);
+await remote.play();
+await remote.seekTo(const Duration(minutes: 5));
+```
+
+HTTP servers must honor byte ranges with consistent 206 responses and a known
+total size. The client reads navigation metadata and requested media ranges
+on demand. An origin that ignores Range returns `network.iso_range_unavailable`.
+Download that image and open the local file. Request headers and same-origin
+credentials apply to the image server. The native player receives a temporary,
+session-scoped URL on 127.0.0.1.
+
+This path supports unencrypted Blu-ray BDMV images with 2048-byte UDF blocks,
+physical or metadata partitions, and indexed M2TS video clips. It supports
+whole clips and cuts at indexed access points within a single STC sequence.
+The native HLS engine determines codec and track support. DVD-Video, disc
+menus, encrypted titles, managed HTTP policies, bounded buffering and AirPlay
+are outside this playback path. Sandboxed macOS hosts need client and server
+network entitlements. Android hosts that restrict cleartext must allow loopback
+HTTP to 127.0.0.1 in their network security configuration. For an upstream
+plain-HTTP image, the host app must also permit that origin under its transport
+policy. HTTPS image servers use the host’s normal certificate trust settings.
+
 ## Errors
 
 Public asynchronous failures are `YlPlayerException` values carrying a
