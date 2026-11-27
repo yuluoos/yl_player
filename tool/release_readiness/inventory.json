@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "baselineCommit": "46c8ceeee3ae77290da6c3576681a646d9048496",
+  "baselineCommit": "68bd5a070935eec9139e9cf64e797a80c8cc433d",
   "requirements": {
     "path": "docs/superpowers/specs/2026-09-20-playback-expansion-requirements.md",
     "sha256": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3"
@@ -20,16 +20,16 @@
       "packages/yl_player/lib/src/drm/license_secure_socket.dart": "e840dd82f87e6dd1e31bb82d84a9bdc7ec78f662610d7219ddd562344bd9cc6d",
       "packages/yl_player/lib/src/drm/license_stub.dart": "ea85799c71e1d7b8b51ac024b8c16d8fa60cd03ffa20ff20ce444405b65bf7ea",
       "packages/yl_player/lib/src/drm/license_timing.dart": "dae73579c3a799375f8c73d27c823f65baa358af2b7707aa97b09316406a211a",
-      "packages/yl_player/lib/src/iso/bluray_title.dart": "95fd51a5c80d484715934c92e5df82217b3ccc8c99ba4dfc207d73814445391e",
-      "packages/yl_player/lib/src/iso/dvd_title.dart": "f6d95d409c41d1908ec7b14c561a2316096e50cfe15a9466d856baeb60961c86",
+      "packages/yl_player/lib/src/iso/bluray_title.dart": "7fb860dc3f545560d8e562c93ca1984a5c1acd199b4933496f4fece27d10e73a",
+      "packages/yl_player/lib/src/iso/dvd_title.dart": "88a575e319067170a1d90332f309b52c129005ef55fa3bf48b1a0b0754a8292b",
       "packages/yl_player/lib/src/iso/dvd_transport.dart": "b735785c6787a5de50288b6f202f49c05c831474557ea4ee1a348c9d904961d8",
-      "packages/yl_player/lib/src/iso/iso_image.dart": "35073f71bb7f7360b3e14f0994a251a36eac47bfe319f8250598bc1b16235633",
+      "packages/yl_player/lib/src/iso/iso_image.dart": "b643b13c5ebff62d153f010bc20b76c622e1a84de17cabe2a433d98a0402e813",
       "packages/yl_player/lib/src/iso/iso_input.dart": "0b82f06d9e79e6ae3f19350fec1c135ceb7d30144774037d03692ec2d1629c5d",
       "packages/yl_player/lib/src/iso/iso_input_io.dart": "ae1ea15073ab42251e7e39f498946d01632f72f5345c1ecc9b59a0cfdfe651a1",
       "packages/yl_player/lib/src/iso/iso_input_stub.dart": "4c828248272025c1418c674bfd241f7cebced48c3f0ede0d7e134e4851a3e179",
-      "packages/yl_player/lib/src/iso/iso_segment.dart": "23af5bbac99074b87e07f8f3005b536dbbc5c949ab44b3a67766e3594e6062b5",
-      "packages/yl_player/lib/src/iso/iso_server.dart": "4274a4c81d5a5e66230e9c594d8edd617dddd40408c79c44caa560b572ac7ffd",
-      "packages/yl_player/lib/src/iso/udf.dart": "3247c73e2819b4aff047d2db6e8e08bb9fcb25c70a6c411b16d1d681f552e6d6",
+      "packages/yl_player/lib/src/iso/iso_segment.dart": "61f6f774ab30ee087d290b1da905e0c594926d2dc56f9587340cf68e2dd9d5e6",
+      "packages/yl_player/lib/src/iso/iso_server.dart": "560312bc6176c943d21e086c2b6abf78e478b48c6e25855cd726f37c388764db",
+      "packages/yl_player/lib/src/iso/udf.dart": "a767f9e76368a62c5ed8a43bde8d7ae6dca62798accc62336da6d492936c3635",
       "packages/yl_player/lib/src/network_traffic.dart": "e9b1e1897e5eb084a6bc1476ba53a9d23b20827d5c80521dfb9a961df5c92fa7",
       "packages/yl_player/lib/src/playback_session.dart": "3de288306cd43a4a93aed508811c8ef760d183d9e682f5252b328c352abc6f7b",
       "packages/yl_player/lib/src/player_controller.dart": "9b886c344d8d828e3b6f034c538405882f11dfe7a30a2fb560c0876fb685548d",
@@ -74,6 +74,7 @@
       "packages/yl_player/lib/src/subtitles/webvtt_settings.dart": "7295c36841a936f2cbd26623afddc65a3ace553e3a3ba11a04af3347692dd377",
       "packages/yl_player/lib/yl_player.dart": "a4d46674143c7602a97f4e8d2a9b42150f9a86fda681842e109c3404b8e6c2fd",
       "packages/yl_player/pubspec.yaml": "ac527cf50c7f94f339808c2ed4f0e5073ff39f9191808eeab4c46cf5cae604fd",
+      "packages/yl_player/tool/iso_ranges.dart": "821047faf75270fb1d1deda70e8cbec65ef31c081337d58f225e8925119f3fab",
       "packages/yl_player_android/.gitignore": "ae768b0bfed9e44a618f24e4356f3ed3353422f5e810604601bdc2cefbd10fe6",
       "packages/yl_player_android/.metadata": "a79bfb2f2cc54f642f042734a5cecfcaa70c5610bf3cd4c28f51864fbac0cb2a",
       "packages/yl_player_android/CHANGELOG.md": "b228e9f9a0e570262111eeb400184ff991d9041d801c15119308b659dc0be1d5",
@@ -634,7 +635,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "61c8ba9d9e68b77ed10de516c6a59273014228679dfdd108f1fc12ba3c980fe8"
     },
-    "sha256": "c3525355c3d7c359e7ef24225c9069183dd34a8fdc9bcd903b3b4a6aa2942213"
+    "sha256": "fca3df751bcab98b81464948ee1d0ee06163b6342d217f297761cf4c2099c232"
   },
   "evidence": {
     "p01": {
@@ -679,7 +680,7 @@
     },
     "platform": {
       "path": "docs/platform-support.md",
-      "sha256": "611b535426a4b41f3e7063d5f9ad4e2d55e34fec426b40c95d310e1615767759",
+      "sha256": "915632119e2937b18dd37f88132790b8b93d8018d5bec67f72ef35c4660195b5",
       "kind": "report"
     },
     "remaining-engineering": {
@@ -1301,6 +1302,21 @@
       "kind": "report",
       "path": "docs/superpowers/reports/evidence/2026-11-26-main-46c8ceee/hardware-and-ci.json",
       "sha256": "6b92a7d7d824633d6d4ad90739da651b8004f2614e24d983f1e07c152a3a09ab"
+    },
+    "hosted-ci-188": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/evidence/2026-11-27-main-68bd5a07/hosted-ci.json",
+      "sha256": "322f4855ddc8664d934cfe066c9567d850db12cd86c682c689327b533960c158"
+    },
+    "release-ci-188": {
+      "kind": "acceptance",
+      "path": "docs/superpowers/reports/evidence/2026-11-27-main-68bd5a07/release-ci-acceptance.json",
+      "sha256": "aa579e0e295f65624cbd2b3f255eedb09dcde6b86dd28119a3203bf16cafc510"
+    },
+    "apple-disc-playback-20261127": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/evidence/2026-11-27-main-68bd5a07/apple-disc-playback.json",
+      "sha256": "1d3bc136e82368ab2c715337ebbb657f9351b8548312cd40c9888664f01ff133"
     }
   },
   "rows": [
@@ -1485,7 +1501,8 @@
         "p03",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "apple-disc-playback-20261127"
       ],
       "acceptance": null,
       "nextAction": "qualify-exact-software-device-and-thermal-budget"
@@ -1708,7 +1725,8 @@
         "remaining-device-acceptance-20261105",
         "ios-format-matrix-20261120",
         "current-candidate-20261125",
-        "main-ci-device-check-20261126"
+        "main-ci-device-check-20261126",
+        "apple-disc-playback-20261127"
       ],
       "acceptance": null,
       "nextAction": "qualify-remaining-ios-devices-minimum-os-and-output-boundaries"
@@ -3058,8 +3076,8 @@
     {
       "requirement": "RELEASE-CI",
       "platform": "all",
-      "implementation": "partial",
-      "verification": "external_missing",
+      "implementation": "implemented",
+      "verification": "passed",
       "evidence": [
         "p08",
         "remaining-acceptance-20261026",
@@ -3070,10 +3088,12 @@
         "ci-gates-20261111",
         "current-candidate-20261125",
         "ci-decoder-diagnosis-20261126",
-        "main-ci-device-check-20261126"
+        "main-ci-device-check-20261126",
+        "hosted-ci-188",
+        "release-ci-188"
       ],
-      "acceptance": null,
-      "nextAction": "restore-ios-xctest-handshake-connect-api24-and-ios-runners-then-run-full-ci"
+      "acceptance": "release-ci-188",
+      "nextAction": "revalidate-hosted-ci-on-product-or-workflow-changes"
     }
   ]
 }

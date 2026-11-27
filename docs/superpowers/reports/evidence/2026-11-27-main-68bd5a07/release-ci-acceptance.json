@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "requirement": "RELEASE-CI",
+  "platform": "all",
+  "sourceHash": "fca3df751bcab98b81464948ee1d0ee06163b6342d217f297761cf4c2099c232",
+  "requirementsHash": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3",
+  "coverage": "full",
+  "outcome": "passed",
+  "checks": [
+    {
+      "id": "full-workflow-on-main",
+      "outcome": "passed"
+    },
+    {
+      "id": "all-required-hosted-jobs",
+      "outcome": "passed"
+    },
+    {
+      "id": "public-surface-publication-final",
+      "outcome": "passed"
+    },
+    {
+      "id": "artifact-identities",
+      "outcome": "passed"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/superpowers/reports/evidence/2026-11-27-main-68bd5a07/hosted-ci.json",
+      "sha256": "322f4855ddc8664d934cfe066c9567d850db12cd86c682c689327b533960c158"
+    }
+  ]
+}

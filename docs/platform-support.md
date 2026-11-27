@@ -167,16 +167,26 @@ focused public Flutter cases. Selected local TLS fixtures prove encrypted
 transfer plus chain/hostname rejection under isolated test trust; they do not
 prove a production publicly trusted server path.
 
-The current focused Apple evidence includes actual macOS hardware-decoder
-commit on covered fixtures. An iOS Simulator may skip the one real bounded H.264
-case only when the inspected stream is H.264 and VideoToolbox explicitly reports
-hardware decode unavailable; controlled hardware-path tests still execute. A
-Simulator skip or controlled decoder output is not physical-device evidence.
+The physical iPhone 16 shard passed all 34 selected native tests on
+`e56199e0`, with zero skips. The simulator runs the complementary native
+selection. The full hosted workflow on `68bd5a07` passed its release gate;
+physical device jobs are available separately on manual dispatch.
+[Hosted CI #188](https://github.com/yuluoos/yl_player/actions/runs/45942757467)
 
-Still pending final acceptance: physical iOS hardware playback, Android
-7/1.5-GB/32-bit endurance, minimum-OS runtime matrices, native Intel macOS
-decoding, Instruments/memgraph profiling, full consumer/package-manager
-matrices, remote CI, and the complete canonical regression/release matrix.
+On iPhone 16 (iOS 27.2), the native HLS path returned
+`AVErrorDecoderNotFound` (`avplayer.-11833`) for the DVD fixture’s MPEG-2
+video with either AC-3 or AAC. The same cell encoded as H.264 rendered its
+first frame with both audio tracks. The iOS simulator produced the same four
+outcomes. macOS played and sought through the original MPEG-2/AC-3 title from
+a file and over HTTP Range. iPhone 16 and macOS both played and sought through
+the Blu-ray fixture on both inputs.
+[Disc playback and codec controls](superpowers/reports/evidence/2026-11-27-main-68bd5a07/apple-disc-playback.json)
+
+Open acceptance work includes the Android API 24 physical video cases,
+Android 7/1.5-GB/32-bit endurance, minimum-OS runtime coverage, Intel Mac
+decoding, physical output and A/V sync, performance profiling, and the
+remaining consumer and cross-platform regression cases.
+[Release readiness inventory](../tool/release_readiness/inventory.json)
 
 ## DASH implementation boundary
 

@@ -1,0 +1,140 @@
+{
+  "commit": "68bd5a070935eec9139e9cf64e797a80c8cc433d",
+  "flutter": "3.44.0",
+  "devices": {
+    "iphone": "iPhone 16",
+    "simulator": "iPhone 18 Pro (Simulator)",
+    "macos": "27.2",
+    "iphoneOS": "27.2"
+  },
+  "discPlayback": {
+    "iphone-dvd": {
+      "cases": {
+        "DVD ISO local file plays across clips and seeks": {
+          "outcome": "error",
+          "decoderError": "avplayer.-11833"
+        },
+        "DVD ISO HTTP ranges plays across clips and seeks": {
+          "outcome": "error",
+          "decoderError": "avplayer.-11833"
+        }
+      },
+      "rawFlutterReportSHA256": "50808e2ef89eac6f15c84f7212fac310a3a67d9731a64888ca59cc016045d485"
+    },
+    "iphone-bluray": {
+      "cases": {
+        "Blu-ray ISO local file plays across clips and seeks": {
+          "outcome": "success"
+        },
+        "Blu-ray ISO HTTP ranges plays across clips and seeks": {
+          "outcome": "success"
+        }
+      },
+      "rawFlutterReportSHA256": "d356062f61136fe7c7bc1403f1a8eef5b2d01324f293b76e3d951448d8a8213e"
+    },
+    "mac-dvd": {
+      "cases": {
+        "DVD ISO local file plays across clips and seeks": {
+          "outcome": "success"
+        },
+        "DVD ISO HTTP ranges plays across clips and seeks": {
+          "outcome": "success"
+        }
+      },
+      "rawFlutterReportSHA256": "29ec9d8901e0f18ab9f82522492b0f3e6e1966b6ede24932e27cd341eb4f86c9"
+    },
+    "mac-bluray": {
+      "cases": {
+        "Blu-ray ISO local file plays across clips and seeks": {
+          "outcome": "success"
+        },
+        "Blu-ray ISO HTTP ranges plays across clips and seeks": {
+          "outcome": "success"
+        }
+      },
+      "rawFlutterReportSHA256": "1115019aae03843e4934b0dc4f6ad16653f9daa84d24109d13070930357a510c"
+    }
+  },
+  "codecControls": {
+    "method": "Same seven-second cell served as a single local HTTP HLS segment. Video copied or re-encoded with libx264, audio copied or re-encoded with AAC. Success requires the public player session first-frame event.",
+    "results": {
+      "sim": {
+        "cases": {
+          "HLS mpeg2-ac3 video first frame": {
+            "outcome": "error",
+            "decoderError": "avplayer.-11833"
+          },
+          "HLS mpeg2-aac video first frame": {
+            "outcome": "error",
+            "decoderError": "avplayer.-11833"
+          },
+          "HLS h264-ac3 video first frame": {
+            "outcome": "success"
+          },
+          "HLS h264-aac video first frame": {
+            "outcome": "success"
+          }
+        },
+        "rawFlutterReportSHA256": "ebe90574443162c4a301647b95eed8797517278c9f098464cc43e508609380d2"
+      },
+      "phone": {
+        "cases": {
+          "HLS mpeg2-ac3 video first frame": {
+            "outcome": "error",
+            "decoderError": "avplayer.-11833"
+          },
+          "HLS mpeg2-aac video first frame": {
+            "outcome": "error",
+            "decoderError": "avplayer.-11833"
+          },
+          "HLS h264-ac3 video first frame": {
+            "outcome": "success"
+          },
+          "HLS h264-aac video first frame": {
+            "outcome": "success"
+          }
+        },
+        "rawFlutterReportSHA256": "9f9a6430a562fbfaa234c1aa0500ebc2402183b20ef67da44362f2004190f337"
+      }
+    },
+    "fixtureDurationSeconds": 7,
+    "videoEncodings": {
+      "mpeg2": "copy",
+      "h264": "libx264"
+    },
+    "audioEncodings": {
+      "ac3": "copy",
+      "aac": "aac"
+    },
+    "segmentSHA256": {
+      "h264-aac": "be40d0a3359c1318e1e7505b6a1816e7eec23d002fa9c0e381cd3a92c2dff313",
+      "h264-ac3": "145ab851baa660bf86182c8d44ace45c16c98b342f0721cac877dfa6bf85b9f8",
+      "mpeg2-aac": "8f94c89fc81fff998fcb524f803316c8e33a0db7283d3a66d0f050994d7c8342",
+      "mpeg2-ac3": "f0de576f94ce8c6a79ee2a5b8799ae3b543db799ae6aeebbc56b144bb0ccd2cf"
+    }
+  },
+  "dvdTransport": {
+    "fixture": "dvd_titles.iso.gz.bin",
+    "fixtureSHA256": "368597f01b76f80dd0222c94831894180c15453711e0df74d01d2a7013803542",
+    "fileAndHttpMatchingSegmentSHA256": [
+      "1be35c49c167e90dfd24530b9f54c19772a32bdcb5f6d70f878b11cb0dd18d9e",
+      "2fee2136bd87910e48cdccbc900e798d14651d0890cc6532f6983b2d4f2bd2b6",
+      "346d4359896a21ee8d74250654ebd598d9ffc430b9d327754a514a8872c09b97",
+      "58fc0f98d8e049ef6927251a7238e1492b6aa28eb0b12e7208d5b1d3cf135047"
+    ],
+    "decodedWholeTitleFrames": {
+      "mpeg2video": 420,
+      "ac3": 438
+    },
+    "vobComparison": "Both elementary streams match the source VOB byte for byte after putting the two authored cells in title playback order. Standalone decoding of individual segments encounters AC-3 frames split at segment boundaries."
+  },
+  "priorPhysicalNativeShard": {
+    "commit": "e56199e024e7e3a53e7de17aaeaaa4fa16ba330a",
+    "device": "iPhone 16",
+    "os": "27.2",
+    "passed": 34,
+    "failed": 0,
+    "skipped": 0,
+    "manifestSHA256": "ecad877d3e43f7a62ce0e3e9e88a66d2c90ef14b7df283938988a1547d18c7ac"
+  }
+}

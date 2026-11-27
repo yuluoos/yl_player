@@ -1,0 +1,174 @@
+{
+  "workflowRun": {
+    "conclusion": "success",
+    "event": "workflow_dispatch",
+    "head_branch": "main",
+    "head_sha": "68bd5a070935eec9139e9cf64e797a80c8cc433d",
+    "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467",
+    "id": 45942757467,
+    "name": "CI",
+    "path": ".github/workflows/ci.yml",
+    "run_attempt": 1,
+    "run_number": 188,
+    "status": "completed"
+  },
+  "sourceHash": "fca3df751bcab98b81464948ee1d0ee06163b6342d217f297761cf4c2099c232",
+  "jobs": [
+    {
+      "name": "changes",
+      "id": 140320546348,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320546348"
+    },
+    {
+      "name": "foundation",
+      "id": 140320591095,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320591095"
+    },
+    {
+      "name": "apple-consumers",
+      "id": 140320591127,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320591127"
+    },
+    {
+      "name": "android-unit",
+      "id": 140320591146,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320591146"
+    },
+    {
+      "name": "ffmpeg-reproducibility",
+      "id": 140320591163,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320591163"
+    },
+    {
+      "name": "ios-integration",
+      "id": 140320591173,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320591173"
+    },
+    {
+      "name": "android-consumer",
+      "id": 140320591180,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320591180"
+    },
+    {
+      "name": "apple-unit",
+      "id": 140320592706,
+      "conclusion": "skipped",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140320592706"
+    },
+    {
+      "name": "android-integration (24)",
+      "id": 140321784459,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140321784459"
+    },
+    {
+      "name": "android-integration (36)",
+      "id": 140321784523,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140321784523"
+    },
+    {
+      "name": "android-api24-physical",
+      "id": 140321785658,
+      "conclusion": "skipped",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140321785658"
+    },
+    {
+      "name": "macos-integration",
+      "id": 140331827098,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140331827098"
+    },
+    {
+      "name": "ios-physical",
+      "id": 140331829215,
+      "conclusion": "skipped",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140331829215"
+    },
+    {
+      "name": "release-gates",
+      "id": 140341765564,
+      "conclusion": "success",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140341765564"
+    },
+    {
+      "name": "quick-aggregate",
+      "id": 140341767455,
+      "conclusion": "skipped",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/45942757467/job/140341767455"
+    }
+  ],
+  "releaseGateSteps": [
+    {
+      "conclusion": "success",
+      "name": "Set up job"
+    },
+    {
+      "conclusion": "success",
+      "name": "Run actions/checkout@v7"
+    },
+    {
+      "conclusion": "success",
+      "name": "Require every hosted full-matrix result"
+    },
+    {
+      "conclusion": "success",
+      "name": "Run subosito/flutter-action@v2"
+    },
+    {
+      "conclusion": "success",
+      "name": "Public surface, publication, and final hygiene"
+    },
+    {
+      "conclusion": "success",
+      "name": "Post Run subosito/flutter-action@v2"
+    },
+    {
+      "conclusion": "success",
+      "name": "Post Run actions/checkout@v7"
+    },
+    {
+      "conclusion": "success",
+      "name": "Complete job"
+    }
+  ],
+  "downloadedArtifactsVerifiedBySHA256": [
+    {
+      "digest": "sha256:b35767ea65ac95e2d906149c36bb47d43e37de075548d0d78c6c8512d1646ea2",
+      "id": 15176258277,
+      "name": "macos-exact-runtime-evidence",
+      "size_in_bytes": 5546407
+    },
+    {
+      "digest": "sha256:bedd86127c9b615c1c3e5351b6f7c4329aebee7cd0c2aa92c18292b976c028fe",
+      "id": 15175450463,
+      "name": "ios-exact-runtime-evidence",
+      "size_in_bytes": 2229120
+    },
+    {
+      "digest": "sha256:fc89277397a0aad748b977af57fce0cf8910ff6cb6ce673a49a29db0bb58967d",
+      "id": 15175295765,
+      "name": "apple-consumer-evidence",
+      "size_in_bytes": 1495881
+    },
+    {
+      "digest": "sha256:7e67c859e5f3f5117034ccfe53c602347216ed179502ea9b471b3b766a28d7f0",
+      "id": 15173672264,
+      "name": "android-api24-simulator",
+      "size_in_bytes": 1119
+    },
+    {
+      "digest": "sha256:2ca26cb2f954e1c45a5922d38d0508a06d210dbe10f0afafcbe65ee2daad8c51",
+      "id": 15172564162,
+      "name": "android-consumer-evidence",
+      "size_in_bytes": 9831
+    }
+  ]
+}

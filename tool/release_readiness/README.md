@@ -16,8 +16,7 @@ python3 -B -m unittest discover -s tool/playback_benchmark -p test_release_readi
 
 `inventory.json`记录审核基线commit、需求文档hash、源码/制品文件清单、报告hash、
 各组独立的implementation和verification及下一步动作。报告存在、编译成功、
-历史单项通过、模拟器成功均不能自动把整组改为passed。当前所有完整组仍开放；
-历史通过留在报告，`not_run`意为**尚未完成当前整组共同验收**，不抹去已执行子项。
+历史单项通过、模拟器成功均不能自动把整组改为passed。历史单项通过留在报告，`not_run`意为**尚未完成当前整组共同验收**，不抹去已执行子项。
 `failed`保留已知必需项失败，具体组及最新后续动作以台账为准；`external_missing`
 列授权/原始参考/物理链/最低OS/Intel/正式性能目标等缺项。具体问题见对应报告。
 实现状态implemented也不意味着性能或设备验证完成。
@@ -63,7 +62,7 @@ kind=`acceptance`的独立JSON，row.acceptance必须引用它。格式如下（
 PERF-BASELINE / RELEASE-CONSUMERS / RELEASE-CI及platform=all。
 这是**经人工审阅的验收声明校验器**，不理解每种原始日志、不能证明声明真实，也不
 自行证明画质、授权、物理输出或性能数字。`releaseReady`仅表示所登记完整声明在此
-源码范围内齐备；发布、标签、上传仍需明确发布指令。仓库当前没有任何完整声明。
+源码范围内齐备。发布、标签、上传仍需明确发布指令。
 
 维护时先复核变化和影响范围，再更新源清单/报告hash及必要行；不要自动将新源码
 或新报告重新盖章为通过。重新计算source_snapshot可用于生成待审核清单；更新后
@@ -73,6 +72,13 @@ PERF-BASELINE / RELEASE-CONSUMERS / RELEASE-CI及platform=all。
 
 当前产品决定以需求v2.2为准：PD-01、PD-02、PD-03均已确认。历史P08计划中的
 “PD-02/03尚未确认”不是当前阻塞；具体DRM/Dolby/设备/参考缺口仍需独立解决。
+
+## 2026-11-27 主分支 CI 验收
+
+`68bd5a07` 的全量 CI #188 通过了全部必需托管作业和发布门禁。五份归档均下载核对了 SHA-256。
+本次登记的完整声明仅覆盖 `RELEASE-CI`。Android API 24 和 iOS 真机作业按配置跳过，硬解验收仍跟随各自的真机回执。
+产品快照相对上一基线的变化限于六个 ISO 源文件及范围请求测量工具。其余 101 行保留原验收状态。
+[全量 CI #188](https://github.com/yuluoos/yl_player/actions/runs/45942757467) · [CI 完整验收声明](../../docs/superpowers/reports/evidence/2026-11-27-main-68bd5a07/release-ci-acceptance.json)
 
 ## 2026-11-05 台账同步
 
