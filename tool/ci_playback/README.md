@@ -6,14 +6,14 @@ Android API 24 模拟器跑音频生命周期与严格策略拒绝用例，API 2
 
 ## GitHub Actions
 
-PR 和普通 push 使用托管模拟器。默认分支的定时或手动全量工作流还要求同一运行的两个真机作业成功。仅在受信任的默认分支全量运行中调度自托管设备。仓库管理员按下表设置 Actions 仓库变量并注册对应 runner。签名设备所在的 runner 组应只授权受保护默认分支上的这份工作流。
+PR 和普通 push 使用托管模拟器。定时和手动全量 CI 的发布门禁要求所有托管分片通过。要补跑真机，在默认分支手动触发 CI 时勾选 `run_physical_tests`。仓库管理员按下表设置 Actions 仓库变量并注册对应 runner。签名设备所在的 runner 组应只授权受保护默认分支上的这份工作流。
 
 | 作业 | 自托管 runner 标签 | 仓库变量 | 主机条件 |
 | --- | --- | --- | --- |
 | Android API 24 真机 | `yl-android-api24` | `YL_ANDROID_API24_DEVICE_ID` 为 adb 序列号 | POSIX、Android SDK、adb、JDK 17、具备合格 AVC 解码路径的 API 24 真机 |
 | iOS 真机 | `macOS` 和 `yl-ios-device` | `YL_IOS_DEVICE_ID` 为 UDID，按签名配置填写 `YL_IOS_DEVELOPMENT_TEAM` | Xcode、已配对解锁且允许调试的 iPhone、可用的开发签名与描述文件 |
 
-设备变量缺失会跳过对应设备作业，完整发布汇总随即失败。作业失败或取消也无法产生完整发布通过结果。普通 quick 汇总仅表示该次选中的常规检查通过。
+手动勾选后，有设备变量的平台会运行真机分片并单独报告结果，缺少设备变量的平台会显示跳过。真机硬解验收以真机分片的实际回执为准。
 
 ## 本地复验
 

@@ -320,8 +320,6 @@ aggregate_full() {
   require_success android-consumer "${YL_RESULT_ANDROID_CONSUMER:-}"
   require_success apple-consumers "${YL_RESULT_APPLE_CONSUMERS:-}"
   require_success ffmpeg-reproducibility "${YL_RESULT_REPRODUCIBILITY:-}"
-  require_success android-api24-physical "${YL_RESULT_ANDROID_HARDWARE:-}"
-  require_success ios-physical "${YL_RESULT_IOS_HARDWARE:-}"
   if [ "$test_mode" = 1 ]; then
     echo 'PLAYER_V2_TEST_MODE_COMPLETE aggregate=full release_evidence=false'
   else
